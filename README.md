@@ -128,6 +128,24 @@ Defines an option that accepts a `key=value` pair:
 option "--param", value: {format: KeyValue.new('=')}
 ```
 
+### Defining Arguments
+
+```ruby
+argument :file
+```
+
+Define an optional argument:
+
+```ruby
+argument :optional_output, required: false
+```
+
+Define an argument that can be repeated:
+
+```ruby
+argument :files, repeats: true
+```
+
 ### Running
 
 Keyword arguments:
