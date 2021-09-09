@@ -400,6 +400,11 @@ module CommandMapper
       `#{shellescape}`
     end
 
+    #
+    # Executes the command and returns an IO object to it.
+    #
+    # @return [IO]
+    #
     def popen!
       IO.popen(@env,*argv)
     end
