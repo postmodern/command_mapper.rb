@@ -92,6 +92,50 @@ class Grep < CommandMapper::Command
 end
 ```
 
+### Running
+
+Keyword arguments:
+
+```ruby
+Grep.run(ignore_case: true, patterns: "foo", file: "file.txt")
+# ...
+```
+
+With a block:
+
+```ruby
+Grep.run do |grep|
+  grep.ignore_case = true
+  grep.patterns = "foo"
+  grep.file = "file.txt"
+end
+```
+
+### Capturing output
+
+```ruby
+Grep.capture(ignore_case: true, patterns: "foo", file: "file.txt")
+# => "..."
+```
+
+### popen
+
+```ruby
+io = Grep.popen(ignore_case: true, patterns: "foo", file: "file.txt")
+
+io.each_line do |line|
+  # ...
+end
+```
+
+### sudo
+
+```ruby
+Grep.sudo(patterns: "Error", file: "/var/log/syslog")
+# Password: 
+# ...
+```
+
 ## Requirements
 
 * [ruby] >= 2.0.0
