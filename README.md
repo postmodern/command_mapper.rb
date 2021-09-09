@@ -92,6 +92,42 @@ class Grep < CommandMapper::Command
 end
 ```
 
+### Defining Options
+
+```ribu
+option "--opt"
+```
+
+Define a short option:
+
+```ruby
+option "-o", name: :opt
+```
+
+Defines an option with a required value:
+
+```ruby
+option "--output", value: {required: true}
+```
+
+Defines an option that can be specified multiple times:
+
+```ruby
+option "--include-dir", repeats: true
+```
+
+Defines an option that accepts a comma-separated list:
+
+```ruby
+option "--list", value: {format: List.new(',')}
+```
+
+Defines an option that accepts a `key=value` pair:
+
+```ruby
+option "--param", value: {format: KeyValue.new('=')}
+```
+
 ### Running
 
 Keyword arguments:
