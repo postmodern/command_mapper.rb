@@ -121,4 +121,4 @@ Copyright (c) 2021 Hal Brodigan
 See {file:LICENSE.txt} for license information.
 
 [command_mapper]: https://github.com/postmodern/command_mapper.rb#readme
-[ruby]: htt[s://www.ruby-lang.org/
+[ruby]: https://www.ruby-lang.org/
