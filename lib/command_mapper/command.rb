@@ -363,6 +363,12 @@ module CommandMapper
       return args
     end
 
+    #
+    # Escapes any shell control-characters so that it can be ran in a shell.
+    #
+    # @return [String]
+    #   The shell-escaped command.
+    #
     def shellescape
       Shellwords.shelljoin(argv)
     end
