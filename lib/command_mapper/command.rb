@@ -60,6 +60,25 @@ module CommandMapper
     end
 
     #
+    # Runs the command in a shell and captures all stdout output.
+    #
+    # @param [Hash{Symbol => Object}] params
+    #   The option values.
+    #
+    # @yield [self]
+    #   The newly initialized command.
+    #
+    # @yieldparam [Command] self
+    #
+    # @return [String]
+    #   The stdout output of the command.
+    #
+    def self.capture(params={},**kwargs,&block)
+      command = new(params,**kwargs,&block)
+      command.capture!
+    end
+
+    #
     # Executes the command and returns an IO object to it.
     #
     # @param [Hash{Symbol => Object}] params
@@ -369,6 +388,16 @@ module CommandMapper
     #
     def run!
       system(@env,*argv)
+    end
+
+    #
+    # Runs the command in a shell and captures all stdout output.
+    #
+    # @return [String]
+    #   The stdout output of the command.
+    #
+    def capture!
+      `#{shellescape}`
     end
 
     def popen!
