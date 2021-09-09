@@ -1,0 +1,9 @@
+/Gemfile.lock
+/doc/
+/pkg/
+/vendor/bundle/
+.DS_Store
+.yardoc
+*.log
+*.swp
+*~

@@ -1,0 +1,22 @@
+name: command_mapper
+summary: Maps commands and options to Ruby classes
+description:
+  CommandMapper maps commands and their options to classes, keyword arguments,
+  and methods.
+
+license: MIT
+authors: Postmodern
+email: postmodern.mod3@gmail.com
+homepage: https://github.com/postmodern/command_mapper.rb#readme
+has_yard: true
+
+metadata:
+  documentation_uri: https://rubydoc.info/gems/command_mapper
+  source_code_uri:   https://github.com/postmodern/command_mapper.rb
+  bug_tracker_uri:   https://github.com/postmodern/command_mapper.rb/issues
+  changelog_uri:     https://github.com/postmodern/command_mapper.rb/blob/master/ChangeLog.md
+
+required_ruby_version: ">= 2.0.0"
+
+development_dependencies:
+  bundler: ~> 2.0
