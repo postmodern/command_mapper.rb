@@ -15,9 +15,13 @@ module CommandMapper
     # @param [Boolean] required
     #   Specifies whether the argument is required or can be omitted.
     #
-    def initialize(format: nil, required: true)
-      @format   = format
-      @required = required
+    # @param [Boolean] allow_empty
+    #   Specifies whether the argument may accept empty values.
+    #
+    def initialize(format: nil, required: true, allow_empty: false)
+      @format      = format
+      @required    = required
+      @allow_empty = allow_empty
     end
 
     #
@@ -36,6 +40,15 @@ module CommandMapper
     #
     def optional?
       !@required
+    end
+
+    #
+    # Specifies whether the argument may accept empty values.
+    #
+    # @return [Boolean]
+    #
+    def allow_empty?
+      @allow_empty
     end
 
     #

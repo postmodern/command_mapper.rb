@@ -8,6 +8,10 @@ describe CommandMapper::ArgumentValue do
   let(:format) { Formats::List.new(',') }
 
   describe "#initialize" do
+    it "must default allow_empty: to false" do
+      expect(subject.allow_empty?).to be(false)
+    end
+
     context "when given the format: keyword argument" do
       subject { described_class.new(format: format) }
 
@@ -29,6 +33,14 @@ describe CommandMapper::ArgumentValue do
 
       it "#required? must be false" do
         expect(subject.required?).to be(false)
+      end
+    end
+
+    context "when given allow_empty: true" do
+      subject { described_class.new(allow_empty: true) }
+
+      it "must enable allow_empty?" do
+        expect(subject.allow_empty?).to be(true)
       end
     end
   end
@@ -65,6 +77,24 @@ describe CommandMapper::ArgumentValue do
 
       it "#optional? must be true" do
         expect(subject.optional?).to be(true)
+      end
+    end
+  end
+
+  describe "#allow_empty?" do
+    context "when initialized with allow_empty: true" do
+      subject { described_class.new(allow_empty: true) }
+
+      it "#allow_empty? must be true" do
+        expect(subject.allow_empty?).to be(true)
+      end
+    end
+
+    context "when initialized with allow_empty: false" do
+      subject { described_class.new(allow_empty: false) }
+
+      it "#allow_empty? must be false" do
+        expect(subject.allow_empty?).to be(false)
       end
     end
   end
