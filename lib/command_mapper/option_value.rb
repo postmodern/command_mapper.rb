@@ -4,11 +4,16 @@ module CommandMapper
   class OptionValue < ArgumentValue
 
     def initialize(allow_empty: false, required: true, **kwargs)
-      @allow_empty = allow_empty
-
       super(required: required, **kwargs)
+
+      @allow_empty = allow_empty
     end
 
+    #
+    # Specifies whether the option's value may accept empty values.
+    #
+    # @return [Boolean]
+    #
     def allow_empty?
       @allow_empty
     end
