@@ -68,7 +68,7 @@ describe CommandMapper::ArgumentValue do
       subject { described_class.new(required: true) }
 
       it "#optional? must be false" do
-        expect(subject.required?).to be(true)
+        expect(subject.optional?).to be(false)
       end
     end
 
