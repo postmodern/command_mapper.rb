@@ -15,11 +15,9 @@ module CommandMapper
     # @param [Boolean] required
     #   Specifies whether the argument is required or can be omitted.
     #
-    def initialize(format: nil, required: true, &block)
+    def initialize(format: nil, required: true)
       @format   = format
       @required = required
-
-      @formatter = block
     end
 
     #

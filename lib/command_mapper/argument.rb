@@ -5,11 +5,11 @@ module CommandMapper
 
     attr_reader :name
 
-    def initialize(name, repeats: false, **kwargs,&block)
+    def initialize(name, repeats: false, **kwargs)
       @name    = name
       @repeats = repeats
 
-      super(**kwargs,&block)
+      super(**kwargs)
     end
 
     def repeats?

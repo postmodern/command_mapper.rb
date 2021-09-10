@@ -12,7 +12,7 @@ module CommandMapper
     # @return [OptionValue, nil]
     attr_reader :value
 
-    def initialize(flag, name: nil, equals: nil, repeats: false, value: nil, &block)
+    def initialize(flag, name: nil, equals: nil, repeats: false, value: nil)
       @flag    = flag
       @name    = self.class.infer_name_from_flag(flag)
       @equals  = equals
