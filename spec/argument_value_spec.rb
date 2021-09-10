@@ -3,8 +3,6 @@ require 'command_mapper/argument_value'
 require 'command_mapper/formats/list'
 
 describe CommandMapper::ArgumentValue do
-  include CommandMapper
-
   let(:format) { Formats::List.new(',') }
 
   describe "#initialize" do
