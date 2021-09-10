@@ -18,7 +18,10 @@ module CommandMapper
       !@required
     end
 
-    def argv(value)
+    def format_value(value)
+      if @format then @format.call(value)
+      else            value.to_s
+      end
     end
 
   end

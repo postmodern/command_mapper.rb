@@ -5,10 +5,10 @@ require 'command_mapper/formats/list'
 describe CommandMapper::ArgumentValue do
   include CommandMapper
 
+  let(:format) { Formats::List.new(',') }
+
   describe "#initialize" do
     context "when given the format: keyword argument" do
-      let(:format) { Formats::List.new(',') }
-
       subject { described_class.new(format: format) }
 
       it "must set #format" do
@@ -65,6 +65,18 @@ describe CommandMapper::ArgumentValue do
 
       it "#optional? must be true" do
         expect(subject.optional?).to be(true)
+      end
+    end
+  end
+
+  describe "#format_value" do
+    context "when #format is set" do
+      subject { described_class.new(format: format) }
+
+      let(:value) { %w[one two three] }
+
+      it "must pass call #call on the #format object" do
+        expect(subject.format_value(value)).to eq(format.call(value))
       end
     end
   end
