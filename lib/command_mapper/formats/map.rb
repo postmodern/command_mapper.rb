@@ -9,6 +9,12 @@ module CommandMapper
         @map = map
       end
 
+      # Maps boolean values to "yes" and "no"
+      YesNo = new(true => 'yes', false => 'no')
+
+      # Maps boolean values to "enabled" and "disabled"
+      EnabledDisabled = new(true => 'enabled', false => 'disabled')
+
       #
       # @param [Object] value
       #
