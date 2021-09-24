@@ -438,6 +438,14 @@ describe CommandMapper::Command do
     end
   end
 
+  let(:opt1) { "foo" }
+  let(:opt2) { "bar" }
+  let(:opt3) { "baz" }
+  let(:arg1) { "foo" }
+  let(:arg2) { "bar" }
+  let(:arg3) { "baz" }
+  let(:env)  { {'FOO' => 'bar'} }
+
   let(:command_class) { TestCommand::ExampleCommand }
 
   describe "#[]" do
@@ -499,10 +507,6 @@ describe CommandMapper::Command do
       end
     end
 
-    let(:opt1) { "foo" }
-    let(:opt2) { "bar" }
-    let(:opt3) { "baz" }
-
     context "when the command has options set" do
       subject { command_class.new({opt1: opt1, opt2: opt2, opt3: opt3}) }
 
@@ -517,10 +521,6 @@ describe CommandMapper::Command do
         )
       end
     end
-
-    let(:arg1) { "foo" }
-    let(:arg2) { "bar" }
-    let(:arg3) { "baz" }
 
     context "when the command has arguments set" do
       subject { command_class.new({arg1: arg1, arg2: arg2, arg3: arg3}) }
@@ -632,6 +632,107 @@ describe CommandMapper::Command do
           )
         end
       end
+    end
+  end
+
+  describe "#shellescape" do
+    let(:opt1) { "foo bar" }
+    let(:arg1) { "baz qux" }
+
+    subject { command_class.new({opt1: opt1, arg1: arg1}) }
+
+    it "must escape the command option values and argument values" do
+      expect(subject.shellescape).to eq(Shellwords.shelljoin(subject.argv))
+    end
+
+    context "when initialized with env: {...}" do
+      let(:env) { {"FOO" => "bar baz"} }
+
+      let(:escaped_env) do
+        env.map { |name,value|
+          "#{Shellwords.shellescape(name)}=#{Shellwords.shellescape(value)}"
+        }.join(' ')
+      end
+
+      subject { command_class.new({opt1: opt1, arg1: arg1}, env: env) }
+
+      it "must escape both the env variables and the command" do
+        expect(subject.shellescape).to eq(
+          "#{escaped_env} #{Shellwords.shelljoin(subject.argv)}"
+        )
+      end
+    end
+  end
+
+  describe "#run!" do
+    subject { command_class.new({opt1: opt1, arg1: arg1}, env: env) }
+
+    it "must pass the command's env and argv to Kenrel.system" do
+      expect(subject).to receive(:system).with(env,*subject.argv)
+
+      subject.run!
+    end
+  end
+
+  describe "#capture!" do
+    subject { command_class.new({opt1: opt1, arg1: arg1}, env: env) }
+
+    it "must pass the command's env and argv to `...`" do
+      expect(subject).to receive(:`).with(subject.shellescape)
+
+      subject.capture!
+    end
+  end
+
+  describe "#popen!" do
+    subject { command_class.new({opt1: opt1, arg1: arg1}, env: env) }
+
+    it "must pass the command's env, argv, and to IO.popen" do
+      expect(IO).to receive(:popen).with(env,subject.argv)
+
+      subject.popen!
+    end
+
+    context "when a open mode is given" do
+      let(:mode) { 'w' }
+
+      it "must pass the command's env, argv, and the mode to IO.popen" do
+        expect(IO).to receive(:popen).with(env,subject.argv,mode)
+
+        subject.popen!(mode)
+      end
+    end
+  end
+
+  describe "#sudo!" do
+    subject { command_class.new({opt1: opt1, arg1: arg1}, env: env) }
+
+    let(:expected_argv) { [command_class.command, "--opt1", opt1, arg1] }
+
+    it "must pass the command's env and argv, and to IO.popen" do
+      expect(Sudo).to receive(:run).with({command: subject.argv}, env: env)
+
+      subject.sudo!
+    end
+  end
+
+  describe "#to_s" do
+    let(:opt1) { "foo bar" }
+    let(:arg1) { "baz qux" }
+    let(:env) { {"FOO" => "bar baz"} }
+
+    subject { command_class.new({opt1: opt1, arg1: arg1}, env: env) }
+
+    it "must call #shellescape" do
+      expect(subject.to_s).to eq(subject.shellescape)
+    end
+  end
+
+  describe "#to_a" do
+    subject { command_class.new({opt1: opt1, arg1: arg1}) }
+
+    it "must call #argv" do
+      expect(subject.to_a).to eq(subject.argv)
     end
   end
 end
