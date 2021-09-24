@@ -324,7 +324,7 @@ module CommandMapper
     #
     def [](name)
       if respond_to?(name)
-        send(name,value)
+        send(name)
       else
         raise(ArgumentError,"#{self.class} does not define ##{name}")
       end
