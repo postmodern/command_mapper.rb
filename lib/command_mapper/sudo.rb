@@ -41,7 +41,7 @@ module CommandMapper
     option '--background'
     option '--close-from', equals: true
     option '--chdir', equals: true
-    option '--preserve-env', equals: true, value: {required: false}
+    option '--preserve-env', equals: true, value: :optional
     option '--edit'
     option '--group'
     option '--set-home'
