@@ -266,6 +266,21 @@ module CommandMapper
     end
 
     #
+    # All defined subcommands.
+    #
+    # @return [Hash{Symbol => Command}]
+    #
+    # @api semipublic
+    #
+    def self.subcommands
+      @subcommands ||= if superclass < Command
+                         superclass.subcommands.dup
+                       else
+                         {}
+                       end
+    end
+
+    #
     # Defines a subcommand.
     #
     # @param [String] name
@@ -299,6 +314,7 @@ module CommandMapper
       subcommand_method_name = name.to_s.tr('-','_')
       subcommand_class_name  = name.to_s.split(/[_-]+/).map(&:capitalize).join
 
+      self.subcommands[name] = subcommand_class
       const_set(subcommand_class_name,subcommand_class)
 
       define_method(subcommand_method_name) do |&block|

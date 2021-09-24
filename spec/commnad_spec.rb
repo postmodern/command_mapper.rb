@@ -298,6 +298,63 @@ describe CommandMapper::Command do
 
   end
 
+  describe ".subcommands" do
+    subject { command_class }
+
+    context "when the command has no defined subcommands" do
+      let(:command_class) { TestCommand::EmptyCommand }
+
+      it { expect(subject.subcommands).to be_empty }
+    end
+
+    context "when the comand does have defined subcommands" do
+      module TestCommand
+        class BaseClassWithOptions < CommandMapper::Command
+          subcommand :foo do
+          end
+
+          subcommand :bar do
+          end
+        end
+
+        class InheritedOptions < BaseClassWithOptions
+        end
+      end
+
+      let(:command_class) { TestCommand::InheritedOptions }
+      let(:command_superclass) { TestCommand::BaseClassWithOptions }
+
+      it "must copy the subcommands defined in the superclass" do
+        expect(subject.subcommands).to eq(command_superclass.subcommands)
+      end
+
+      context "and when the class defines subcommands of it's own" do
+        module TestCommand
+          class InheritsAndDefinesOptions < BaseClassWithOptions
+
+            subcommand :baz do
+            end
+
+          end
+        end
+
+        let(:command_class) { TestCommand::InheritsAndDefinesOptions }
+
+        it "must copy the subcommands defined in the superclass" do
+          expect(subject.subcommands).to include(command_superclass.subcommands)
+        end
+
+        it "must define it's own subcommands" do
+          expect(command_class.subcommands[:baz]).to eq(command_class::Baz)
+        end
+
+        it "must not modify the superclass's subcommands" do
+          expect(command_superclass.subcommands[:baz]).to be(nil)
+        end
+      end
+    end
+  end
+
   describe ".subcommand" do
     module TestCommand
       class DefinesSubcommand < CommandMapper::Command
