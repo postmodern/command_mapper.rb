@@ -382,6 +382,8 @@ describe CommandMapper::Command do
     subject { command_class.new({opt1: value}) }
 
     it "must call the method with the same given name" do
+      expect(subject).to receive(name).and_return(value)
+
       expect(subject[name]).to be(value)
     end
 
@@ -392,6 +394,33 @@ describe CommandMapper::Command do
         expect {
           subject[name]
         }.to raise_error(ArgumentError,"#{command_class} does not define ##{name}")
+      end
+    end
+  end
+
+  describe "#[]=" do
+    let(:name)  { :opt2  }
+    let(:value) { 'new_value' }
+
+    subject { command_class.new }
+
+    it "must call the writter method with the same given name" do
+      expect(subject).to receive(:"#{name}=").with(value).and_return(value)
+
+      subject[name] = value
+    end
+
+    it "must return the new value" do
+      expect(subject[name] = value).to be(value)
+    end
+
+    context "when there is no reader method of the same name" do
+      let(:name) { :fubar }
+
+      it do
+        expect {
+          subject[name] = value
+        }.to raise_error(ArgumentError,"#{command_class} does not define ##{name}=")
       end
     end
   end
