@@ -56,8 +56,7 @@ module CommandMapper
     #
     def self.run(params={},**kwargs,&block)
       command = new(params,**kwargs,&block)
-
-      system(command.env,*command.argv)
+      command.run!
     end
 
     #
@@ -76,8 +75,7 @@ module CommandMapper
     #
     def self.capture(params={},**kwargs,&block)
       command = new(params,**kwargs,&block)
-
-      `#{command.shellescape}`
+      command.capture!
     end
 
     #
@@ -95,8 +93,7 @@ module CommandMapper
     #
     def self.popen(params={}, mode: 'r', **kwargs,&block)
       command = new(params,**kwargs,&block)
-
-      IO.popen(command.env,command.argv,mode)
+      command.popen!
     end
 
     #
@@ -117,8 +114,7 @@ module CommandMapper
     #
     def self.sudo(params={}, sudo: {}, **kwargs,&block)
       command = new(params,**kwargs,&block)
-
-      Sudo.run(sudo.merge(env: command.env, command: command.argv))
+      command.sudo!(sudo)
     end
 
     #
@@ -407,7 +403,59 @@ module CommandMapper
     #   The shell-escaped command.
     #
     def shellescape
-      Shellwords.shelljoin(argv)
+      escaped_command = Shellwords.shelljoin(argv)
+
+      unless @env.empty?
+        escaped_env = @env.map { |name,value|
+          "#{Shellwords.shellescape(name)}=#{Shellwords.shellescape(value)}"
+        }.join(' ')
+
+        escaped_command = "#{escaped_env} #{escaped_command}"
+      end
+
+      return escaped_command
+    end
+
+    #
+    # Initializes and runs the command.
+    #
+    # @return [Boolean, nil]
+    #
+    def run!
+      system(@env,*argv)
+    end
+
+    #
+    # Runs the command in a shell and captures all stdout output.
+    #
+    # @return [String]
+    #   The stdout output of the command.
+    #
+    def capture!
+      `#{shellescape}`
+    end
+
+    #
+    # Executes the command and returns an IO object to it.
+    #
+    # @return [IO]
+    #
+    def popen!(mode=nil)
+      if mode then IO.popen(@env,argv,mode)
+      else         IO.popen(@env,argv)
+      end
+    end
+
+    #
+    # Initializes and runs the command through sudo.
+    #
+    # @param [Hash{Symbol => Object}] sudo_params
+    #   Additional keyword arguments for {Sudo#initialize}.
+    #
+    # @return [Boolean, nil]
+    #
+    def sudo!(sudo_params={},&block)
+      Sudo.run(sudo_params.merge(command: argv), env: @env, &block)
     end
 
     #
@@ -426,3 +474,5 @@ module CommandMapper
 
   end
 end
+
+require 'command_mapper/sudo'
