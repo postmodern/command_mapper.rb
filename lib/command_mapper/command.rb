@@ -1,4 +1,4 @@
-require 'command_mapper/formats'
+require 'command_mapper/types'
 require 'command_mapper/argument'
 require 'command_mapper/option'
 
@@ -7,7 +7,7 @@ require 'shellwords'
 module CommandMapper
   class Command
 
-    include Formats
+    include Types
 
     #
     # Initializes the command.
@@ -28,15 +28,15 @@ module CommandMapper
     #
     def initialize(params={}, command: self.class.command, env: {})
       @options    = {}
-      @arguments  = {}
       @subcommand = nil
-
-      @command = command
-      @env     = env
+      @arguments  = {}
 
       params.each do |name,value|
         self[name] = value
       end
+
+      @command = command
+      @env     = env
 
       yield self if block_given?
     end
@@ -56,7 +56,8 @@ module CommandMapper
     #
     def self.run(params={},**kwargs,&block)
       command = new(params,**kwargs,&block)
-      command.run!
+
+      system(command.env,*command.argv)
     end
 
     #
@@ -75,7 +76,8 @@ module CommandMapper
     #
     def self.capture(params={},**kwargs,&block)
       command = new(params,**kwargs,&block)
-      command.capture!
+
+      `#{command.shellescape}`
     end
 
     #
@@ -91,9 +93,10 @@ module CommandMapper
     #
     # @return [IO]
     #
-    def self.popen(params={}, **kwargs,&block)
+    def self.popen(params={}, mode: 'r', **kwargs,&block)
       command = new(params,**kwargs,&block)
-      command.popen!
+
+      IO.popen(command.env,command.argv,mode)
     end
 
     #
@@ -114,7 +117,8 @@ module CommandMapper
     #
     def self.sudo(params={}, sudo: {}, **kwargs,&block)
       command = new(params,**kwargs,&block)
-      command.sudo!(sudo)
+
+      Sudo.run(sudo.merge(env: command.env, command: command.argv))
     end
 
     #
@@ -158,10 +162,10 @@ module CommandMapper
     #
     # @param [Hash{Symbol => Object}] value
     #
-    # @option value [Class] :format
+    # @option value [Types::Value, Hash, true, nil] value
     #   The format of the option's value.
     #
-    # @option value [Boolean] :required (true)
+    # @option value [Boolean] required (true)
     #   Specifies whether the option's value is required.
     #
     # @param [Boolean] equals
@@ -192,7 +196,7 @@ module CommandMapper
     #   option '--foo', repeats: true
     #
     # @example Defining an option that takes a comma-separated list:
-    #   option '--list', value: {format: List.new(',')}
+    #   option '--list', value: List.new
     #
     def self.option(flag, name: nil, value: nil, repeats: false, equals: false, &block)
       option = Option.new(flag, name:    name,
@@ -232,8 +236,8 @@ module CommandMapper
     #
     # @param [Symbol] name
     #
-    # @param [Class, nil] format
-    #   The format of the option's value.
+    # @param [Types::Value, Hash, true] value
+    #   The explicit value type for the argument.
     #
     # @param [Boolean] required (true)
     #   Specifies whether the option's value is required.
@@ -244,23 +248,21 @@ module CommandMapper
     # @api public
     #
     # @example Define an argument:
-    #   argument :file, required: true
+    #   argument :file
     #
     # @example Define an argument that can be specified multiple times:
     #   argument :files, repeats: true
     #
     # @example Define an optional argument:
-    #   argument :file
+    #   argument :file, value: {required: false}
     #
-    def self.argument(name, format: nil, required: true, repeats: false)
-      argument = Argument.new(name, format:   format,
-                                    required: required,
-                                    repeats:  repeats)
+    def self.argument(name, value: true, repeats: false)
+      argument = Argument.new(name, value: value, repeats: repeats)
 
       self.arguments[name] = argument
 
-      define_method(name)        {         @options[name]         }
-      define_method(:"#{name}=") { |value| @options[name] = value }
+      define_method(name)        {         @arguments[name]         }
+      define_method(:"#{name}=") { |value| @arguments[name] = value }
     end
 
     #
@@ -325,42 +327,35 @@ module CommandMapper
     end
 
     def argv
-      args = [@command]
+      argv = [@command]
 
       @options.each do |name,value|
-        unless value.nil?
-          option = self.class.options.fetch(name) do
-            raise(UnknownOption,"unknown option name: #{name.inspect}")
-          end
+        option = self.class.options.fetch(name)
 
-          args.concat(option.argv(value))
-        end
+        argv.concat(option.argv(value))
       end
 
       if @subcommand
         # a subcommand takes precedence over any command arguments
-        args.concat(@subcommand.argv)
+        argv.concat(@subcommand.argv)
       else
         additional_args = []
 
         @arguments.each do |name,value|
-          unless value.nil?
-            argument = self.class.arguments.fetch(name) do
-              raise(UnknownArgument,"unknown argument name: #{name.inspect}")
-            end
+          argument = self.class.arguments.fetch(name)
 
-            additional_args.concat(argument.argv(value))
-          end
+          additional_args.concat(argument.argv(value))
         end
 
-        if additional_args.any? { |token| token.start_with?('-') }
-          additional_args.prepend('--')
+        if additional_args.any? { |arg| arg.start_with?('-') }
+          # append a '--' separator if any of the arguments start with a '-'
+          argv << '--'
         end
 
-        argv.concat(additiional_args)
+        argv.concat(additional_args)
       end
 
-      return args
+      return argv
     end
 
     #
@@ -385,51 +380,6 @@ module CommandMapper
     #
     def to_s
       shellescape
-    end
-
-    #
-    # Runs the command.
-    #
-    # @return [Boolean, nil]
-    #
-    def run!
-      system(@env,*argv)
-    end
-
-    #
-    # Runs the command in a shell and captures all stdout output.
-    #
-    # @return [String]
-    #   The stdout output of the command.
-    #
-    def capture!
-      `#{shellescape}`
-    end
-
-    #
-    # Executes the command and returns an IO object to it.
-    #
-    # @return [IO]
-    #
-    def popen!
-      IO.popen(@env,*argv)
-    end
-
-    #
-    # Runs the command through `sudo`.
-    #
-    # @param [Hash{Symbol => Object}] sudo_options
-    #   Additional options for {Sudo}.
-    #
-    # @return [Boolean, nil]
-    #   Indicates whether the `sudo` command successfully ran.
-    #   Returns `nil` when `sudo` is not installed.
-    #
-    def sudo!(sudo_options={})
-      sudo = Sudo.new(sudo_options)
-      sudo.env     = @env
-      sudo.command = argv
-      sudo.run!
     end
 
   end

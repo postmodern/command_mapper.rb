@@ -1,0 +1,5 @@
+require 'command_mapper/types/value'
+require 'command_mapper/types/map'
+require 'command_mapper/types/list'
+require 'command_mapper/types/key_value'
+require 'command_mapper/types/key_value_list'

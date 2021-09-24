@@ -281,4 +281,101 @@ describe CommandMapper::Command do
       end
     end
   end
+
+  describe "#argv" do
+    module TestCommand
+      class CommandWithOptionsAndArguments < CommandMapper::Command
+        command 'test'
+        option '--opt1', value: {required: true}
+        option '--opt2', value: {required: true}
+        option '--opt3', value: {required: true}
+        argument :arg1, value: {required: true}
+        argument :arg2, value: {required: true}
+        argument :arg3, value: {required: true}
+      end
+    end
+
+    let(:command_class) { TestCommand::CommandWithOptionsAndArguments }
+
+    context "when the command has no options or arguments set" do
+      subject { command_class.new }
+
+      it "must return an argv only containing the command name" do
+        expect(subject.argv).to eq([subject.class.command])
+      end
+    end
+
+    context "when the command has options set" do
+      let(:opt1) { "foo" }
+      let(:opt2) { "bar" }
+      let(:opt3) { "baz" }
+
+      subject { command_class.new({opt1: opt1, opt2: opt2, opt3: opt3}) }
+
+      it "must return an argv containing the command name and option flags followed by values" do
+        expect(subject.argv).to eq(
+          [
+            subject.class.command,
+            '--opt1', opt1,
+            '--opt2', opt2,
+            '--opt3', opt3
+          ]
+        )
+      end
+    end
+
+    context "when the command has arguments set" do
+      let(:arg1) { "foo" }
+      let(:arg2) { "bar" }
+      let(:arg3) { "baz" }
+
+      subject { command_class.new({arg1: arg1, arg2: arg2, arg3: arg3}) }
+
+      it "must return an argv containing the command name and argument values" do
+        expect(subject.argv).to eq(
+          [subject.class.command, arg1, arg2, arg3]
+        )
+      end
+
+      context "and when one of the argument values starts with a '-'" do
+        let(:arg2) { "--bar" }
+
+        it "must separate the arguments with a '--'" do
+          expect(subject.argv).to eq(
+            [subject.class.command, "--", arg1, arg2, arg3]
+          )
+        end
+      end
+    end
+
+    context "when the command has both options and arguments set" do
+      let(:opt1) { "foo" }
+      let(:opt2) { "bar" }
+      let(:opt3) { "baz" }
+      let(:arg1) { "foo" }
+      let(:arg2) { "bar" }
+      let(:arg3) { "baz" }
+
+      subject do
+        command_class.new(
+          {
+            opt1: opt1, opt2: opt2, opt3: opt3,
+            arg1: arg1, arg2: arg2, arg3: arg3
+          }
+        )
+      end
+
+      it "must return an argv containing the command name, options flags and values, then argument values" do
+        expect(subject.argv).to eq(
+          [
+            subject.class.command,
+            '--opt1', opt1,
+            '--opt2', opt2,
+            '--opt3', opt3,
+            arg1, arg2, arg3
+          ]
+        )
+      end
+    end
+  end
 end

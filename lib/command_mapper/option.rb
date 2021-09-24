@@ -1,7 +1,11 @@
-require 'command_mapper/option_value'
+require 'command_mapper/exceptions'
+require 'command_mapper/arg'
 
 module CommandMapper
-  class Option
+  #
+  # Represents an option for a command.
+  #
+  class Option < Arg
 
     # @return [String]
     attr_reader :flag
@@ -9,26 +13,34 @@ module CommandMapper
     # @return [Symbol]
     attr_reader :name
 
-    # @return [OptionValue, nil]
-    attr_reader :value
-
-    def initialize(flag, name: nil, equals: nil, repeats: false, value: nil)
+    #
+    # Initializes the option.
+    #
+    # @param [String] flag
+    #   The option's flag (ex: `-o` or `--output`).
+    #
+    # @param [Symbol, nil] name
+    #   The option's name.
+    #
+    # @param [Boolean] equals
+    #   Specifies whether the option's flag and value should be separated with a
+    #   `=` character.
+    #
+    # @param [Hash{Symbol => Object}] kwargs
+    #   Additional keyword arguments.
+    #
+    # @option kwargs [Boolean] :repeats
+    #   Specifies whether the option can be given multiple times.
+    #
+    # @option kwargs [Value, Hash, true, nil] :value
+    #   The option's value.
+    #
+    def initialize(flag, name: nil, equals: nil, **kwargs)
       @flag    = flag
       @name    = self.class.infer_name_from_flag(flag)
       @equals  = equals
-      @repeats = repeats
 
-      @value = case value
-               when true then OptionValue.new(required: true)
-               when Hash then OptionValue.new(**value)
-               when nil  then nil
-               else
-                 raise(ArgumentError,"value: keyword must be a Hash or true: #{value.inspect}")
-               end
-    end
-
-    def has_value?
-      !@value.nil?
+      super(**kwargs)
     end
 
     #
@@ -60,19 +72,130 @@ module CommandMapper
       name.downcase.gsub(/[_-]+/,'_').to_sym
     end
 
+    #
+    # Indicates whether the option accepts a value.
+    #
+    # @return [Boolean]
+    #
+    def accepts_value?
+      !@value.nil?
+    end
+
+    #
+    # Indicates whether the option flag and value should be separated with a
+    # `=` character.
+    #
+    # @return [Boolean]
+    #
     def equals?
       @equals
     end
 
-    def repeats?
-      @repeats
+    #
+    # Validates whether the given value is compatible with the option.
+    #
+    # @param [Object] value
+    #
+    # @return [true, (false, String)]
+    #   Returns true if the value is valid, or `false` and a validation error
+    #   message if the value is not compatible.
+    #
+    def validate(value)
+      if accepts_value?
+        super(value)
+      else
+        case value
+        when true, false, nil
+          return true
+        when Integer
+          if repeats?
+            return true
+          else
+            return [false, "only repeating options may accept Integers"]
+          end
+        else
+          return [false, "only accepts true, false, or nil"]
+        end
+      end
     end
 
-    def value?
-      !@value.nil?
-    end
-
+    #
+    # Converts the given value into the command-line arguments for the option's
+    # flag and value.
+    #
+    # @param [Object] value
+    #   The value given to the option.
+    #
+    # @return [Array<String>]
+    #
+    # @raise [ArgumentError]
+    #   The given value was incompatible with the option.
+    #
     def argv(value)
+      valid, message = validate(value)
+
+      unless valid
+        raise(ValidationError,"option #{@name} was given an invalid value (#{value.inspect}): #{message}")
+      end
+
+      argv = []
+
+      if accepts_value?
+        if repeats?
+          values = Array(value)
+
+          values.each do |element|
+            emit_option_flag_and_value(argv,element)
+          end
+        else
+          emit_option_flag_and_value(argv,value)
+        end
+      else
+        emit_option_flag_only(argv,value)
+      end
+
+      return argv
+    end
+
+    private
+
+    #
+    # Emits the option's flag.
+    #
+    # @param [Array<String>] argv
+    #   The argv array to append to.
+    #
+    # @param [true, false, nil] value
+    #   Indicates whether to emit the option's flag or not.
+    #
+    def emit_option_flag_only(argv,value)
+      if value == true
+        argv << @flag
+      elsif repeats? && value.kind_of?(Integer)
+        value.times { argv << @flag }
+      end
+    end
+
+    #
+    # Emits the option's flag and value.
+    #
+    # @param [Array<String>] argv
+    #   The argv array to append to.
+    #
+    # @param [Object] value
+    #   The value for the option.
+    #
+    def emit_option_flag_and_value(argv,value)
+      # explicitly ignore nil values
+      unless value.nil?
+        value = @value.format(value)
+
+        if equals?
+          argv << "#{@flag}=#{value}"
+        else
+          argv << @flag << value
+        end
+      end
     end
 
   end
