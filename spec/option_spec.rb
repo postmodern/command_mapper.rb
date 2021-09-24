@@ -384,5 +384,18 @@ describe CommandMapper::Option do
         end
       end
     end
+
+    context "when given an argv array and a value" do
+      let(:accepts_value) { true  }
+      let(:value)         { "foo" }
+
+      let(:argv) { [] }
+
+      before { subject.argv(argv,value) }
+
+      it "must concat the args to the argv array" do
+        expect(argv).to eq([flag, value])
+      end
+    end
   end
 end

@@ -183,5 +183,17 @@ describe CommandMapper::Argument do
         }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{value.inspect}): #{message}")
       end
     end
+
+    context "when given an argv array and a value" do
+      let(:value) { "foo" }
+
+      let(:argv) { [] }
+
+      before { subject.argv(argv,value) }
+
+      it "must concat the args to the argv array" do
+        expect(argv).to eq([value])
+      end
+    end
   end
 end

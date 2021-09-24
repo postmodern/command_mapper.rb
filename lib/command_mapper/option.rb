@@ -123,6 +123,9 @@ module CommandMapper
     # Converts the given value into the command-line arguments for the option's
     # flag and value.
     #
+    # @param [Array] argv
+    #   The argv array.
+    #
     # @param [Object] value
     #   The value given to the option.
     #
@@ -131,14 +134,12 @@ module CommandMapper
     # @raise [ArgumentError]
     #   The given value was incompatible with the option.
     #
-    def argv(value)
+    def argv(argv=[],value)
       valid, message = validate(value)
 
       unless valid
         raise(ValidationError,"option #{@name} was given an invalid value (#{value.inspect}): #{message}")
       end
-
-      argv = []
 
       if accepts_value?
         if repeats?

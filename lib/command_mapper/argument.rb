@@ -44,6 +44,9 @@ module CommandMapper
     # Converts the given value into the command-line arguments for the
     # argument's flag and value.
     #
+    # @param [Array] argv
+    #   The argv array.
+    #
     # @param [Object] value
     #   The value for the argument.
     #
@@ -53,14 +56,12 @@ module CommandMapper
     # @raise [ArgumentError]
     #   The given value was incompatible with the argument.
     #
-    def argv(value)
+    def argv(argv=[],value)
       valid, message = validate(value)
 
       unless valid
         raise(ValidationError,"argument #{@name} was given an invalid value (#{value.inspect}): #{message}")
       end
-
-      argv = []
 
       if repeats?
         values = Array(value)

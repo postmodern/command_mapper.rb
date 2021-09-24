@@ -374,7 +374,7 @@ module CommandMapper
       @options.each do |name,value|
         option = self.class.options.fetch(name)
 
-        argv.concat(option.argv(value))
+        option.argv(argv,value)
       end
 
       if @subcommand
@@ -386,7 +386,7 @@ module CommandMapper
         @arguments.each do |name,value|
           argument = self.class.arguments.fetch(name)
 
-          additional_args.concat(argument.argv(value))
+          argument.argv(additional_args,value)
         end
 
         if additional_args.any? { |arg| arg.start_with?('-') }
