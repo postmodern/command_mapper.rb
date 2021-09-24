@@ -370,6 +370,10 @@ describe CommandMapper::Command do
 
     subject { command_class }
 
+    it "must add the subcommand to .subcommands using the method name" do
+      expect(subject.subcommands[:subcmd]).to be(command_class::Subcmd)
+    end
+
     it "must define a constant for the new Subcommand class" do
       expect(subject.const_get('Subcmd')).to (be < described_class)
     end
@@ -399,6 +403,10 @@ describe CommandMapper::Command do
 
       let(:command_class) { TestCommand::DefinesSubcommand }
 
+      it "must add the subcommand to .subcommands using the method name" do
+        expect(subject.subcommands[:sub_cmd]).to be(command_class::SubCmd)
+      end
+
       it "must define a CamelCased subcommand constant" do
         expect(subject.const_get('SubCmd')).to (be < described_class)
       end
@@ -423,7 +431,7 @@ describe CommandMapper::Command do
       argument :arg2, value: {required: true}
       argument :arg3, value: {required: true}
 
-      subcommand :subcmd do
+      subcommand 'subcmd' do
         option '--sub-opt1', value: {required: true}
         argument :sub_arg1, value: {required: true}
       end
