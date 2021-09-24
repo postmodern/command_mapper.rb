@@ -319,9 +319,14 @@ module CommandMapper
     #
     # @return [Object]
     #
+    # @raise [ArgumentError]
+    #   The given name was not match any option or argument.
+    #
     def [](name)
-      @options.fetch(name) do
-        @arguments[name]
+      if respond_to?(name)
+        send(name,value)
+      else
+        raise(ArgumentError,"#{self.class} does not define ##{name}")
       end
     end
 
