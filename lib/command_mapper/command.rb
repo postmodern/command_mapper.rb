@@ -312,12 +312,31 @@ module CommandMapper
       end
     end
 
+    #
+    # Gets the value of an option or an argument.
+    #
+    # @param [Symbol] name
+    #
+    # @return [Object]
+    #
     def [](name)
       @options.fetch(name) do
         @arguments[name]
       end
     end
 
+    #
+    # Sets an option or an argument with the given name.
+    #
+    # @param [Symbol] name
+    #
+    # @param [Object] value
+    #
+    # @return [Object]
+    #
+    # @raise [ArgumentError]
+    #   The given name was not match any option or argument.
+    #
     def []=(name,value)
       if respond_to?("#{name}=")
         send("#{name}=",value)
@@ -326,6 +345,11 @@ module CommandMapper
       end
     end
 
+    #
+    # Returns an Array of command-line arguments for the command.
+    #
+    # @return [Array<String>]
+    #
     def argv
       argv = [@command]
 
