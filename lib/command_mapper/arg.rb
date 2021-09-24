@@ -13,7 +13,7 @@ module CommandMapper
     #
     # Initializes the argument.
     #
-    # @param [Value, Hash, true, nil] value
+    # @param [Value, Hash, :required, :optional, nil] value
     #
     # @param [Boolean] repeats
     #

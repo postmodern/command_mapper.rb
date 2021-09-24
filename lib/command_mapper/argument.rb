@@ -18,7 +18,7 @@ module CommandMapper
     # @param [Symbol] name
     #   The argument's name.
     #
-    # @param [Types::Value, Hash, true] value
+    # @param [Types::Value, Hash, :required, :optional] value
     #   The value type of the argument.
     #
     # @param [Hash{Symbol => Object}] kwargs
@@ -30,7 +30,7 @@ module CommandMapper
     # @raise [ArgumentError]
     #   The given `value:` must not be `false` or `nil`.
     #
-    def initialize(name, value: true, **kwargs)
+    def initialize(name, value: :required, **kwargs)
       @name = name
 
       unless value

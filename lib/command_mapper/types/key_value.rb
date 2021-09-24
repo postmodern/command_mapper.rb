@@ -28,16 +28,16 @@ module CommandMapper
       # @param [String] separator
       #   The key-value separator.
       #
-      # @param [Value, Hash, true, false] key
+      # @param [Value, Hash, :required, :optional] key
       #   The key's value type.
       #
-      # @param [Value, Hash, true, false] value
+      # @param [Value, Hash, :required, :optional] value
       #   The value's value type.
       #
       # @param [Hash{Symbol => Object}]
       #   Additional keyword arguments for {Value#initialize}.
       #
-      def initialize(separator: '=', key: true, value: true, **kwargs)
+      def initialize(separator: '=', key: :required, value: :required, **kwargs)
         super(**kwargs)
 
         @separator = separator

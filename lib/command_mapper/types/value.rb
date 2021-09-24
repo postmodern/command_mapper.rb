@@ -105,7 +105,7 @@ module CommandMapper
     #
     # Converts a value into a {Value} object.
     #
-    # @param [Value, Hash, Boolean, nil] value
+    # @param [Value, Hash, :required, :optional, nil] value
     #
     # @return [Value]
     #
@@ -113,12 +113,13 @@ module CommandMapper
     #
     def self.Value(value)
       case value
-      when Value       then value
-      when Hash        then Value.new(**value)
-      when true, false then Value.new(required: value)
-      when nil         then nil
+      when Value     then value
+      when Hash      then Value.new(**value)
+      when :required then Value.new(required: true)
+      when :optional then Value.new(required: false)
+      when nil       then nil
       else
-        raise(ArgumentError,"value must be a #{Value}, Hash, true, false, or nil: #{value.inspect}")
+        raise(ArgumentError,"value must be a #{Value}, Hash, :required, :optional, or nil: #{value.inspect}")
       end
     end
 

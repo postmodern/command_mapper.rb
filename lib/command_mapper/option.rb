@@ -32,7 +32,7 @@ module CommandMapper
     # @option kwargs [Boolean] :repeats
     #   Specifies whether the option can be given multiple times.
     #
-    # @option kwargs [Value, Hash, true, nil] :value
+    # @option kwargs [Value, Hash, :required, :optional, nil] :value
     #   The option's value.
     #
     def initialize(flag, name: nil, equals: nil, **kwargs)

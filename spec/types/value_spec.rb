@@ -246,8 +246,8 @@ describe "CommandMapper::Types::Value()" do
     end
   end
 
-  context "when given true" do
-    let(:value) { true }
+  context "when given :required" do
+    let(:value) { :required }
 
     subject { CommandMapper::Types::Value(value) }
 
@@ -260,8 +260,8 @@ describe "CommandMapper::Types::Value()" do
     end
   end
 
-  context "when given false" do
-    let(:value) { false }
+  context "when given :optional" do
+    let(:value) { :optional }
 
     subject { CommandMapper::Types::Value(value) }
 
@@ -290,7 +290,7 @@ describe "CommandMapper::Types::Value()" do
     it do
       expect {
         CommandMapper::Types::Value(value)
-      }.to raise_error(ArgumentError,"value must be a CommandMapper::Types::Value, Hash, true, false, or nil: #{value.inspect}")
+      }.to raise_error(ArgumentError,"value must be a CommandMapper::Types::Value, Hash, :required, :optional, or nil: #{value.inspect}")
     end
   end
 end

@@ -162,11 +162,8 @@ module CommandMapper
     #
     # @param [Hash{Symbol => Object}] value
     #
-    # @option value [Types::Value, Hash, true, nil] value
+    # @option value [Types::Value, Hash, :required, :optional, nil] value
     #   The format of the option's value.
-    #
-    # @option value [Boolean] required (true)
-    #   Specifies whether the option's value is required.
     #
     # @param [Boolean] equals
     #   Specifies whether the option is of the form `--opt=value` or
@@ -184,13 +181,13 @@ module CommandMapper
     #   option '-F', name: :foo
     #
     # @example Defining an option who's value is required:
-    #   option '--file', value: true
+    #   option '--file', value: :required
     #
     # @example Defining an option who's value is optional:
-    #   option '--file', value: {required: false}
+    #   option '--file', value: :optional
     #
     # @example Defining an `--opt=value` option:
-    #   option '--foo', equals: true, value: true
+    #   option '--foo', equals: true, value: :required
     #
     # @example Defining an option that can be repeated multiple times:
     #   option '--foo', repeats: true
@@ -236,11 +233,8 @@ module CommandMapper
     #
     # @param [Symbol] name
     #
-    # @param [Types::Value, Hash, true] value
+    # @param [Types::Value, Hash, :required, :optional] value
     #   The explicit value type for the argument.
-    #
-    # @param [Boolean] required (true)
-    #   Specifies whether the option's value is required.
     #
     # @param [Boolean] repeats
     #   Specifies whether the option can be repeated multiple times.
@@ -256,7 +250,7 @@ module CommandMapper
     # @example Define an optional argument:
     #   argument :file, value: {required: false}
     #
-    def self.argument(name, value: true, repeats: false)
+    def self.argument(name, value: :required, repeats: false)
       name     = name.to_sym
       argument = Argument.new(name, value: value, repeats: repeats)
 

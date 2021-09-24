@@ -41,8 +41,8 @@ class Grep < CommandMapper::Command
   option "--fixed-strings"
   option "--basic-regexp"
   option "--perl-regexp"
-  option "--regexp", equals: true, value: true
-  option "--file", equals: true, value: true
+  option "--regexp", equals: true, value: :required
+  option "--file", equals: true, value: :required
   option "--ignore-case"
   option "--no-ignore-case"
   option "--word-regexp"
@@ -52,42 +52,42 @@ class Grep < CommandMapper::Command
   option "--invert-match"
   option "--version"
   option "--help"
-  option "--max-count", equals: true, value: true
+  option "--max-count", equals: true, value: :required
   option "--byte-offset"
   option "--line-number"
   option "--line-buffered"
   option "--with-filename"
   option "--no-filename"
-  option "--label", equals: true, value: true
+  option "--label", equals: true, value: :required
   option "--only-matching"
   option "--quiet"
-  option "--binary-files", equals: true, value: true
+  option "--binary-files", equals: true, value: :required
   option "--text"
   option "-I", name: :ignore_binary
-  option "--directories", equals: true, value: true
-  option "--devices", equals: true, value: true
+  option "--directories", equals: true, value: :required
+  option "--devices", equals: true, value: :required
   option "--recursive"
   option "--dereference-recursive"
-  option "--include", equals: true, value: true
-  option "--exclude", equals: true, value: true
-  option "--exclude-from", equals: true, value: true
-  option "--exclude-dir", equals: true, value: true
-  option "--files-without-match", value: true
+  option "--include", equals: true, value: :required
+  option "--exclude", equals: true, value: :required
+  option "--exclude-from", equals: true, value: :required
+  option "--exclude-dir", equals: true, value: :required
+  option "--files-without-match", value: :required
   option "--files-with-matches"
   option "--count"
   option "--initial-tab"
   option "--null"
-  option "--before-context", equals: true, value: true
-  option "--after-context", equals: true, value: true
-  option "--context", equals: true, value: true
-  option "--group-separator", equals: true, value: true
+  option "--before-context", equals: true, value: :required
+  option "--after-context", equals: true, value: :required
+  option "--context", equals: true, value: :required
+  option "--group-separator", equals: true, value: :required
   option "--no-group-separator"
-  option "--color", equals: :optional, value: false
-  option "--colour", equals: :optional, value: false
+  option "--color", equals: :optional, value: :optional
+  option "--colour", equals: :optional, value: :optional
   option "--binary"
 
   argument :patterns
-  argument :file, value: false
+  argument :file, value: :optional
 
 end
 ```
@@ -107,7 +107,7 @@ option "-o", name: :opt
 Defines an option with a required value:
 
 ```ruby
-option "--output", value: true
+option "--output", value: :required
 ```
 
 Defines an option that can be specified multiple times:
@@ -149,7 +149,7 @@ argument :host
 Define an optional argument:
 
 ```ruby
-argument :optional_output, value: false
+argument :optional_output, value: :optional
 ```
 
 Define an argument that can be repeated:

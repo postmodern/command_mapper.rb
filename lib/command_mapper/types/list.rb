@@ -23,13 +23,13 @@ module CommandMapper
       # @param [String] separator
       #   The list separator character.
       #
-      # @param [Value, Hash, true, false] value
+      # @param [Value, Hash, :required, :optional] value
       #   The list's value type.
       #
       # @param [Hash{Symbol => Object}] kwargs
       #   Additional keyword arguments for {Value#initialize}.
       #
-      def initialize(separator: ',', value: true, **kwargs)
+      def initialize(separator: ',', value: :required, **kwargs)
         super(**kwargs)
 
         if value.nil?

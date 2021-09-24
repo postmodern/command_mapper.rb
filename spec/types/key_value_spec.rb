@@ -34,8 +34,8 @@ describe CommandMapper::Types::KeyValue do
       end
     end
 
-    context "when given the key: false" do
-      subject { described_class.new(key: false) }
+    context "when given the key: :optional" do
+      subject { described_class.new(key: :optional) }
 
       it "must initialize #key" do
         expect(subject.key).to be_kind_of(CommandMapper::Types::Value)
@@ -46,8 +46,8 @@ describe CommandMapper::Types::KeyValue do
       end
     end
 
-    context "when given the value: false" do
-      subject { described_class.new(value: false) }
+    context "when given the value: :optional" do
+      subject { described_class.new(value: :optional) }
 
       it "must initialize #value" do
         expect(subject.value).to be_kind_of(CommandMapper::Types::Value)
