@@ -257,12 +257,13 @@ module CommandMapper
     #   argument :file, value: {required: false}
     #
     def self.argument(name, value: true, repeats: false)
+      name     = name.to_sym
       argument = Argument.new(name, value: value, repeats: repeats)
 
-      self.arguments[name] = argument
+      self.arguments[argument.name] = argument
 
-      define_method(name)        {         @arguments[name]         }
-      define_method(:"#{name}=") { |value| @arguments[name] = value }
+      define_method(name)        {         @arguments[argument.name]         }
+      define_method(:"#{name}=") { |value| @arguments[argument.name] = value }
     end
 
     #
@@ -307,14 +308,16 @@ module CommandMapper
     #   end
     #
     def self.subcommand(name,&block)
+      name = name.to_s
+
       subcommand_class = Class.new(Command)
       subcommand_class.command(name)
       subcommand_class.class_eval(&block)
 
-      subcommand_method_name = name.to_s.tr('-','_')
-      subcommand_class_name  = name.to_s.split(/[_-]+/).map(&:capitalize).join
+      subcommand_method_name = name.tr('-','_')
+      subcommand_class_name  = name.split(/[_-]+/).map(&:capitalize).join
 
-      self.subcommands[name] = subcommand_class
+      self.subcommands[name.to_sym] = subcommand_class
       const_set(subcommand_class_name,subcommand_class)
 
       define_method(subcommand_method_name) do |&block|
