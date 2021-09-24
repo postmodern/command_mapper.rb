@@ -82,12 +82,12 @@ class Grep < CommandMapper::Command
   option "--context", equals: true, value: true
   option "--group-separator", equals: true, value: true
   option "--no-group-separator"
-  option "--color", equals: :optional, value: {required: false}
-  option "--colour", equals: :optional, value: {required: false}
+  option "--color", equals: :optional, value: false
+  option "--colour", equals: :optional, value: false
   option "--binary"
 
   argument :patterns
-  argument :file, required: false
+  argument :file, value: false
 
 end
 ```
@@ -107,7 +107,7 @@ option "-o", name: :opt
 Defines an option with a required value:
 
 ```ruby
-option "--output", value: {required: true}
+option "--output", value: true
 ```
 
 Defines an option that can be specified multiple times:
@@ -116,34 +116,58 @@ Defines an option that can be specified multiple times:
 option "--include-dir", repeats: true
 ```
 
+Defines an option that accepts a numeric value:
+
+```ruby
+option "--count", value: Num.new
+```
+
 Defines an option that accepts a comma-separated list:
 
 ```ruby
-option "--list", value: {format: List.new(',')}
+option "--list", value: List.new
 ```
 
 Defines an option that accepts a `key=value` pair:
 
 ```ruby
-option "--param", value: {format: KeyValue.new('=')}
+option "--param", value: KeyValue.new
+```
+
+Defines an option that accepts a `key:value` pair:
+
+```ruby
+option "--param", value: KeyValue.new(separator: ':')
 ```
 
 ### Defining Arguments
 
 ```ruby
-argument :file
+argument :host
 ```
 
 Define an optional argument:
 
 ```ruby
-argument :optional_output, required: false
+argument :optional_output, value: false
 ```
 
 Define an argument that can be repeated:
 
 ```ruby
 argument :files, repeats: true
+```
+
+Define an argument that accepts a file:
+
+```ruby
+argument :file, value: FilePath.new
+```
+
+Define an argument that accepts a directory:
+
+```ruby
+argument :dir, value: DirPath.new
 ```
 
 ### Running
