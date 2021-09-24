@@ -314,19 +314,19 @@ module CommandMapper
       subcommand_class.command(name)
       subcommand_class.class_eval(&block)
 
-      subcommand_method_name = name.tr('-','_')
-      subcommand_class_name  = name.split(/[_-]+/).map(&:capitalize).join
+      method_name = name.tr('-','_')
+      class_name  = name.split(/[_-]+/).map(&:capitalize).join
 
-      self.subcommands[name.to_sym] = subcommand_class
-      const_set(subcommand_class_name,subcommand_class)
+      self.subcommands[method_name.to_sym] = subcommand_class
+      const_set(class_name,subcommand_class)
 
-      define_method(subcommand_method_name) do |&block|
+      define_method(method_name) do |&block|
         if block then @subcommand = subcommand_class.new(&block)
         else          @subcommand
         end
       end
 
-      define_method(:"#{subcommand_method_name}=") do |options|
+      define_method(:"#{method_name}=") do |options|
         @subcommand = subcommand_class.new(options)
       end
     end
