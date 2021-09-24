@@ -53,13 +53,11 @@ describe CommandMapper::Command do
       it { expect(subject.options).to be_empty }
     end
 
-    context "when the comand does have defined options" do
+    context "and when the command inherits from another command class" do
       module TestCommand
         class BaseClassWithOptions < CommandMapper::Command
-
           option "--foo"
           option "--bar"
-
         end
 
         class InheritedOptions < BaseClassWithOptions
@@ -76,9 +74,7 @@ describe CommandMapper::Command do
       context "and when the class defines options of it's own" do
         module TestCommand
           class InheritsAndDefinesOptions < BaseClassWithOptions
-
             option "--baz"
-
           end
         end
 
@@ -100,7 +96,59 @@ describe CommandMapper::Command do
   end
 
   describe ".option" do
+    module TestCommand
+      class DefinesItsOwnOptions < CommandMapper::Command
+        command 'test'
+        option '--foo'
+        option '--bar'
+      end
+    end
+
+    let(:command_class) { TestCommand::DefinesItsOwnOptions }
+
     subject { command_class }
+
+    it "must add options to .options" do
+      expect(subject.options[:foo]).to be_kind_of(CommandMapper::Option)
+      expect(subject.options[:foo].flag).to eq('--foo')
+
+      expect(subject.options[:bar]).to be_kind_of(CommandMapper::Option)
+      expect(subject.options[:bar].flag).to eq('--bar')
+    end
+
+    it "must define a reader method for each option" do
+      expect(subject.instance_methods(false)).to include(:foo)
+      expect(subject.instance_methods(false)).to include(:bar)
+    end
+
+    it "must define a writter method for each option" do
+      expect(subject.instance_methods(false)).to include(:foo=)
+      expect(subject.instance_methods(false)).to include(:bar=)
+    end
+
+    describe "reader method" do
+      subject { command_class.new }
+
+      let(:value) { "test_reading" }
+
+      before { subject.instance_variable_get("@options")[:foo] = value }
+
+      it "must read the options value from @options" do
+        expect(subject.foo).to be(value)
+      end
+    end
+
+    describe "writter method" do
+      subject { command_class.new }
+
+      let(:value) { "test_writing" }
+
+      before { subject.foo = value }
+
+      it "must read the options value from @options" do
+        expect(subject.instance_variable_get('@options')[:foo]).to be(value)
+      end
+    end
 
     context "when given a short flag" do
       context "and it's length is < 3" do
@@ -202,6 +250,7 @@ describe CommandMapper::Command do
   describe ".argument" do
     module TestCommand
       class DefinesArgument < CommandMapper::Command
+        command 'test'
         argument :foo
       end
     end
@@ -222,6 +271,31 @@ describe CommandMapper::Command do
     it "must define a writter method for the argument" do
       expect(subject.instance_methods(false)).to include(:foo=)
     end
+
+    describe "reader method" do
+      subject { command_class.new }
+
+      let(:value) { "test_reading" }
+
+      before { subject.instance_variable_get("@arguments")[:foo] = value }
+
+      it "must read the options value from @arguments" do
+        expect(subject.foo).to be(value)
+      end
+    end
+
+    describe "writter method" do
+      subject { command_class.new }
+
+      let(:value) { "test_writing" }
+
+      before { subject.foo = value }
+
+      it "must read the options value from @arguments" do
+        expect(subject.instance_variable_get('@arguments')[:foo]).to be(value)
+      end
+    end
+
   end
 
   describe ".subcommand" do
