@@ -1,4 +1,5 @@
 require 'command_mapper/command'
+require 'command_mapper/types/key_value_list'
 
 module CommandMapper
   #
@@ -64,10 +65,8 @@ module CommandMapper
     option '--version'
     option '--validate'
 
-    argument :env, repeats: true do |(name,value)|
-      "#{name}=#{value}"
-    end
+    argument :env, repeats: true, value: KeyValueList.new
 
-    argument :command, type: Array
+    argument :command, value: :optional, repeats: true
   end
 end
