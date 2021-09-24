@@ -36,37 +36,38 @@ module CommandMapper
   #
   class Sudo < Command
 
-    option '--askpass', name: :ask_password
-    option '--bell'
-    option '--background'
-    option '--close-from', equals: true
-    option '--chdir', equals: true
-    option '--preserve-env', equals: true, value: :optional
-    option '--edit'
-    option '--group'
-    option '--set-home'
-    option '--help'
-    option '--host', equals: true
-    option '--login'
-    option '--remove-timestamp'
-    option '--reset-timestamp'
-    option '--list'
-    option '--non-interactive'
-    option '--preserve-groups'
-    option '--prompt', equals: true
-    option '--chroot', equals: true
-    option '--role', equals: true
-    option '--stdin'
-    option '--shell'
-    option '--type', equals: true
-    option '--other-user', equals: true
-    option '--command-timeout', equals: true
-    option '--user', equals: true
-    option '--version'
-    option '--validate'
+    command "sudo"
 
-    argument :env, repeats: true, value: KeyValueList.new
+    option "--askpass"
+    option "--background"
+    option "--bell"
+    option "--close-from", equals: true, value: :required
+    option "--chdir", equals: true, value: :required
+    option "--preserve-env", equals: true, value: :required
+    option "--edit"
+    option "--group", equals: true, value: :required
+    option "--set-home"
+    option "--help"
+    option "--host", equals: true, value: :required
+    option "--login"
+    option "--remove-timestamp"
+    option "--reset-timestamp"
+    option "--list"
+    option "--non-interactive"
+    option "--preserve-groups"
+    option "--prompt", equals: true, value: :required
+    option "--chroot", equals: true, value: :required
+    option "--role", equals: true, value: :required
+    option "--stdin"
+    option "--shell"
+    option "--type", equals: true, value: :required
+    option "--command-timeout", equals: true, value: :required
+    option "--other-user", equals: true, value: :required
+    option "--user", equals: true, value: :required
+    option "--version"
+    option "--validate"
 
     argument :command, value: :optional, repeats: true
+
   end
 end
