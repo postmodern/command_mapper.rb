@@ -356,26 +356,47 @@ describe CommandMapper::Command do
     end
   end
 
-  describe "#argv" do
-    module TestCommand
-      class CommandWithOptionsAndArguments < CommandMapper::Command
-        command 'test'
-        option '--opt1', value: {required: true}
-        option '--opt2', value: {required: true}
-        option '--opt3', value: {required: true}
-        argument :arg1, value: {required: true}
-        argument :arg2, value: {required: true}
-        argument :arg3, value: {required: true}
+  module TestCommand
+    class ExampleCommand < CommandMapper::Command
+      command 'test'
+      option '--opt1', value: {required: true}
+      option '--opt2', value: {required: true}
+      option '--opt3', value: {required: true}
+      argument :arg1, value: {required: true}
+      argument :arg2, value: {required: true}
+      argument :arg3, value: {required: true}
 
-        subcommand :subcmd do
-          option '--sub-opt1', value: {required: true}
-          argument :sub_arg1, value: {required: true}
-        end
+      subcommand :subcmd do
+        option '--sub-opt1', value: {required: true}
+        argument :sub_arg1, value: {required: true}
       end
     end
+  end
 
-    let(:command_class) { TestCommand::CommandWithOptionsAndArguments }
+  let(:command_class) { TestCommand::ExampleCommand }
 
+  describe "#[]" do
+    let(:name)  { :opt1  }
+    let(:value) { 'test' }
+
+    subject { command_class.new({opt1: value}) }
+
+    it "must call the method with the same given name" do
+      expect(subject[name]).to be(value)
+    end
+
+    context "when there is no reader method of the same name" do
+      let(:name) { :fubar }
+
+      it do
+        expect {
+          subject[name]
+        }.to raise_error(ArgumentError,"#{command_class} does not define ##{name}")
+      end
+    end
+  end
+
+  describe "#argv" do
     context "when the command has no options or arguments set" do
       subject { command_class.new }
 
