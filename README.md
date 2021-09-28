@@ -140,6 +140,18 @@ Defines an option that accepts a `key:value` pair:
 option "--param", value: KeyValue.new(separator: ':')
 ```
 
+Custom writer methods:
+
+```ruby
+def foo=(value)
+  @options[:foo] = case value
+                   when Hash  then ...
+                   when Array then ...
+                   else            value.to_s
+                   end
+end
+```
+
 ### Defining Arguments
 
 ```ruby
@@ -168,6 +180,18 @@ Define an argument that accepts a directory:
 
 ```ruby
 argument :dir, value: DirPath.new
+```
+
+Custom writer methods:
+
+```ruby
+def foo=(value)
+  @arguments[:foo] = case value
+                     when Hash  then ...
+                     when Array then ...
+                     else            value.to_s
+                     end
+end
 ```
 
 ### Running
