@@ -9,6 +9,8 @@ describe CommandMapper::Command do
       module TestCommand
         class WithCommandName < CommandMapper::Command
           command 'foo'
+          p Module.nesting
+          p self.command
         end
       end
 
@@ -448,11 +450,79 @@ describe CommandMapper::Command do
 
   let(:command_class) { TestCommand::ExampleCommand }
 
+  describe "#initialize" do
+    subject { command_class.new() }
+
+    it "must default #command to self.class.command" do
+      expect(subject.command).to eq(command_class.command)
+    end
+
+    it "must default #env to {}" do
+      expect(subject.env).to eq({})
+    end
+
+    it "must default options to {}" do
+      expect(subject.options).to eq({})
+    end
+
+    it "must default arguments to {}" do
+      expect(subject.arguments).to eq({})
+    end
+
+    it "must default subcommand to nil" do
+      expect(subject.arguments).to eq({})
+    end
+
+    context "when initialized with a Hash of options and arguments" do
+      let(:params) do
+        {opt1: opt1, opt2: opt2, arg2: arg2, arg3: arg3}
+      end
+
+      subject { command_class.new(params) }
+
+      it "must populate #options and #arguments" do
+        expect(subject.options).to eq({opt1: opt1, opt2: opt2})
+        expect(subject.arguments).to eq({arg2: arg2, arg3: arg3})
+      end
+    end
+
+    context "when initialized with additional keywords" do
+      let(:params) do
+        {opt1: opt1, opt2: opt2, arg2: arg2, arg3: arg3}
+      end
+
+      subject { command_class.new(**params) }
+
+      it "must populate #options and #arguments" do
+        expect(subject.options).to eq({opt1: opt1, opt2: opt2})
+        expect(subject.arguments).to eq({arg2: arg2, arg3: arg3})
+      end
+    end
+
+    context "when initialized with command: ..." do
+      let(:command) { 'foo-bar' }
+
+      subject { command_class.new(command: command) }
+
+      it "must override #command" do
+        expect(subject.command).to eq(command)
+      end
+    end
+
+    context "when initialized with env: {...}" do
+      subject { command_class.new(env: env) }
+
+      it "must populate #env" do
+        expect(subject.env).to eq(env)
+      end
+    end
+  end
+
   describe "#[]" do
     let(:name)  { :opt1  }
     let(:value) { 'test' }
 
-    subject { command_class.new({opt1: value}) }
+    subject { command_class.new(opt1: value) }
 
     it "must call the method with the same given name" do
       expect(subject).to receive(name).and_return(value)

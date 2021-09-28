@@ -9,27 +9,70 @@ module CommandMapper
 
     include Types
 
+    # The command name.
+    #
+    # @return [String]
+    attr_reader :command
+
+    # The environment variables to execute the command with.
+    #
+    # @return [Hash{String => String}]
+    attr_reader :env
+
+    # The option values to execute the command with.
+    #
+    # @return [Hash{String => Object}]
+    attr_reader :options
+
+    # The argument values to execute the command with.
+    #
+    # @return [Hash{String => Object}]
+    attr_reader :arguments
+
+    # The subcommand's options and arguments.
+    #
+    # @return [Command, nil]
+    attr_reader :subcommand
+
     #
     # Initializes the command.
     #
     # @param [Hash{Symbol => Object}] params
-    #   The option values.
+    #   The option and argument values.
     #
     # @param [String] command
     #   Overrides the command name.
     #
-    # @param [Hash{String => String,nil}] env
+    # @param [Hash{String => String}] env
     #   Custom environment variables to pass to the command.
+    #
+    # @param [Hash{Symbol => Object}] kwargs
+    #   Additional keywords arguments. These will be used to populate
+    #   {#options} and {#arguments}, along with `params`.
     #
     # @yield [self]
     #   The newly initialized command.
     #
     # @yieldparam [Command] self
     #
-    def initialize(params={}, command: self.class.command, env: {})
+    # @example with a symbol Hash
+    #   MyCommand.new({foo: 'bar', baz: 'qux'})
+    #
+    # @example with a keyword arguments
+    #   MyCommand.new(foo: 'bar', baz: 'qux')
+    #
+    # @example with a custom env Hash:
+    #   MyCommand.new({foo: 'bar', baz: 'qux'}, env: {'FOO' =>'bar'})
+    #   MyCommand.new(foo: 'bar', baz: 'qux', env: {'FOO' => 'bar'})
+    #
+    def initialize(params={}, command: self.class.command,
+                              env:     {},
+                              **kwargs)
       @options    = {}
       @subcommand = nil
       @arguments  = {}
+
+      params = params.merge(kwargs)
 
       params.each do |name,value|
         self[name] = value
@@ -332,6 +375,8 @@ module CommandMapper
     #   The given name was not match any option or argument.
     #
     def [](name)
+      name = name.to_s
+
       if respond_to?(name)
         send(name)
       else
