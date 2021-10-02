@@ -14,6 +14,8 @@ and safely automating commands.
 * Supports defining commands as Ruby classes.
 * Supports mapping in options and additional arguments.
   * Supports common option formats:
+    * `Num`: numeric values
+    * `Hex`: hexadecimal values
     * `List`: `VALUE,...`
     * `KeyValue`: `KEY:VALUE` or `KEY=VALUE`
     * `Map`: `enabled|disables` or `yes|no`
