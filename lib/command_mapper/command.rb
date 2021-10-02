@@ -40,8 +40,11 @@ module CommandMapper
     # @param [Hash{Symbol => Object}] params
     #   The option and argument values.
     #
-    # @param [String] command
-    #   Overrides the command name.
+    # @param [String] command_name
+    #   Overrides the command with a custom command name.
+    #
+    # @param [String, nil] command_path
+    #   Overrides the command with a custom path to the command.
     #
     # @param [Hash{String => String}] env
     #   Custom environment variables to pass to the command.
@@ -65,7 +68,8 @@ module CommandMapper
     #   MyCommand.new({foo: 'bar', baz: 'qux'}, env: {'FOO' =>'bar'})
     #   MyCommand.new(foo: 'bar', baz: 'qux', env: {'FOO' => 'bar'})
     #
-    def initialize(params={}, command: self.class.command,
+    def initialize(params={}, command_name: self.class.command,
+                              command_path: nil,
                               env:     {},
                               **kwargs)
       @options    = {}
@@ -78,7 +82,7 @@ module CommandMapper
         self[name] = value
       end
 
-      @command = command
+      @command = command_path || command_name
       @env     = env
 
       yield self if block_given?
