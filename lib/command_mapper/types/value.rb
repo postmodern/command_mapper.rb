@@ -1,5 +1,8 @@
 module CommandMapper
   module Types
+    #
+    # The base value for all command-line argument or option values.
+    #
     class Value
 
       #

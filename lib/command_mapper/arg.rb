@@ -2,7 +2,7 @@ require 'command_mapper/types/value'
 
 module CommandMapper
   #
-  # Represents a command-line arg, either an option or an argument.
+  # The base class for both {Option options} and {Argument arguments}.
   #
   class Arg
     # The argument's value type.

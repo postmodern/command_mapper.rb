@@ -2,8 +2,18 @@ require 'command_mapper/types/value'
 
 module CommandMapper
   module Types
+    #
+    # Represents a path to an existing file.
+    #
     class FilePath < Value
 
+      #
+      # Validates the given value.
+      #
+      # @param [Object] value
+      #
+      # @return [true, (false, String)]
+      #
       def validate(value)
         valid, message = super(value)
 
