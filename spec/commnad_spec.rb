@@ -499,10 +499,20 @@ describe CommandMapper::Command do
       end
     end
 
-    context "when initialized with command: ..." do
-      let(:command) { 'foo-bar' }
+    context "when initialized with command_name: ..." do
+      let(:command) { 'foo2' }
 
-      subject { command_class.new(command: command) }
+      subject { command_class.new(command_name: command) }
+
+      it "must override #command" do
+        expect(subject.command).to eq(command)
+      end
+    end
+
+    context "when initialized with command_path: ..." do
+      let(:command) { '/path/to/foo' }
+
+      subject { command_class.new(command_path: command) }
 
       it "must override #command" do
         expect(subject.command).to eq(command)
