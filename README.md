@@ -19,6 +19,9 @@ and safely automating commands.
     * `List`: `VALUE,...`
     * `KeyValue`: `KEY:VALUE` or `KEY=VALUE`
     * `Map`: `enabled|disables` or `yes|no`
+    * `InputPath`: a path to a pre-existing file or directory
+    * `InputFile`: a path to a pre-existing file
+    * `InputDir`: a path to a pre-existing directory
 * Supports mapping in sub-commands.
 * Safely executes commands and their individual command-line arguments,
   in order to prevent command or option injection.
