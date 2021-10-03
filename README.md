@@ -13,7 +13,7 @@ and safely automating commands.
 
 * Supports defining commands as Ruby classes.
 * Supports mapping in options and additional arguments.
-  * Supports common option formats:
+  * Supports common option types:
     * `Num`: numeric values
     * `Hex`: hexadecimal values
     * `List`: `VALUE,...`
