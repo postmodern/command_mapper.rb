@@ -99,7 +99,7 @@ end
 
 ### Defining Options
 
-```ribu
+```ruby
 option "--opt"
 ```
 
