@@ -1,14 +1,14 @@
-require 'command_mapper/types/value'
+require 'command_mapper/types/input_path'
 
 module CommandMapper
   module Types
     #
     # Represents a path to an existing file.
     #
-    class FilePath < Value
+    class InputFile < InputPath
 
       #
-      # Validates the given value.
+      # Validates the file exists.
       #
       # @param [Object] value
       #
@@ -26,6 +26,8 @@ module CommandMapper
             return false, "file does not exist"
           end
         end
+
+        return true
       end
 
     end

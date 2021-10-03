@@ -1,14 +1,14 @@
-require 'command_mapper/types/value'
+require 'command_mapper/types/input_path'
 
 module CommandMapper
   module Types
     #
     # Represents a path to an existing directory.
     #
-    class DirPath < Value
+    class InputDir < InputPath
 
       #
-      # Validates the given value.
+      # Validates whether the directory exists.
       #
       # @param [Object] value
       #
