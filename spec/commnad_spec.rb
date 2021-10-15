@@ -651,6 +651,16 @@ describe CommandMapper::Command do
         )
       end
 
+      context "when the arguments are initialized in a different order" do
+        subject { command_class.new({arg2: arg2, arg1: arg1, arg3: arg3}) }
+
+        it "must return the argument values in the order the arguments were defined" do
+          expect(subject.argv).to eq(
+            [subject.command_name, arg1, arg2, arg3]
+          )
+        end
+      end
+
       context "and when one of the argument values starts with a '-'" do
         let(:arg2) { "--bar" }
 
