@@ -2,41 +2,49 @@ require 'spec_helper'
 require 'command_mapper/command'
 
 describe CommandMapper::Command do
+  module TestCommand
+    class WithCommandName < CommandMapper::Command
+      command 'foo'
+    end
+
+    class NoCommandName < CommandMapper::Command
+    end
+  end
+
   describe ".command_name" do
     subject { command_class }
 
-    context "when a .command_name has been defined" do
-      module TestCommand
-        class WithCommandName < CommandMapper::Command
-          command 'foo'
-          p Module.nesting
-          p self.command
-        end
-      end
-
+    context "when @command_name has been set" do
       let(:command_class) { TestCommand::WithCommandName }
 
       it "must return the defined command name" do
-        expect(subject.command).to eq('foo')
+        expect(subject.command_name).to eq('foo')
       end
 
       it "must freeze the given command name" do
-        expect(subject.command).to be_frozen
+        expect(subject.command_name).to be_frozen
       end
     end
 
     context "when no .command has been defined" do
-      module TestCommand
-        class NoCommandName < CommandMapper::Command
-        end
-      end
-
       let(:command_class) { TestCommand::NoCommandName }
 
       it "must raise NotImplementedError" do
         expect {
-          subject.command
-        }.to raise_error(NotImplementedError,"#{command_class} did not set command")
+          subject.command_name
+        }.to raise_error(NotImplementedError,"#{command_class} did not call command(...)")
+      end
+    end
+  end
+
+  describe ".command_name" do
+    subject { command_class }
+
+    context "when @command_name has been set" do
+      let(:command_class) { TestCommand::WithCommandName }
+
+      it "must set .command_name" do
+        expect(subject.command_name).to eq('foo')
       end
     end
   end
@@ -100,9 +108,10 @@ describe CommandMapper::Command do
   describe ".option" do
     module TestCommand
       class DefinesItsOwnOptions < CommandMapper::Command
-        command 'test'
-        option '--foo'
-        option '--bar'
+        command 'test' do
+          option '--foo'
+          option '--bar'
+        end
       end
     end
 
@@ -206,10 +215,8 @@ describe CommandMapper::Command do
     context "when the comand does have defined arguments" do
       module TestCommand
         class BaseClassWithOptions < CommandMapper::Command
-
           argument :foo
           argument :bar
-
         end
 
         class InheritedOptions < BaseClassWithOptions
@@ -226,9 +233,7 @@ describe CommandMapper::Command do
       context "and when the class defines arguments of it's own" do
         module TestCommand
           class InheritsAndDefinesOptions < BaseClassWithOptions
-
             argument :baz
-
           end
         end
 
@@ -252,8 +257,9 @@ describe CommandMapper::Command do
   describe ".argument" do
     module TestCommand
       class DefinesArgument < CommandMapper::Command
-        command 'test'
-        argument :foo
+        command 'test' do
+          argument :foo
+        end
       end
     end
 
@@ -381,7 +387,7 @@ describe CommandMapper::Command do
     end
 
     it "must initialize a new Command with the given subcommand name" do
-      expect(subject.const_get('Subcmd').command).to eq("subcmd")
+      expect(subject.const_get('Subcmd').command_name).to eq("subcmd")
     end
 
     it "must define a reader method for the subcommand" do
@@ -425,17 +431,18 @@ describe CommandMapper::Command do
 
   module TestCommand
     class ExampleCommand < CommandMapper::Command
-      command 'test'
-      option '--opt1', value: {required: true}
-      option '--opt2', value: {required: true}
-      option '--opt3', value: {required: true}
-      argument :arg1, value: {required: true}
-      argument :arg2, value: {required: true}
-      argument :arg3, value: {required: true}
+      command 'test' do
+        option '--opt1', value: {required: true}
+        option '--opt2', value: {required: true}
+        option '--opt3', value: {required: true}
+        argument :arg1, value: {required: true}
+        argument :arg2, value: {required: true}
+        argument :arg3, value: {required: true}
 
-      subcommand 'subcmd' do
-        option '--sub-opt1', value: {required: true}
-        argument :sub_arg1, value: {required: true}
+        subcommand 'subcmd' do
+          option '--sub-opt1', value: {required: true}
+          argument :sub_arg1, value: {required: true}
+        end
       end
     end
   end
@@ -453,8 +460,8 @@ describe CommandMapper::Command do
   describe "#initialize" do
     subject { command_class.new() }
 
-    it "must default #command to self.class.command" do
-      expect(subject.command).to eq(command_class.command)
+    it "must default #command_name to self.class.command" do
+      expect(subject.command_name).to eq(command_class.command_name)
     end
 
     it "must default #env to {}" do
@@ -500,22 +507,22 @@ describe CommandMapper::Command do
     end
 
     context "when initialized with command_name: ..." do
-      let(:command) { 'foo2' }
+      let(:command_name) { 'foo2' }
 
-      subject { command_class.new(command_name: command) }
+      subject { command_class.new(command_name: command_name) }
 
       it "must override #command" do
-        expect(subject.command).to eq(command)
+        expect(subject.command_name).to eq(command_name)
       end
     end
 
     context "when initialized with command_path: ..." do
-      let(:command) { '/path/to/foo' }
+      let(:command_path) { '/path/to/foo' }
 
-      subject { command_class.new(command_path: command) }
+      subject { command_class.new(command_path: command_path) }
 
       it "must override #command" do
-        expect(subject.command).to eq(command)
+        expect(subject.command_path).to eq(command_path)
       end
     end
 
@@ -583,7 +590,17 @@ describe CommandMapper::Command do
       subject { command_class.new }
 
       it "must return an argv only containing the command name" do
-        expect(subject.argv).to eq([subject.class.command])
+        expect(subject.argv).to eq([subject.class.command_name])
+      end
+    end
+
+    context "when the command is initialized with the command_path: keyword" do
+      let(:command_path) { '/path/to/foo' }
+
+      subject { command_class.new(command_path: command_path) }
+
+      it "must override the command name" do
+        expect(subject.argv).to eq([subject.command_path])
       end
     end
 
@@ -593,7 +610,7 @@ describe CommandMapper::Command do
       it "must return an argv containing the command name and option flags followed by values" do
         expect(subject.argv).to eq(
           [
-            subject.class.command,
+            subject.class.command_name,
             '--opt1', opt1,
             '--opt2', opt2,
             '--opt3', opt3
@@ -607,7 +624,7 @@ describe CommandMapper::Command do
 
       it "must return an argv containing the command name and argument values" do
         expect(subject.argv).to eq(
-          [subject.class.command, arg1, arg2, arg3]
+          [subject.command_name, arg1, arg2, arg3]
         )
       end
 
@@ -616,7 +633,7 @@ describe CommandMapper::Command do
 
         it "must separate the arguments with a '--'" do
           expect(subject.argv).to eq(
-            [subject.class.command, "--", arg1, arg2, arg3]
+            [subject.command_name, "--", arg1, arg2, arg3]
           )
         end
       end
@@ -635,7 +652,7 @@ describe CommandMapper::Command do
       it "must return an argv containing the command name, options flags and values, then argument values" do
         expect(subject.argv).to eq(
           [
-            subject.class.command,
+            subject.command_name,
             '--opt1', opt1,
             '--opt2', opt2,
             '--opt3', opt3,
@@ -660,7 +677,7 @@ describe CommandMapper::Command do
       it "must return an argv containing the command name, sub-command name, subcommand options and arguments" do
         expect(subject.argv).to eq(
           [
-            subject.class.command,
+            subject.command_name,
             'subcmd', '--sub-opt1', sub_opt1, sub_arg1
           ]
         )
@@ -679,7 +696,7 @@ describe CommandMapper::Command do
         it "must return an argv containing the command name, global options, sub-command name, subcommand options and arguments" do
           expect(subject.argv).to eq(
             [
-              subject.class.command,
+              subject.command_name,
               '--opt1', opt1,
               '--opt2', opt2,
               '--opt3', opt3,
@@ -703,7 +720,7 @@ describe CommandMapper::Command do
         it "must return an argv containing the sub-command's options and arguments, instead of the command's arguments" do
           expect(subject.argv).to eq(
             [
-              subject.class.command,
+              subject.command_name,
               '--opt1', opt1,
               '--opt2', opt2,
               '--opt3', opt3,

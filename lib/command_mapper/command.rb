@@ -12,7 +12,12 @@ module CommandMapper
     # The command name.
     #
     # @return [String]
-    attr_reader :command
+    attr_reader :command_name
+
+    # The optional path to the command.
+    #
+    # @return [String, nil]
+    attr_reader :command_path
 
     # The environment variables to execute the command with.
     #
@@ -68,10 +73,13 @@ module CommandMapper
     #   MyCommand.new({foo: 'bar', baz: 'qux'}, env: {'FOO' =>'bar'})
     #   MyCommand.new(foo: 'bar', baz: 'qux', env: {'FOO' => 'bar'})
     #
-    def initialize(params={}, command_name: self.class.command,
+    def initialize(params={}, command_name: self.class.command_name,
                               command_path: nil,
                               env:     {},
                               **kwargs)
+      @command_name = command_name
+      @command_path = command_path
+
       @options    = {}
       @subcommand = nil
       @arguments  = {}
@@ -82,8 +90,7 @@ module CommandMapper
         self[name] = value
       end
 
-      @command = command_path || command_name
-      @env     = env
+      @env = env
 
       yield self if block_given?
     end
@@ -173,14 +180,35 @@ module CommandMapper
     # @return [String]
     #   The command name.
     #
+    # @raise [NotImplementedError]
+    #   The command class did not call {command}.
+    #
+    # @api semipublic
+    #
+    def self.command_name
+      @command_name || raise(NotImplementedError,"#{self} did not call command(...)")
+    end
+
+    #
+    # @param [#to_s] new_command_name
+    #
+    # @yield [self]
+    #
+    # @example
+    #   command 'grep'
+    #   # ...
+    #
+    # @example
+    #   command 'grep' do
+    #     option "--regexp", equals: true, value: :required
+    #     # ...
+    #   end
+    #
     # @api public
     #
-    def self.command(new_name=nil)
-      if new_name
-        @command = new_name.to_s.freeze
-      else
-        @command || raise(NotImplementedError,"#{self} did not set command")
-      end
+    def self.command(new_command_name,&block)
+      @command_name = new_command_name.to_s.freeze
+      yield self if block_given?
     end
 
     #
@@ -336,11 +364,11 @@ module CommandMapper
     #
     # @example Defining a sub-command:
     #   class Git
-    #     command 'git'
-    #   
-    #     subcommand 'clone' do
-    #       option '--bare'
-    #       # ...
+    #     command 'git' do
+    #       subcommand 'clone' do
+    #         option '--bare'
+    #         # ...
+    #       end
     #     end
     #   end
     #
@@ -414,7 +442,7 @@ module CommandMapper
     # @return [Array<String>]
     #
     def argv
-      argv = [@command]
+      argv = [@command_path || @command_name]
 
       @options.each do |name,value|
         option = self.class.options.fetch(name)

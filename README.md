@@ -40,59 +40,59 @@ require 'command_mapper/command'
 #
 class Grep < CommandMapper::Command
 
-  command "grep"
-
-  option "--extended-regexp"
-  option "--fixed-strings"
-  option "--basic-regexp"
-  option "--perl-regexp"
-  option "--regexp", equals: true, value: :required
-  option "--file", equals: true, value: :required
-  option "--ignore-case"
-  option "--no-ignore-case"
-  option "--word-regexp"
-  option "--line-regexp"
-  option "--null-data"
-  option "--no-messages"
-  option "--invert-match"
-  option "--version"
-  option "--help"
-  option "--max-count", equals: true, value: :required
-  option "--byte-offset"
-  option "--line-number"
-  option "--line-buffered"
-  option "--with-filename"
-  option "--no-filename"
-  option "--label", equals: true, value: :required
-  option "--only-matching"
-  option "--quiet"
-  option "--binary-files", equals: true, value: :required
-  option "--text"
-  option "-I", name: :ignore_binary
-  option "--directories", equals: true, value: :required
-  option "--devices", equals: true, value: :required
-  option "--recursive"
-  option "--dereference-recursive"
-  option "--include", equals: true, value: :required
-  option "--exclude", equals: true, value: :required
-  option "--exclude-from", equals: true, value: :required
-  option "--exclude-dir", equals: true, value: :required
-  option "--files-without-match", value: :required
-  option "--files-with-matches"
-  option "--count"
-  option "--initial-tab"
-  option "--null"
-  option "--before-context", equals: true, value: :required
-  option "--after-context", equals: true, value: :required
-  option "--context", equals: true, value: :required
-  option "--group-separator", equals: true, value: :required
-  option "--no-group-separator"
-  option "--color", equals: :optional, value: :optional
-  option "--colour", equals: :optional, value: :optional
-  option "--binary"
-
-  argument :patterns
-  argument :file, value: :optional
+  command "grep" do
+    option "--extended-regexp"
+    option "--fixed-strings"
+    option "--basic-regexp"
+    option "--perl-regexp"
+    option "--regexp", equals: true, value: :required
+    option "--file", equals: true, value: :required
+    option "--ignore-case"
+    option "--no-ignore-case"
+    option "--word-regexp"
+    option "--line-regexp"
+    option "--null-data"
+    option "--no-messages"
+    option "--invert-match"
+    option "--version"
+    option "--help"
+    option "--max-count", equals: true, value: :required
+    option "--byte-offset"
+    option "--line-number"
+    option "--line-buffered"
+    option "--with-filename"
+    option "--no-filename"
+    option "--label", equals: true, value: :required
+    option "--only-matching"
+    option "--quiet"
+    option "--binary-files", equals: true, value: :required
+    option "--text"
+    option "-I", name: :ignore_binary
+    option "--directories", equals: true, value: :required
+    option "--devices", equals: true, value: :required
+    option "--recursive"
+    option "--dereference-recursive"
+    option "--include", equals: true, value: :required
+    option "--exclude", equals: true, value: :required
+    option "--exclude-from", equals: true, value: :required
+    option "--exclude-dir", equals: true, value: :required
+    option "--files-without-match", value: :required
+    option "--files-with-matches"
+    option "--count"
+    option "--initial-tab"
+    option "--null"
+    option "--before-context", equals: true, value: :required
+    option "--after-context", equals: true, value: :required
+    option "--context", equals: true, value: :required
+    option "--group-separator", equals: true, value: :required
+    option "--no-group-separator"
+    option "--color", equals: :optional, value: :optional
+    option "--colour", equals: :optional, value: :optional
+    option "--binary"
+  
+    argument :patterns
+    argument :file, value: :optional
+  end
 
 end
 ```
