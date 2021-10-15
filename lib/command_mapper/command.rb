@@ -456,8 +456,8 @@ module CommandMapper
       else
         additional_args = []
 
-        @arguments.each do |name,value|
-          argument = self.class.arguments.fetch(name)
+        self.class.arguments.each do |name,argument|
+          value = @arguments[name]
 
           argument.argv(additional_args,value)
         end
