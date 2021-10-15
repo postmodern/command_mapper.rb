@@ -142,7 +142,9 @@ describe CommandMapper::Command do
 
       let(:value) { "test_reading" }
 
-      before { subject.instance_variable_get("@options")[:foo] = value }
+      before do
+        subject.instance_variable_get("@command_options")[:foo] = value
+      end
 
       it "must read the options value from @options" do
         expect(subject.foo).to be(value)
@@ -157,7 +159,7 @@ describe CommandMapper::Command do
       before { subject.foo = value }
 
       it "must read the options value from @options" do
-        expect(subject.instance_variable_get('@options')[:foo]).to be(value)
+        expect(subject.instance_variable_get('@command_options')[:foo]).to be(value)
       end
     end
 
@@ -285,7 +287,9 @@ describe CommandMapper::Command do
 
       let(:value) { "test_reading" }
 
-      before { subject.instance_variable_get("@arguments")[:foo] = value }
+      before do
+        subject.instance_variable_get("@command_arguments")[:foo] = value
+      end
 
       it "must read the options value from @arguments" do
         expect(subject.foo).to be(value)
@@ -300,7 +304,7 @@ describe CommandMapper::Command do
       before { subject.foo = value }
 
       it "must read the options value from @arguments" do
-        expect(subject.instance_variable_get('@arguments')[:foo]).to be(value)
+        expect(subject.instance_variable_get('@command_arguments')[:foo]).to be(value)
       end
     end
 
@@ -465,19 +469,19 @@ describe CommandMapper::Command do
     end
 
     it "must default #env to {}" do
-      expect(subject.env).to eq({})
+      expect(subject.command_env).to eq({})
     end
 
     it "must default options to {}" do
-      expect(subject.options).to eq({})
+      expect(subject.command_options).to eq({})
     end
 
     it "must default arguments to {}" do
-      expect(subject.arguments).to eq({})
+      expect(subject.command_arguments).to eq({})
     end
 
     it "must default subcommand to nil" do
-      expect(subject.arguments).to eq({})
+      expect(subject.command_arguments).to eq({})
     end
 
     context "when initialized with a Hash of options and arguments" do
@@ -488,8 +492,8 @@ describe CommandMapper::Command do
       subject { command_class.new(params) }
 
       it "must populate #options and #arguments" do
-        expect(subject.options).to eq({opt1: opt1, opt2: opt2})
-        expect(subject.arguments).to eq({arg2: arg2, arg3: arg3})
+        expect(subject.command_options).to eq({opt1: opt1, opt2: opt2})
+        expect(subject.command_arguments).to eq({arg2: arg2, arg3: arg3})
       end
     end
 
@@ -501,8 +505,8 @@ describe CommandMapper::Command do
       subject { command_class.new(**params) }
 
       it "must populate #options and #arguments" do
-        expect(subject.options).to eq({opt1: opt1, opt2: opt2})
-        expect(subject.arguments).to eq({arg2: arg2, arg3: arg3})
+        expect(subject.command_options).to eq({opt1: opt1, opt2: opt2})
+        expect(subject.command_arguments).to eq({arg2: arg2, arg3: arg3})
       end
     end
 
@@ -526,11 +530,11 @@ describe CommandMapper::Command do
       end
     end
 
-    context "when initialized with env: {...}" do
-      subject { command_class.new(env: env) }
+    context "when initialized with command_env: {...}" do
+      subject { command_class.new(command_env: env) }
 
       it "must populate #env" do
-        expect(subject.env).to eq(env)
+        expect(subject.command_env).to eq(env)
       end
     end
   end
@@ -585,12 +589,12 @@ describe CommandMapper::Command do
     end
   end
 
-  describe "#argv" do
+  describe "#command_argv" do
     context "when the command has no options or arguments set" do
       subject { command_class.new }
 
       it "must return an argv only containing the command name" do
-        expect(subject.argv).to eq([subject.class.command_name])
+        expect(subject.command_argv).to eq([subject.class.command_name])
       end
 
       context "but the command has required arguments" do
@@ -611,7 +615,7 @@ describe CommandMapper::Command do
 
         it do
           expect {
-            subject.argv
+            subject.command_argv
           }.to raise_error(ArgumentRequired,"argument arg2 is required")
         end
       end
@@ -623,7 +627,7 @@ describe CommandMapper::Command do
       subject { command_class.new(command_path: command_path) }
 
       it "must override the command name" do
-        expect(subject.argv).to eq([subject.command_path])
+        expect(subject.command_argv).to eq([subject.command_path])
       end
     end
 
@@ -631,7 +635,7 @@ describe CommandMapper::Command do
       subject { command_class.new({opt1: opt1, opt2: opt2, opt3: opt3}) }
 
       it "must return an argv containing the command name and option flags followed by values" do
-        expect(subject.argv).to eq(
+        expect(subject.command_argv).to eq(
           [
             subject.class.command_name,
             '--opt1', opt1,
@@ -646,7 +650,7 @@ describe CommandMapper::Command do
       subject { command_class.new({arg1: arg1, arg2: arg2, arg3: arg3}) }
 
       it "must return an argv containing the command name and argument values" do
-        expect(subject.argv).to eq(
+        expect(subject.command_argv).to eq(
           [subject.command_name, arg1, arg2, arg3]
         )
       end
@@ -655,7 +659,7 @@ describe CommandMapper::Command do
         subject { command_class.new({arg2: arg2, arg1: arg1, arg3: arg3}) }
 
         it "must return the argument values in the order the arguments were defined" do
-          expect(subject.argv).to eq(
+          expect(subject.command_argv).to eq(
             [subject.command_name, arg1, arg2, arg3]
           )
         end
@@ -665,7 +669,7 @@ describe CommandMapper::Command do
         let(:arg2) { "--bar" }
 
         it "must separate the arguments with a '--'" do
-          expect(subject.argv).to eq(
+          expect(subject.command_argv).to eq(
             [subject.command_name, "--", arg1, arg2, arg3]
           )
         end
@@ -683,7 +687,7 @@ describe CommandMapper::Command do
       end
 
       it "must return an argv containing the command name, options flags and values, then argument values" do
-        expect(subject.argv).to eq(
+        expect(subject.command_argv).to eq(
           [
             subject.command_name,
             '--opt1', opt1,
@@ -708,7 +712,7 @@ describe CommandMapper::Command do
       end
 
       it "must return an argv containing the command name, sub-command name, subcommand options and arguments" do
-        expect(subject.argv).to eq(
+        expect(subject.command_argv).to eq(
           [
             subject.command_name,
             'subcmd', '--sub-opt1', sub_opt1, sub_arg1
@@ -727,7 +731,7 @@ describe CommandMapper::Command do
         end
 
         it "must return an argv containing the command name, global options, sub-command name, subcommand options and arguments" do
-          expect(subject.argv).to eq(
+          expect(subject.command_argv).to eq(
             [
               subject.command_name,
               '--opt1', opt1,
@@ -751,7 +755,7 @@ describe CommandMapper::Command do
         end
 
         it "must return an argv containing the sub-command's options and arguments, instead of the command's arguments" do
-          expect(subject.argv).to eq(
+          expect(subject.command_argv).to eq(
             [
               subject.command_name,
               '--opt1', opt1,
@@ -765,17 +769,19 @@ describe CommandMapper::Command do
     end
   end
 
-  describe "#shellescape" do
+  describe "#command_string" do
     let(:opt1) { "foo bar" }
     let(:arg1) { "baz qux" }
 
     subject { command_class.new({opt1: opt1, arg1: arg1}) }
 
+    let(:escaped_command) { Shellwords.shelljoin(subject.command_argv) }
+
     it "must escape the command option values and argument values" do
-      expect(subject.shellescape).to eq(Shellwords.shelljoin(subject.argv))
+      expect(subject.command_string).to eq(escaped_command)
     end
 
-    context "when initialized with env: {...}" do
+    context "when initialized with command_env: {...}" do
       let(:env) { {"FOO" => "bar baz"} }
 
       let(:escaped_env) do
@@ -784,65 +790,67 @@ describe CommandMapper::Command do
         }.join(' ')
       end
 
-      subject { command_class.new({opt1: opt1, arg1: arg1}, env: env) }
+      let(:escaped_command) { Shellwords.shelljoin(subject.command_argv) }
+
+      subject { command_class.new({opt1: opt1, arg1: arg1}, command_env: env) }
 
       it "must escape both the env variables and the command" do
-        expect(subject.shellescape).to eq(
-          "#{escaped_env} #{Shellwords.shelljoin(subject.argv)}"
+        expect(subject.command_string).to eq(
+          "#{escaped_env} #{escaped_command}"
         )
       end
     end
   end
 
-  describe "#run!" do
-    subject { command_class.new({opt1: opt1, arg1: arg1}, env: env) }
+  describe "#run_command" do
+    subject { command_class.new({opt1: opt1, arg1: arg1}, command_env: env) }
 
     it "must pass the command's env and argv to Kenrel.system" do
-      expect(subject).to receive(:system).with(env,*subject.argv)
+      expect(subject).to receive(:system).with(env,*subject.command_argv)
 
-      subject.run!
+      subject.run_command
     end
   end
 
-  describe "#capture!" do
-    subject { command_class.new({opt1: opt1, arg1: arg1}, env: env) }
+  describe "#capture_command" do
+    subject { command_class.new({opt1: opt1, arg1: arg1}, command_env: env) }
 
     it "must pass the command's env and argv to `...`" do
-      expect(subject).to receive(:`).with(subject.shellescape)
+      expect(subject).to receive(:`).with(subject.command_string)
 
-      subject.capture!
+      subject.capture_command
     end
   end
 
-  describe "#popen!" do
-    subject { command_class.new({opt1: opt1, arg1: arg1}, env: env) }
+  describe "#popen_command" do
+    subject { command_class.new({opt1: opt1, arg1: arg1}, command_env: env) }
 
     it "must pass the command's env, argv, and to IO.popen" do
-      expect(IO).to receive(:popen).with(env,subject.argv)
+      expect(IO).to receive(:popen).with(env,subject.command_argv)
 
-      subject.popen!
+      subject.popen_command
     end
 
     context "when a open mode is given" do
       let(:mode) { 'w' }
 
       it "must pass the command's env, argv, and the mode to IO.popen" do
-        expect(IO).to receive(:popen).with(env,subject.argv,mode)
+        expect(IO).to receive(:popen).with(env,subject.command_argv,mode)
 
-        subject.popen!(mode)
+        subject.popen_command(mode)
       end
     end
   end
 
   describe "#sudo!" do
-    subject { command_class.new({opt1: opt1, arg1: arg1}, env: env) }
+    subject { command_class.new({opt1: opt1, arg1: arg1}, command_env: env) }
 
     let(:expected_argv) { [command_class.command, "--opt1", opt1, arg1] }
 
     it "must pass the command's env and argv, and to IO.popen" do
-      expect(Sudo).to receive(:run).with({command: subject.argv}, env: env)
+      expect(Sudo).to receive(:run).with({command: subject.command_argv}, command_env: env)
 
-      subject.sudo!
+      subject.sudo_command
     end
   end
 
@@ -851,18 +859,18 @@ describe CommandMapper::Command do
     let(:arg1) { "baz qux" }
     let(:env) { {"FOO" => "bar baz"} }
 
-    subject { command_class.new({opt1: opt1, arg1: arg1}, env: env) }
+    subject { command_class.new({opt1: opt1, arg1: arg1}, command_env: env) }
 
-    it "must call #shellescape" do
-      expect(subject.to_s).to eq(subject.shellescape)
+    it "must call #command_string" do
+      expect(subject.to_s).to eq(subject.command_string)
     end
   end
 
   describe "#to_a" do
     subject { command_class.new({opt1: opt1, arg1: arg1}) }
 
-    it "must call #argv" do
-      expect(subject.to_a).to eq(subject.argv)
+    it "must call #command_argv" do
+      expect(subject.to_a).to eq(subject.command_argv)
     end
   end
 end

@@ -22,17 +22,17 @@ module CommandMapper
     # The environment variables to execute the command with.
     #
     # @return [Hash{String => String}]
-    attr_reader :env
+    attr_reader :command_env
 
     # The option values to execute the command with.
     #
     # @return [Hash{String => Object}]
-    attr_reader :options
+    attr_reader :command_options
 
     # The argument values to execute the command with.
     #
     # @return [Hash{String => Object}]
-    attr_reader :arguments
+    attr_reader :command_arguments
 
     # The subcommand's options and arguments.
     #
@@ -75,14 +75,14 @@ module CommandMapper
     #
     def initialize(params={}, command_name: self.class.command_name,
                               command_path: nil,
-                              env:     {},
+                              command_env:  {},
                               **kwargs)
       @command_name = command_name
       @command_path = command_path
 
-      @options    = {}
+      @command_options    = {}
+      @command_arguments  = {}
       @subcommand = nil
-      @arguments  = {}
 
       params = params.merge(kwargs)
 
@@ -90,7 +90,7 @@ module CommandMapper
         self[name] = value
       end
 
-      @env = env
+      @command_env = command_env
 
       yield self if block_given?
     end
@@ -110,7 +110,7 @@ module CommandMapper
     #
     def self.run(params={},**kwargs,&block)
       command = new(params,**kwargs,&block)
-      command.run!
+      command.run_command
     end
 
     #
@@ -129,7 +129,7 @@ module CommandMapper
     #
     def self.capture(params={},**kwargs,&block)
       command = new(params,**kwargs,&block)
-      command.capture!
+      command.capture_command
     end
 
     #
@@ -147,7 +147,7 @@ module CommandMapper
     #
     def self.popen(params={}, mode: 'r', **kwargs,&block)
       command = new(params,**kwargs,&block)
-      command.popen!
+      command.popen_command
     end
 
     #
@@ -168,7 +168,7 @@ module CommandMapper
     #
     def self.sudo(params={}, sudo: {}, **kwargs,&block)
       command = new(params,**kwargs,&block)
-      command.sudo!(sudo)
+      command.sudo_command(**sudo)
     end
 
     #
@@ -276,11 +276,11 @@ module CommandMapper
       self.options[option.name] = option
 
       define_method(option.name) do
-        @options[option.name]
+        @command_options[option.name]
       end
 
       define_method(:"#{option.name}=") do |value|
-        @options[option.name] = value
+        @command_options[option.name] = value
       end
     end
 
@@ -327,8 +327,13 @@ module CommandMapper
 
       self.arguments[argument.name] = argument
 
-      define_method(name)        {         @arguments[argument.name]         }
-      define_method(:"#{name}=") { |value| @arguments[argument.name] = value }
+      define_method(name) do
+        @command_arguments[argument.name]
+      end
+
+      define_method(:"#{name}=") do |value|
+        @command_arguments[argument.name] = value
+      end
     end
 
     #
@@ -444,10 +449,10 @@ module CommandMapper
     # @raise [ArgumentReqired]
     #   A required argument was not set.
     #
-    def argv
+    def command_argv
       argv = [@command_path || @command_name]
 
-      @options.each do |name,value|
+      @command_options.each do |name,value|
         option = self.class.options.fetch(name)
 
         option.argv(argv,value)
@@ -455,12 +460,12 @@ module CommandMapper
 
       if @subcommand
         # a subcommand takes precedence over any command arguments
-        argv.concat(@subcommand.argv)
+        argv.concat(@subcommand.command_argv)
       else
         additional_args = []
 
         self.class.arguments.each do |name,argument|
-          value = @arguments[name]
+          value = @command_arguments[name]
 
           if value.nil? && argument.value.required?
             raise(ArgumentRequired,"argument #{name} is required")
@@ -486,11 +491,11 @@ module CommandMapper
     # @return [String]
     #   The shell-escaped command.
     #
-    def shellescape
-      escaped_command = Shellwords.shelljoin(argv)
+    def command_string
+      escaped_command = Shellwords.shelljoin(command_argv)
 
-      unless @env.empty?
-        escaped_env = @env.map { |name,value|
+      unless @command_env.empty?
+        escaped_env = @command_env.map { |name,value|
           "#{Shellwords.shellescape(name)}=#{Shellwords.shellescape(value)}"
         }.join(' ')
 
@@ -505,8 +510,8 @@ module CommandMapper
     #
     # @return [Boolean, nil]
     #
-    def run!
-      system(@env,*argv)
+    def run_command
+      system(@command_env,*command_argv)
     end
 
     #
@@ -515,8 +520,8 @@ module CommandMapper
     # @return [String]
     #   The stdout output of the command.
     #
-    def capture!
-      `#{shellescape}`
+    def capture_command
+      `#{command_string}`
     end
 
     #
@@ -524,9 +529,9 @@ module CommandMapper
     #
     # @return [IO]
     #
-    def popen!(mode=nil)
-      if mode then IO.popen(@env,argv,mode)
-      else         IO.popen(@env,argv)
+    def popen_command(mode=nil)
+      if mode then IO.popen(@command_env,command_argv,mode)
+      else         IO.popen(@command_env,command_argv)
       end
     end
 
@@ -538,22 +543,24 @@ module CommandMapper
     #
     # @return [Boolean, nil]
     #
-    def sudo!(sudo_params={},&block)
-      Sudo.run(sudo_params.merge(command: argv), env: @env, &block)
+    def sudo_command(**sudo_kwargs,&block)
+      sudo_params = sudo_kwargs.merge(command: command_argv)
+
+      Sudo.run(sudo_params, command_env: @command_env, &block)
     end
 
     #
     # @see #argv
     #
     def to_a
-      argv
+      command_argv
     end
 
     #
     # @see #shellescape
     #
     def to_s
-      shellescape
+      command_string
     end
 
   end

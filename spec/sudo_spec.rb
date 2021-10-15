@@ -14,11 +14,11 @@ describe CommandMapper::Sudo do
 
   describe "#argv" do
     it "the first argument must be 'sudo'" do
-      expect(subject.argv.first).to eq('sudo')
+      expect(subject.command_argv.first).to eq('sudo')
     end
 
     it "must end with the command arguments" do
-      expect(subject.argv[-command.length..-1]).to eq(command)
+      expect(subject.command_argv[-command.length..-1]).to eq(command)
     end
   end
 end
