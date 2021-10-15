@@ -592,6 +592,29 @@ describe CommandMapper::Command do
       it "must return an argv only containing the command name" do
         expect(subject.argv).to eq([subject.class.command_name])
       end
+
+      context "but the command has required arguments" do
+        module TestCommand
+          class CommandWithRequiredArguments < CommandMapper::Command
+            command "test" do
+              option '--opt1', value: {required: true}
+              option '--opt2', value: {required: true}
+              option '--opt3', value: {required: true}
+              argument :arg1, value: {required: false}
+              argument :arg2, value: {required: true}
+              argument :arg3, value: {required: false}
+            end
+          end
+        end
+
+        let(:command_class) { TestCommand::CommandWithRequiredArguments }
+
+        it do
+          expect {
+            subject.argv
+          }.to raise_error(ArgumentRequired,"argument arg2 is required")
+        end
+      end
     end
 
     context "when the command is initialized with the command_path: keyword" do

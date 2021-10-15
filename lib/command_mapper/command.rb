@@ -441,6 +441,9 @@ module CommandMapper
     #
     # @return [Array<String>]
     #
+    # @raise [ArgumentReqired]
+    #   A required argument was not set.
+    #
     def argv
       argv = [@command_path || @command_name]
 
@@ -459,7 +462,11 @@ module CommandMapper
         self.class.arguments.each do |name,argument|
           value = @arguments[name]
 
-          argument.argv(additional_args,value)
+          if value.nil? && argument.value.required?
+            raise(ArgumentRequired,"argument #{name} is required")
+          else
+            argument.argv(additional_args,value)
+          end
         end
 
         if additional_args.any? { |arg| arg.start_with?('-') }

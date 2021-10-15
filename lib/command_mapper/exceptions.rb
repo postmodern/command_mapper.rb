@@ -4,4 +4,7 @@ module CommandMapper
   #
   class ValidationError < ArgumentError
   end
+
+  class ArgumentRequired < ValidationError
+  end
 end
