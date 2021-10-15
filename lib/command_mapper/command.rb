@@ -266,6 +266,9 @@ module CommandMapper
     # @example Defining an option that takes a comma-separated list:
     #   option '--list', value: List.new
     #
+    # @raise [ArgumentError]
+    #   The option flag conflicts with a pre-existing internal method.
+    #
     def self.option(flag, name: nil, value: nil, repeats: false, equals: false, &block)
       option = Option.new(flag, name:    name,
                                 equals:  equals,
@@ -274,6 +277,14 @@ module CommandMapper
                                 &block)
 
       self.options[option.name] = option
+
+      if is_internal_method?(option.name)
+        if name
+          raise(ArgumentError,"option #{flag.inspect} with name #{name.inspect} cannot override the internal method with same name: ##{option.name}")
+        else
+          raise(ArgumentError,"option #{flag.inspect} maps to method name ##{option.name} and cannot override the internal method with same name: ##{option.name}")
+        end
+      end
 
       define_method(option.name) do
         @command_options[option.name]
@@ -321,11 +332,18 @@ module CommandMapper
     # @example Define an optional argument:
     #   argument :file, value: {required: false}
     #
+    # @raise [ArgumentError]
+    #   The argument name conflicts with a pre-existing internal method.
+    #
     def self.argument(name, value: :required, repeats: false)
       name     = name.to_sym
       argument = Argument.new(name, value: value, repeats: repeats)
 
       self.arguments[argument.name] = argument
+
+      if is_internal_method?(argument.name)
+        raise(ArgumentError,"argument #{name.inspect} cannot override internal method with same name: ##{argument.name}")
+      end
 
       define_method(name) do
         @command_arguments[argument.name]
@@ -377,6 +395,9 @@ module CommandMapper
     #     end
     #   end
     #
+    # @raise [ArgumentError]
+    #   The subcommand name conflicts with a pre-existing internal method.
+    #
     def self.subcommand(name,&block)
       name = name.to_s
 
@@ -389,6 +410,10 @@ module CommandMapper
 
       self.subcommands[method_name.to_sym] = subcommand_class
       const_set(class_name,subcommand_class)
+
+      if is_internal_method?(name)
+        raise(ArgumentError,"subcommand #{name.inspect} cannot override internal method with same name: ##{name}")
+      end
 
       define_method(method_name) do |&block|
         if block then @subcommand = subcommand_class.new(&block)
@@ -561,6 +586,20 @@ module CommandMapper
     #
     def to_s
       command_string
+    end
+
+    private
+
+    #
+    # Determines if there is an internal method of the same name.
+    #
+    # @param [#to_sym] name
+    #   The method name.
+    #
+    # @return [Boolean]
+    #
+    def self.is_internal_method?(name)
+      Command.instance_methods(false).include?(name.to_sym)
     end
 
   end

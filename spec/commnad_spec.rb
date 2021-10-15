@@ -203,6 +203,30 @@ describe CommandMapper::Command do
         end
       end
     end
+
+    context "when the argument shares the same name as an internal method" do
+      let(:command_class) { Class.new(described_class) }
+      let(:flag) { "--flag"      }
+      let(:name) { :command_argv }
+
+      it do
+        expect {
+          command_class.option flag, name: name
+        }.to raise_error(ArgumentError,"option #{flag.inspect} with name #{name.inspect} cannot override the internal method with same name: ##{name}")
+      end
+    end
+
+    context "when the argument flag maps to an existing internal method" do
+      let(:command_class) { Class.new(described_class) }
+      let(:flag) { "--command-argv" }
+      let(:name) { :command_argv    }
+
+      it do
+        expect {
+          command_class.option(flag)
+        }.to raise_error(ArgumentError,"option #{flag.inspect} maps to method name ##{name} and cannot override the internal method with same name: ##{name}")
+      end
+    end
   end
 
   describe ".arguments" do
@@ -308,6 +332,16 @@ describe CommandMapper::Command do
       end
     end
 
+    context "when the argument shares the same name as an internal method" do
+      let(:command_class) { Class.new(described_class) }
+      let(:name) { :command_argv }
+
+      it do
+        expect {
+          command_class.argument(name)
+        }.to raise_error(ArgumentError,"argument #{name.inspect} cannot override internal method with same name: ##{name}")
+      end
+    end
   end
 
   describe ".subcommands" do
@@ -429,6 +463,18 @@ describe CommandMapper::Command do
 
       it "must replace any '-' characters with '_' for the writer method" do
         expect(subject.instance_methods(false)).to include(:sub_cmd=)
+      end
+    end
+
+    context "when the subcommand shares the same name as an internal method" do
+      let(:command_class) { Class.new(described_class) }
+      let(:name) { "command_argv" }
+
+      it do
+        expect {
+          command_class.subcommand(name) do
+          end
+        }.to raise_error(ArgumentError,"subcommand #{name.inspect} cannot override internal method with same name: ##{name}")
       end
     end
   end
