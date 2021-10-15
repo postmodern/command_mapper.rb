@@ -37,7 +37,7 @@ module CommandMapper
     #
     def initialize(flag, name: nil, equals: nil, **kwargs)
       @flag    = flag
-      @name    = self.class.infer_name_from_flag(flag)
+      @name    = name || self.class.infer_name_from_flag(flag)
       @equals  = equals
 
       super(**kwargs)

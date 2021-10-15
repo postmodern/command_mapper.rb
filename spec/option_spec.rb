@@ -14,6 +14,22 @@ describe CommandMapper::Option do
       expect(subject.flag).to eq(flag)
     end
 
+    context "when a name: keyword argument is given" do
+      let(:name) { :bar }
+
+      subject { described_class.new(flag, name: name) }
+
+      it "must set #name" do
+        expect(subject.name).to eq(name)
+      end
+    end
+
+    context "when no name: keyword argument is given" do
+      it "must default #name to .infer_name_from_flag" do
+        expect(subject.name).to eq(described_class.infer_name_from_flag(flag))
+      end
+    end
+
     it "must default #repeats? to false" do
       expect(subject.repeats?).to be(false)
     end
