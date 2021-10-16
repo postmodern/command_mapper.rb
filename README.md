@@ -175,16 +175,16 @@ Define an argument that can be repeated:
 argument :files, repeats: true
 ```
 
-Define an argument that accepts a file:
+Define an argument that accepts an existing file:
 
 ```ruby
-argument :file, value: FilePath.new
+argument :file, value: InputFile.new
 ```
 
-Define an argument that accepts a directory:
+Define an argument that accepts an existing directory:
 
 ```ruby
-argument :dir, value: DirPath.new
+argument :dir, value: InputDir.new
 ```
 
 Custom writer methods:
