@@ -256,7 +256,7 @@ $ gem install command_mapper
 ### Gemfile
 
 ```ruby
-gem 'command_mapper'
+gem 'command_mapper', '~> 0.1'
 ```
 
 ### gemspec
