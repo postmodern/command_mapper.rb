@@ -80,9 +80,9 @@ module CommandMapper
       @command_name = command_name
       @command_path = command_path
 
-      @command_options    = {}
-      @command_arguments  = {}
-      @subcommand = nil
+      @command_options   = {}
+      @command_arguments = {}
+      @subcommand        = nil
 
       params = params.merge(kwargs)
 
