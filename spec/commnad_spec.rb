@@ -468,13 +468,14 @@ describe CommandMapper::Command do
 
     context "when the subcommand shares the same name as an internal method" do
       let(:command_class) { Class.new(described_class) }
-      let(:name) { "command_argv" }
+      let(:name)          { "command-argv" }
+      let(:method_name)   { 'command_argv' }
 
       it do
         expect {
           command_class.subcommand(name) do
           end
-        }.to raise_error(ArgumentError,"subcommand #{name.inspect} cannot override internal method with same name: ##{name}")
+        }.to raise_error(ArgumentError,"subcommand #{name.inspect} maps to method name ##{method_name} and cannot override the internal method with same name: ##{method_name}")
       end
     end
   end

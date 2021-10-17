@@ -80,9 +80,9 @@ module CommandMapper
       @command_name = command_name
       @command_path = command_path
 
-      @command_options   = {}
-      @command_arguments = {}
-      @subcommand        = nil
+      @command_options    = {}
+      @command_arguments  = {}
+      @subcommand = nil
 
       params = params.merge(kwargs)
 
@@ -411,8 +411,8 @@ module CommandMapper
       self.subcommands[method_name.to_sym] = subcommand_class
       const_set(class_name,subcommand_class)
 
-      if is_internal_method?(name)
-        raise(ArgumentError,"subcommand #{name.inspect} cannot override internal method with same name: ##{name}")
+      if is_internal_method?(method_name)
+        raise(ArgumentError,"subcommand #{name.inspect} maps to method name ##{method_name} and cannot override the internal method with same name: ##{method_name}")
       end
 
       define_method(method_name) do |&block|
