@@ -527,8 +527,8 @@ describe CommandMapper::Command do
       expect(subject.command_arguments).to eq({})
     end
 
-    it "must default subcommand to nil" do
-      expect(subject.command_arguments).to eq({})
+    it "must default #command_subcommand to nil" do
+      expect(subject.command_subcommand).to be(nil)
     end
 
     context "when initialized with a Hash of options and arguments" do
