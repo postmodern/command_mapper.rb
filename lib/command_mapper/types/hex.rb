@@ -13,7 +13,12 @@ module CommandMapper
       # @param [Boolean] leading_zero
       #   Specifies whether the hex value will start with `0x` or not.
       #
-      def initialize(leading_zero: false)
+      # @param [Hash{Symbol => Object}] kwargs
+      #   Additional keyword arguments for {Value#initialize}.
+      #
+      def initialize(leading_zero: false, **kwargs)
+        super(**kwargs)
+
         @leading_zero = leading_zero
       end
 
