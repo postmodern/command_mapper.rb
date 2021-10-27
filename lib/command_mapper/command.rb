@@ -37,7 +37,7 @@ module CommandMapper
     # The subcommand's options and arguments.
     #
     # @return [Command, nil]
-    attr_reader :subcommand
+    attr_reader :command_subcommand
 
     #
     # Initializes the command.
@@ -79,18 +79,13 @@ module CommandMapper
                               **kwargs)
       @command_name = command_name
       @command_path = command_path
-
-      @command_options    = {}
-      @command_arguments  = {}
-      @subcommand = nil
+      @command_env  = command_env
 
       params = params.merge(kwargs)
 
       params.each do |name,value|
         self[name] = value
       end
-
-      @command_env = command_env
 
       yield self if block_given?
     end
@@ -286,13 +281,7 @@ module CommandMapper
         end
       end
 
-      define_method(option.name) do
-        @command_options[option.name]
-      end
-
-      define_method(:"#{option.name}=") do |value|
-        @command_options[option.name] = value
-      end
+      attr_accessor option.name
     end
 
     #
@@ -345,13 +334,7 @@ module CommandMapper
         raise(ArgumentError,"argument #{name.inspect} cannot override internal method with same name: ##{argument.name}")
       end
 
-      define_method(name) do
-        @command_arguments[argument.name]
-      end
-
-      define_method(:"#{name}=") do |value|
-        @command_arguments[argument.name] = value
-      end
+      attr_accessor name
     end
 
     #
@@ -416,13 +399,13 @@ module CommandMapper
       end
 
       define_method(method_name) do |&block|
-        if block then @subcommand = subcommand_class.new(&block)
-        else          @subcommand
+        if block then @command_subcommand = subcommand_class.new(&block)
+        else          @command_subcommand
         end
       end
 
       define_method(:"#{method_name}=") do |options|
-        @subcommand = subcommand_class.new(options)
+        @command_subcommand = subcommand_class.new(options)
       end
     end
 
@@ -483,9 +466,9 @@ module CommandMapper
         end
       end
 
-      if @subcommand
+      if @command_subcommand
         # a subcommand takes precedence over any command arguments
-        argv.concat(@subcommand.command_argv)
+        argv.concat(@command_subcommand.command_argv)
       else
         additional_args = []
 

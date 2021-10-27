@@ -143,7 +143,7 @@ describe CommandMapper::Command do
       let(:value) { "test_reading" }
 
       before do
-        subject.instance_variable_get("@command_options")[:foo] = value
+        subject.instance_variable_set('@foo',value)
       end
 
       it "must read the options value from @options" do
@@ -159,7 +159,7 @@ describe CommandMapper::Command do
       before { subject.foo = value }
 
       it "must read the options value from @options" do
-        expect(subject.instance_variable_get('@command_options')[:foo]).to be(value)
+        expect(subject.instance_variable_get('@foo')).to be(value)
       end
     end
 
@@ -312,7 +312,7 @@ describe CommandMapper::Command do
       let(:value) { "test_reading" }
 
       before do
-        subject.instance_variable_get("@command_arguments")[:foo] = value
+        subject.instance_variable_set('@foo',value)
       end
 
       it "must read the options value from @arguments" do
@@ -328,7 +328,7 @@ describe CommandMapper::Command do
       before { subject.foo = value }
 
       it "must read the options value from @arguments" do
-        expect(subject.instance_variable_get('@command_arguments')[:foo]).to be(value)
+        expect(subject.instance_variable_get('@foo')).to be(value)
       end
     end
 
@@ -519,41 +519,59 @@ describe CommandMapper::Command do
       expect(subject.command_env).to eq({})
     end
 
-    it "must default #command_options to {}" do
-      expect(subject.command_options).to eq({})
-    end
-
-    it "must default #command_arguments to {}" do
-      expect(subject.command_arguments).to eq({})
-    end
-
     it "must default #command_subcommand to nil" do
       expect(subject.command_subcommand).to be(nil)
     end
 
+    it "must default option values to nil" do
+      expect(subject.opt1).to be(nil)
+      expect(subject.opt2).to be(nil)
+      expect(subject.opt3).to be(nil)
+    end
+
+    it "must default argument values to nil" do
+      expect(subject.arg1).to be(nil)
+      expect(subject.arg2).to be(nil)
+      expect(subject.arg3).to be(nil)
+    end
+
     context "when initialized with a Hash of options and arguments" do
       let(:params) do
-        {opt1: opt1, opt2: opt2, arg2: arg2, arg3: arg3}
+        {opt1: opt1, opt2: opt2, opt3: opt3, arg1: arg1, arg2: arg2, arg3: arg3}
       end
 
       subject { command_class.new(params) }
 
-      it "must populate #command_options and #command_arguments" do
-        expect(subject.command_options).to eq({opt1: opt1, opt2: opt2})
-        expect(subject.command_arguments).to eq({arg2: arg2, arg3: arg3})
+      it "must set option values" do
+        expect(subject.opt1).to be(opt1)
+        expect(subject.opt2).to be(opt2)
+        expect(subject.opt3).to be(opt3)
+      end
+
+      it "must set argument values" do
+        expect(subject.arg1).to be(arg1)
+        expect(subject.arg2).to be(arg2)
+        expect(subject.arg3).to be(arg3)
       end
     end
 
     context "when initialized with additional keywords" do
-      let(:params) do
-        {opt1: opt1, opt2: opt2, arg2: arg2, arg3: arg3}
+      let(:keywords) do
+        {opt1: opt1, opt2: opt2, opt3: opt3, arg1: arg1, arg2: arg2, arg3: arg3}
       end
 
-      subject { command_class.new(**params) }
+      subject { command_class.new(**keywords) }
 
-      it "must populate #command_options and #command_arguments" do
-        expect(subject.command_options).to eq({opt1: opt1, opt2: opt2})
-        expect(subject.command_arguments).to eq({arg2: arg2, arg3: arg3})
+      it "must set option values" do
+        expect(subject.opt1).to be(opt1)
+        expect(subject.opt2).to be(opt2)
+        expect(subject.opt3).to be(opt3)
+      end
+
+      it "must set argument values" do
+        expect(subject.arg1).to be(arg1)
+        expect(subject.arg2).to be(arg2)
+        expect(subject.arg3).to be(arg3)
       end
     end
 
