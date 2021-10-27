@@ -1,5 +1,7 @@
 # command_mapper
 
+[![CI](https://github.com/postmodern/command_mapper.rb/actions/workflows/ruby.yml/badge.svg)](https://github.com/postmodern/command_mapper.rb/actions/workflows/ruby.yml)
+
 * [Source](https://github.com/postmodern/command_mapper)
 * [Issues](https://github.com/postmodern/command_mapper/issues)
 * [Documentation](http://rubydoc.info/gems/command_mapper/frames)
