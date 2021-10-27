@@ -1,3 +1,5 @@
+require 'command_mapper/types/value'
+
 module CommandMapper
   module Types
     #
