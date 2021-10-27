@@ -515,15 +515,15 @@ describe CommandMapper::Command do
       expect(subject.command_name).to eq(command_class.command_name)
     end
 
-    it "must default #env to {}" do
+    it "must default #command_env to {}" do
       expect(subject.command_env).to eq({})
     end
 
-    it "must default options to {}" do
+    it "must default #command_options to {}" do
       expect(subject.command_options).to eq({})
     end
 
-    it "must default arguments to {}" do
+    it "must default #command_arguments to {}" do
       expect(subject.command_arguments).to eq({})
     end
 
@@ -538,7 +538,7 @@ describe CommandMapper::Command do
 
       subject { command_class.new(params) }
 
-      it "must populate #options and #arguments" do
+      it "must populate #command_options and #command_arguments" do
         expect(subject.command_options).to eq({opt1: opt1, opt2: opt2})
         expect(subject.command_arguments).to eq({arg2: arg2, arg3: arg3})
       end
@@ -551,7 +551,7 @@ describe CommandMapper::Command do
 
       subject { command_class.new(**params) }
 
-      it "must populate #options and #arguments" do
+      it "must populate #command_options and #command_arguments" do
         expect(subject.command_options).to eq({opt1: opt1, opt2: opt2})
         expect(subject.command_arguments).to eq({arg2: arg2, arg3: arg3})
       end
@@ -562,7 +562,7 @@ describe CommandMapper::Command do
 
       subject { command_class.new(command_name: command_name) }
 
-      it "must override #command" do
+      it "must set #command_name" do
         expect(subject.command_name).to eq(command_name)
       end
     end
@@ -572,7 +572,7 @@ describe CommandMapper::Command do
 
       subject { command_class.new(command_path: command_path) }
 
-      it "must override #command" do
+      it "must set #command_path" do
         expect(subject.command_path).to eq(command_path)
       end
     end
@@ -580,7 +580,7 @@ describe CommandMapper::Command do
     context "when initialized with command_env: {...}" do
       subject { command_class.new(command_env: env) }
 
-      it "must populate #env" do
+      it "must populate #command_env" do
         expect(subject.command_env).to eq(env)
       end
     end
