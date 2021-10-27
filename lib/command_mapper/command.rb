@@ -477,10 +477,10 @@ module CommandMapper
     def command_argv
       argv = [@command_path || @command_name]
 
-      @command_options.each do |name,value|
-        option = self.class.options.fetch(name)
-
-        option.argv(argv,value)
+      self.class.options.each do |name,option|
+        unless (value = self[name]).nil?
+          option.argv(argv,value)
+        end
       end
 
       if @subcommand
@@ -490,7 +490,7 @@ module CommandMapper
         additional_args = []
 
         self.class.arguments.each do |name,argument|
-          value = @command_arguments[name]
+          value = self[name]
 
           if value.nil? && argument.value.required?
             raise(ArgumentRequired,"argument #{name} is required")
