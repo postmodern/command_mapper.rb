@@ -20,6 +20,7 @@ and safely automating commands.
     * `Hex`: hexadecimal values
     * `List`: `VALUE,...`
     * `KeyValue`: `KEY:VALUE` or `KEY=VALUE`
+    * `KeyValueList`: `KEY:VALUE,...`, or `KEY=VALUE;...`, etc.
     * `Map`: `enabled|disables` or `yes|no`
     * `InputPath`: a path to a pre-existing file or directory
     * `InputFile`: a path to a pre-existing file
