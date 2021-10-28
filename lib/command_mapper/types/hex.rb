@@ -32,6 +32,26 @@ module CommandMapper
       end
 
       #
+      # Validates a value.
+      #
+      # @param [String, Integer, Object] value
+      #
+      # @return [true, (false, String)]
+      #
+      def validate(value)
+        case value
+        when String
+          unless value =~ /\A(?:0x)?[A-Fa-f0-9]+\z/
+            return [false, "value is not in hexadecimal format"]
+          end
+
+          return true
+        else
+          super(value)
+        end
+      end
+
+      #
       # Formats the value.
       #
       # @param [#to_i] value
@@ -39,10 +59,23 @@ module CommandMapper
       # @return [String]
       #
       def format(value)
-        value = value.to_i
+        case value
+        when String
+          if leading_zero? && !value.start_with?('0x')
+            value = "0x#{value}"
+          elsif (!leading_zero? && value.start_with?('0x'))
+            value = value[2..]
+          end
 
-        if leading_zero? then "0x%x" % value
-        else                  "%x" % value
+          value
+        else
+          value = value.to_i
+
+          if leading_zero?
+            "0x%x" % value
+          else
+            "%x" % value
+          end
         end
       end
 

@@ -34,13 +34,17 @@ module CommandMapper
         case value
         when Integer
           return true
+        when String
+          unless value =~ /\A\d+\z/
+            return [false, "value contains non-numeric characters"]
+          end
         else
-          if value.respond_to?(:=~) && value =~ /^\d+$/
-            return true
-          else
-            return false, "value must be numeric"
+          unless value.respond_to?(:to_i)
+            return [false, "value cannot be converted into an Integer"]
           end
         end
+
+        return true
       end
 
     end

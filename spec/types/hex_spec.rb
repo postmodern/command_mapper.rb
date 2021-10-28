@@ -34,6 +34,82 @@ describe CommandMapper::Types::Hex do
     end
   end
 
+  describe "#validate" do
+    context "when given a String" do
+      context "and the String only contains decimal digits" do
+        let(:value) { "0123456789" }
+
+        it "must return true" do
+          expect(subject.validate(value)).to be(true)
+        end
+
+        context "and the String begins with a '0x'" do
+          let(:value) { "0x0123456789" }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+
+        context "and the String contains a newline" do
+          let(:value) { "01234\n56789" }
+
+          it "must return [false, \"value is not in hexadecimal format\"]" do
+            expect(subject.validate(value)).to eq(
+              [false, "value is not in hexadecimal format"]
+            )
+          end
+        end
+      end
+
+      context "and the String only contains hex digits" do
+        let(:value) { "abcdef" }
+
+        it "must return true" do
+          expect(subject.validate(value)).to be(true)
+        end
+
+        context "and the String begins with a '0x'" do
+          let(:value) { "0xabcdef" }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+
+        context "and the String contains a newline" do
+          let(:value) { "abc\ndef" }
+
+          it "must return [false, \"value is not in hexadecimal format\"]" do
+            expect(subject.validate(value)).to eq(
+              [false, "value is not in hexadecimal format"]
+            )
+          end
+        end
+      end
+
+      context "but the String does not contain other characters" do
+        let(:value) { "foo" }
+
+        it "must return [false, \"value is not in hexadecimal format\"]" do
+          expect(subject.validate(value)).to eq(
+            [false, "value is not in hexadecimal format"]
+          )
+        end
+
+        context "and the String contains a newline" do
+          let(:value) { "foo\nbar" }
+
+          it "must return [false, \"value is not in hexadecimal format\"]" do
+            expect(subject.validate(value)).to eq(
+              [false, "value is not in hexadecimal format"]
+            )
+          end
+        end
+      end
+    end
+  end
+
   describe "#format" do
     context "when given an Integer" do
       let(:value) { 255 }
@@ -52,18 +128,28 @@ describe CommandMapper::Types::Hex do
     end
 
     context "when given a String" do
-      context "and it contains only digits" do
-        let(:value) { "255" }
+      context "and it contains hexadecimal digits" do
+        let(:value) { "ff" }
 
-        it "must return the hexadecimal number form of the String" do
+        it "must return the String" do
           expect(subject.format(value)).to eq("ff")
         end
 
-        context "when initialized with leading_zero: true" do
+        context "but the String does start with '0x'" do
+          let(:value) { "0xff" }
+
+          it "must remove '0x' prefix" do
+            expect(subject.format(value)).to eq("ff")
+          end
+        end
+
+        context "when #leading_zero? is true" do
           subject { described_class.new(leading_zero: true) }
 
-          it "must prepend the hexadecimal number with '0x'" do
-            expect(subject.format(value)).to eq("0xff")
+          context "but the String does not start with '0x'" do
+            it "must prepend the String with '0x'" do
+              expect(subject.format(value)).to eq("0xff")
+            end
           end
         end
       end
