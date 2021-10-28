@@ -1,8 +1,8 @@
-require 'command_mapper/types/value'
+require 'command_mapper/types/type'
 
 module CommandMapper
   module Types
-    class Map < Value
+    class Map < Type
 
       # @return [Hash{Object => String}]
       attr_reader :map

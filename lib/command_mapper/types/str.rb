@@ -1,8 +1,8 @@
-require 'command_mapper/types/value'
+require 'command_mapper/types/type'
 
 module CommandMapper
   module Types
-    class Str < Value
+    class Str < Type
       #
       # Initializes the value.
       #
@@ -13,7 +13,7 @@ module CommandMapper
       #   Specifies whether the argument may accept blank values.
       #
       # @param [Hash{Symbol => Object}] kwargs
-      #   Additional keyword arguments for {Value#initialize}.
+      #   Additional keyword arguments for {Type#initialize}.
       #
       def initialize(allow_empty: false, allow_blank: false, **kwargs)
         super(**kwargs)

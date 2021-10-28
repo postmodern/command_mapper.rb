@@ -18,7 +18,7 @@ module CommandMapper
     # @param [Symbol] name
     #   The argument's name.
     #
-    # @param [Types::Value, Hash, :required, :optional] value
+    # @param [Types::Type, Hash, :required, :optional] value
     #   The value type of the argument.
     #
     # @param [Hash{Symbol => Object}] kwargs

@@ -56,7 +56,7 @@ describe CommandMapper::Option do
       subject { described_class.new(flag, value: value_options) }
 
       it "must initialize #value with the value: options" do
-        expect(subject.value).to be_kind_of(Types::Value)
+        expect(subject.value).to be_kind_of(Types::Type)
       end
     end
   end

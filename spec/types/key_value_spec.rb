@@ -9,7 +9,7 @@ describe CommandMapper::Types::KeyValue do
     end
 
     it "must initialize #key" do
-      expect(subject.key).to be_kind_of(CommandMapper::Types::Value)
+      expect(subject.key).to be_kind_of(CommandMapper::Types::Str)
     end
 
     it "must require a 'key' value by default" do
@@ -17,7 +17,7 @@ describe CommandMapper::Types::KeyValue do
     end
 
     it "must initialize #value" do
-      expect(subject.value).to be_kind_of(CommandMapper::Types::Value)
+      expect(subject.value).to be_kind_of(CommandMapper::Types::Str)
     end
 
     it "must require a 'value' value by default" do
@@ -38,7 +38,7 @@ describe CommandMapper::Types::KeyValue do
       subject { described_class.new(key: :optional) }
 
       it "must initialize #key" do
-        expect(subject.key).to be_kind_of(CommandMapper::Types::Value)
+        expect(subject.key).to be_kind_of(CommandMapper::Types::Str)
       end
 
       it "must not require a 'key' value by default" do
@@ -50,7 +50,7 @@ describe CommandMapper::Types::KeyValue do
       subject { described_class.new(value: :optional) }
 
       it "must initialize #value" do
-        expect(subject.value).to be_kind_of(CommandMapper::Types::Value)
+        expect(subject.value).to be_kind_of(CommandMapper::Types::Str)
       end
 
       it "must not require a 'value' value by default" do

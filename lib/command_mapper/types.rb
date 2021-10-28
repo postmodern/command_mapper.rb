@@ -1,4 +1,4 @@
-require 'command_mapper/types/value'
+require 'command_mapper/types/type'
 require 'command_mapper/types/str'
 require 'command_mapper/types/map'
 require 'command_mapper/types/list'

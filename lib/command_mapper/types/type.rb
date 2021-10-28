@@ -1,12 +1,12 @@
 module CommandMapper
   module Types
     #
-    # The base value for all command-line argument or option values.
+    # The base type for all command-line argument types.
     #
-    class Value
+    class Type
 
       #
-      # Initializes the value.
+      # Initializes the type.
       #
       # @param [Boolean] required
       #   Specifies whether the argument is required or can be omitted.
@@ -72,23 +72,23 @@ module CommandMapper
     require 'command_mapper/types/str'
 
     #
-    # Converts a value into a {Value} object.
+    # Converts a value into a {Type} object.
     #
-    # @param [Value, Hash, :required, :optional, nil] value
+    # @param [Type, Hash, :required, :optional, nil] value
     #
-    # @return [Value]
+    # @return [Type]
     #
     # @raise [ArgumentError]
     #
-    def self.Value(value)
+    def self.Type(value)
       case value
-      when Value     then value
+      when Type      then value
       when Hash      then Str.new(**value)
       when :required then Str.new(required: true)
       when :optional then Str.new(required: false)
       when nil       then nil
       else
-        raise(ArgumentError,"value must be a #{Value}, Hash, :required, :optional, or nil: #{value.inspect}")
+        raise(ArgumentError,"value must be a #{Type}, Hash, :required, :optional, or nil: #{value.inspect}")
       end
     end
 

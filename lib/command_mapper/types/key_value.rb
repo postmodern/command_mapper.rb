@@ -1,11 +1,11 @@
-require 'command_mapper/types/value'
+require 'command_mapper/types/type'
 
 module CommandMapper
   module Types
     #
     # Represents a key-value type.
     #
-    class KeyValue < Value
+    class KeyValue < Type
 
       # The separator String between the key and value.
       #
@@ -14,12 +14,12 @@ module CommandMapper
 
       # The key's type.
       #
-      # @return [Value]
+      # @return [Type]
       attr_reader :key
 
       # The value's type.
       #
-      # @return [Value]
+      # @return [Type]
       attr_reader :value
 
       #
@@ -28,14 +28,14 @@ module CommandMapper
       # @param [String] separator
       #   The key-value separator.
       #
-      # @param [Value, Hash, :required, :optional] key
+      # @param [Type, Hash, :required, :optional] key
       #   The key's value type.
       #
-      # @param [Value, Hash, :required, :optional] value
+      # @param [Type, Hash, :required, :optional] value
       #   The value's value type.
       #
       # @param [Hash{Symbol => Object}]
-      #   Additional keyword arguments for {Value#initialize}.
+      #   Additional keyword arguments for {Type#initialize}.
       #
       def initialize(separator: '=', key: :required, value: :required, **kwargs)
         super(**kwargs)
@@ -50,8 +50,8 @@ module CommandMapper
           raise(ArgumentError,"value: keyword cannot be nil")
         end
 
-        @key   = Types::Value(key)
-        @value = Types::Value(value)
+        @key   = Types::Type(key)
+        @value = Types::Type(value)
       end
 
       #

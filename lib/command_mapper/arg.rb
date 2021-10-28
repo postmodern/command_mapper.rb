@@ -1,4 +1,4 @@
-require 'command_mapper/types/value'
+require 'command_mapper/types/type'
 
 module CommandMapper
   #
@@ -7,18 +7,18 @@ module CommandMapper
   class Arg
     # The argument's value type.
     #
-    # @return [Value, nil]
+    # @return [Type, nil]
     attr_reader :value
 
     #
     # Initializes the argument.
     #
-    # @param [Value, Hash, :required, :optional, nil] value
+    # @param [Type, Hash, :required, :optional, nil] value
     #
     # @param [Boolean] repeats
     #
     def initialize(value: nil, repeats: false)
-      @value   = Types::Value(value)
+      @value   = Types::Type(value)
       @repeats = repeats
     end
 

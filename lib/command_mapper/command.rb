@@ -228,7 +228,7 @@ module CommandMapper
     #
     # @param [Hash{Symbol => Object}] value
     #
-    # @option value [Types::Value, Hash, :required, :optional, nil] value
+    # @option value [Types::Type, Hash, :required, :optional, nil] value
     #   The format of the option's value.
     #
     # @param [Boolean] equals
@@ -304,7 +304,7 @@ module CommandMapper
     #
     # @param [Symbol] name
     #
-    # @param [Types::Value, Hash, :required, :optional] value
+    # @param [Types::Type, Hash, :required, :optional] value
     #   The explicit value type for the argument.
     #
     # @param [Boolean] repeats

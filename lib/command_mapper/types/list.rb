@@ -1,11 +1,11 @@
-require 'command_mapper/types/value'
+require 'command_mapper/types/type'
 
 module CommandMapper
   module Types
     #
     # Represents a list type.
     #
-    class List < Value
+    class List < Type
 
       # The seperator character.
       #
@@ -14,7 +14,7 @@ module CommandMapper
 
       # The value type.
       #
-      # @return [Value]
+      # @return [Type]
       attr_reader :value
 
       #
@@ -23,11 +23,11 @@ module CommandMapper
       # @param [String] separator
       #   The list separator character.
       #
-      # @param [Value, Hash, :required, :optional] value
+      # @param [Type, Hash, :required, :optional] value
       #   The list's value type.
       #
       # @param [Hash{Symbol => Object}] kwargs
-      #   Additional keyword arguments for {Value#initialize}.
+      #   Additional keyword arguments for {Type#initialize}.
       #
       def initialize(separator: ',', value: :required, **kwargs)
         super(**kwargs)
@@ -37,7 +37,7 @@ module CommandMapper
         end
 
         @separator = separator
-        @value     = Types::Value(value)
+        @value     = Types::Type(value)
       end
 
       #

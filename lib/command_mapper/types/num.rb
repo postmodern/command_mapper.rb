@@ -1,11 +1,11 @@
-require 'command_mapper/types/value'
+require 'command_mapper/types/type'
 
 module CommandMapper
   module Types
     #
     # Represents a numeric value.
     #
-    class Num < Value
+    class Num < Type
 
       #
       # Validates a value.

@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'command_mapper/types/value'
+require 'command_mapper/types/type'
 
-describe CommandMapper::Types::Value do
+describe CommandMapper::Types::Type do
   describe "#initialize" do
     it "must default required: to true" do
       expect(subject.required?).to be(true)
@@ -107,13 +107,13 @@ describe CommandMapper::Types::Value do
   end
 end
 
-describe "CommandMapper::Types::Value()" do
-  context "when given a CommandMapper::Types::Value" do
-    let(:value) { CommandMapper::Types::Value.new }
+describe "CommandMapper::Types::Type()" do
+  context "when given a CommandMapper::Types::Type" do
+    let(:value) { CommandMapper::Types::Type.new }
 
-    subject { CommandMapper::Types::Value(value) }
+    subject { CommandMapper::Types::Type(value) }
 
-    it "must return the CommandMapper::Types::Value object" do
+    it "must return the CommandMapper::Types::Type object" do
       expect(subject).to be(value)
     end
   end
@@ -121,7 +121,7 @@ describe "CommandMapper::Types::Value()" do
   context "when given a Hash" do
     let(:value) { {required: true} }
 
-    subject { CommandMapper::Types::Value(value) }
+    subject { CommandMapper::Types::Type(value) }
 
     it "must initialize a new CommandMapper::Types::Str" do
       expect(subject).to be_kind_of(CommandMapper::Types::Str)
@@ -132,7 +132,7 @@ describe "CommandMapper::Types::Value()" do
   context "when given :required" do
     let(:value) { :required }
 
-    subject { CommandMapper::Types::Value(value) }
+    subject { CommandMapper::Types::Type(value) }
 
     it "must initialize a new CommandMapper::Types::Str" do
       expect(subject).to be_kind_of(CommandMapper::Types::Str)
@@ -146,7 +146,7 @@ describe "CommandMapper::Types::Value()" do
   context "when given :optional" do
     let(:value) { :optional }
 
-    subject { CommandMapper::Types::Value(value) }
+    subject { CommandMapper::Types::Type(value) }
 
     it "must initialize a new CommandMapper::Types::Str" do
       expect(subject).to be_kind_of(CommandMapper::Types::Str)
@@ -160,7 +160,7 @@ describe "CommandMapper::Types::Value()" do
   context "when given nil" do
     let(:value) { nil }
 
-    subject { CommandMapper::Types::Value(value) }
+    subject { CommandMapper::Types::Type(value) }
 
     it "must return nil" do
       expect(subject).to be(nil)
@@ -172,8 +172,8 @@ describe "CommandMapper::Types::Value()" do
 
     it do
       expect {
-        CommandMapper::Types::Value(value)
-      }.to raise_error(ArgumentError,"value must be a CommandMapper::Types::Value, Hash, :required, :optional, or nil: #{value.inspect}")
+        CommandMapper::Types::Type(value)
+      }.to raise_error(ArgumentError,"value must be a CommandMapper::Types::Type, Hash, :required, :optional, or nil: #{value.inspect}")
     end
   end
 end
