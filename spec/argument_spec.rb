@@ -34,7 +34,7 @@ describe CommandMapper::Argument do
     end
 
     context "when given the type: keyword argument" do
-      context "and it's a custom Types::Type class" do
+      context "and it's a Types::Type object" do
         let(:type) { Types::KeyValue.new }
 
         subject { described_class.new(name, type: type) }
