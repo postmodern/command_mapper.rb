@@ -17,11 +17,23 @@ describe CommandMapper::Types::List do
       end
     end
 
-    context "when given value: nil" do
-      it do
-        expect {
-          described_class.new(value: nil)
-        }.to raise_error(ArgumentError,"value: keyword cannot be nil")
+    context "when given value: keyword argument" do
+      context "and it's a Types::Type object" do
+        let(:value) { Types::Num.new }
+
+        subject { described_class.new(value: value) }
+
+        it "must set a custom #value" do
+          expect(subject.value).to eq(value)
+        end
+      end
+
+      context "but it's nil" do
+        it do
+          expect {
+            described_class.new(value: nil)
+          }.to raise_error(ArgumentError,"value: keyword cannot be nil")
+        end
       end
     end
   end
