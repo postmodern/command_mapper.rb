@@ -8,6 +8,9 @@ module CommandMapper
     #
     class KeyValueList < List
 
+      # @return [KeyValue]
+      attr_reader :key_value
+
       #
       # Initializes the key-value list.
       #
@@ -36,7 +39,7 @@ module CommandMapper
       #   The formatted key-value list.
       #
       def format(value)
-        super(Array(value).map(&@key_value))
+        super(Array(value).map(&@key_value.method(:format)))
       end
 
     end
