@@ -1,17 +1,20 @@
 require 'command_mapper/exceptions'
-require 'command_mapper/arg'
+require 'command_mapper/option_value'
 
 module CommandMapper
   #
   # Represents an option for a command.
   #
-  class Option < Arg
+  class Option
 
     # @return [String]
     attr_reader :flag
 
     # @return [Symbol]
     attr_reader :name
+
+    # @return [OptionValue, nil]
+    attr_reader :value
 
     #
     # Initializes the option.
@@ -26,21 +29,27 @@ module CommandMapper
     #   Specifies whether the option's flag and value should be separated with a
     #   `=` character.
     #
-    # @param [Hash{Symbol => Object}] kwargs
-    #   Additional keyword arguments.
-    #
-    # @option kwargs [Boolean] :repeats
-    #   Specifies whether the option can be given multiple times.
-    #
-    # @option kwargs [Types::Type, Hash, :required, :optional, nil] :value
+    # @param [Hash, nil] value
     #   The option's value.
     #
-    def initialize(flag, name: nil, equals: nil, **kwargs)
+    # @option value [Boolean] :required
+    #   Specifies whether the option requires a value or not.
+    #
+    # @option value [Types:Type, Hash, nil] :type
+    #   The explicit type for the option's value.
+    #
+    # @param [Boolean] repeats
+    #   Specifies whether the option can be given multiple times.
+    #
+    def initialize(flag, name: nil, equals: nil, value: nil, repeats: false)
       @flag    = flag
       @name    = name || self.class.infer_name_from_flag(flag)
       @equals  = equals
-
-      super(**kwargs)
+      @value   = case value
+                 when Hash then OptionValue.new(**value)
+                 when true then OptionValue.new
+                 end
+      @repeats = repeats
     end
 
     #
@@ -92,6 +101,15 @@ module CommandMapper
     end
 
     #
+    # Determines whether the option can be given multiple times.
+    #
+    # @return [Boolean]
+    #
+    def repeats?
+      @repeats
+    end
+
+    #
     # Validates whether the given value is compatible with the option.
     #
     # @param [Object] value
@@ -102,7 +120,7 @@ module CommandMapper
     #
     def validate(value)
       if accepts_value?
-        super(value)
+        @value.validate(value)
       else
         case value
         when true, false, nil

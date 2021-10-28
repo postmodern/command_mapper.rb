@@ -3,20 +3,6 @@ require 'command_mapper/types/num'
 
 describe CommandMapper::Types::Num do
   describe "#validate" do
-    context "when initialized with required: true" do
-      subject { described_class.new(required: true) }
-
-      context "and given nil value" do
-        let(:value) { nil }
-
-        it "must return [false, \"does not allow a nil value\"]" do
-          expect(subject.validate(value)).to eq(
-            [false, "does not allow a nil value"]
-          )
-        end
-      end
-    end
-
     context "when given an Integer" do
       let(:value) { 1 }
 
@@ -50,6 +36,26 @@ describe CommandMapper::Types::Num do
         it "must return [false, \"value must be numeric\"]" do
           expect(subject.validate(value)).to eq(
             [false, "value contains non-numeric characters"]
+          )
+        end
+      end
+    end
+
+    context "when given another type of Object" do
+      context "but it defines a #to_i method" do
+        let(:value) { 1.0 }
+
+        it "must return true" do
+          expect(subject.validate(value)).to be(true)
+        end
+      end
+
+      context "but it does not define a #to_i method" do
+        let(:value) { Object.new }
+
+        it "must return [false, \"value cannot be converted into an Integer\"]" do
+          expect(subject.validate(value)).to eq(
+            [false, "value cannot be converted into an Integer"]
           )
         end
       end

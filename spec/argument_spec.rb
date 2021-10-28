@@ -1,12 +1,9 @@
 require 'spec_helper'
-require 'arg_examples'
 require 'command_mapper/argument'
 require 'command_mapper/types/list'
 require 'command_mapper/types/key_value'
 
 describe CommandMapper::Argument do
-  include CommandMapper
-
   let(:name) { :foo }
 
   describe "#initialize" do
@@ -16,8 +13,36 @@ describe CommandMapper::Argument do
       expect(subject.name).to eq(name)
     end
 
+    it "must default #required? to true" do
+      expect(subject.required?).to be(true)
+    end
+
+    it "must default #type to a Types::Str object" do
+      expect(subject.type).to be_kind_of(Types::Str)
+    end
+
     it "must default #repeats? to false" do
       expect(subject.repeats?).to be(false)
+    end
+
+    context "when given the required: false keyword argument" do
+      subject { described_class.new(name, required: false) }
+
+      it "must set #required? to false" do
+        expect(subject.required?).to be(false)
+      end
+    end
+
+    context "when given the type: keyword argument" do
+      context "and it's a custom Types::Type class" do
+        let(:type) { Types::KeyValue.new }
+
+        subject { described_class.new(name, type: type) }
+
+        it "must set #type" do
+          expect(subject.type).to eq(type)
+        end
+      end
     end
 
     context "when given the repeats: true keyword argument" do
@@ -27,58 +52,169 @@ describe CommandMapper::Argument do
         expect(subject.repeats?).to be(true)
       end
     end
-
-    context "when given the value: keyword argument" do
-      context "and it's a custom Types::Type class" do
-        let(:value) { Types::KeyValue.new }
-
-        subject { described_class.new(name, value: value) }
-
-        it "must set #value" do
-          expect(subject.value).to eq(value)
-        end
-      end
-
-      context "when given a Hash" do
-        context "when given the required: false keyword argument" do
-          subject { described_class.new(name, value: {required: false}) }
-
-          it "value's #required? must be true" do
-            expect(subject.value.required?).to be(false)
-          end
-        end
-
-        context "when given the required: false keyword argument" do
-          subject { described_class.new(name, value: {required: false}) }
-
-          it "the value's #required? must be false" do
-            expect(subject.value.required?).to be(false)
-          end
-        end
-      end
-    end
   end
 
-  let(:repeats) { false }
-  let(:accepts_value) { false }
-  let(:value_required) { false }
+  let(:required) { false }
+  let(:repeats)  { false }
   let(:value_allows_empty) { false }
   let(:value_allows_blank) { false }
-  let(:value_type) do
+  let(:type) do
     {
-      required:    value_required,
       allow_empty: value_allows_empty,
       allow_blank: value_allows_blank
     }
   end
 
   subject do
-    described_class.new(name, value: value_type,
-                              repeats: repeats)
+    described_class.new(name, required: required,
+                              type:     type,
+                              repeats:  repeats)
   end
 
   describe "#validate" do
-    include_examples "Arg#validate"
+    context "when the argument requires a value" do
+      let(:required) { true }
+
+      context "and when the argument can be repeated" do
+        let(:repeats) { true }
+
+        context "is given an Array" do
+          let(:value) { ["foo"] }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+
+          context "but it's empty" do
+            let(:value) { [] }
+
+            it "must return false and a validation error message" do
+              expect(subject.validate(value)).to eq(
+                [false, "requires at least one value"]
+              )
+            end
+          end
+        end
+
+        context "is given a single String" do
+          let(:value) { "foo" }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+
+        context "is given nil" do
+          let(:value) { nil }
+
+          it "must return false and a validation error message" do
+            expect(subject.validate(value)).to eq(
+              [false, "requires at least one value"]
+            )
+          end
+        end
+      end
+
+      context "but the argument can only be specified once" do
+        let(:repeats) { false }
+
+        context "is given a single String" do
+          let(:value) { "foo" }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+
+        context "and when nil is given" do
+          let(:value) { nil }
+
+          it "must return false and a validation error message" do
+            expect(subject.validate(value)).to eq(
+              [false, "does not allow a nil value"]
+            )
+          end
+        end
+      end
+    end
+
+    context "when the argument does not require a value" do
+      let(:required) { false }
+
+      context "and when the argument can be repeated" do
+        let(:repeats) { true }
+
+        context "is given an Array" do
+          let(:value) { ["foo"] }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+
+          context "but it's empty" do
+            let(:value) { [] }
+
+            it "must return false and a validation error message" do
+              expect(subject.validate(value)).to be(true)
+            end
+          end
+        end
+
+        context "is given a single String" do
+          let(:value) { "foo" }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+
+        context "and when nil is given" do
+          let(:value) { nil }
+
+          it "must return false and a validation error message" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+      end
+
+      context "but the argument can only be specified once" do
+        let(:repeats) { false }
+
+        context "is given an Array" do
+          let(:value) { ["foo"] }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+
+          context "but it's empty" do
+            let(:value) { [] }
+
+            it "must return false and a validation error message" do
+              expect(subject.validate(value)).to eq(
+                [false, "does not allow an empty value"]
+              )
+            end
+          end
+        end
+
+        context "is given a single String" do
+          let(:value) { "foo" }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+
+        context "and when nil is given" do
+          let(:value) { nil }
+
+          it "must return false and a validation error message" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+      end
+    end
   end
 
   describe "#argv" do
@@ -100,18 +236,18 @@ describe CommandMapper::Argument do
           end
         end
 
-        context "when initializes with a custom value: type" do
-          let(:value_type) { Types::KeyValue.new }
+        context "when initializes with a custom type: type" do
+          let(:type) { Types::KeyValue.new }
 
           let(:values) do
             [{"foo" => 1}, {"bar" => 2 }]
           end
 
-          it "must format each value using #value.format" do
+          it "must format each value using #type.format" do
             expect(subject.argv(values)).to eq(
               [
-                subject.value.format(values[0]),
-                subject.value.format(values[1])
+                subject.type.format(values[0]),
+                subject.type.format(values[1])
               ]
             )
           end
@@ -133,15 +269,15 @@ describe CommandMapper::Argument do
           end
         end
 
-        context "when initializes with a custom value: type" do
-          let(:value_type) { Types::KeyValue.new }
+        context "when initializes with a custom type: type" do
+          let(:type) { Types::KeyValue.new }
 
           let(:value) do
             {"foo" => "bar"}
           end
 
-          it "must format the value using #value.format" do
-            expect(subject.argv(value)).to eq([subject.value.format(value)])
+          it "must format the value using #type.format" do
+            expect(subject.argv(value)).to eq([subject.type.format(value)])
           end
         end
       end
@@ -155,7 +291,7 @@ describe CommandMapper::Argument do
         expect(subject.argv(value)).to eq([value])
       end
 
-      context "is given nil" do
+      context "and is given nil" do
         let(:value) { nil }
 
         it "must return an empty argv" do
@@ -163,18 +299,18 @@ describe CommandMapper::Argument do
         end
       end
 
-      context "when initializes with a custom value: type" do
-        let(:value_type) { Types::List.new }
-        let(:value)      { [1,2,3,4]       }
+      context "when initializes with a custom type: type" do
+        let(:type)  { Types::List.new }
+        let(:value) { [1,2,3,4]       }
 
         it "must format the value using #value.format" do
-          expect(subject.argv(value)).to eq([subject.value.format(value)])
+          expect(subject.argv(value)).to eq([subject.type.format(value)])
         end
       end
     end
 
     context "when the given value is invalid" do
-      let(:value) { "  " }
+      let(:value)   { "  " }
       let(:message) { "does not allow a blank value" }
 
       it do

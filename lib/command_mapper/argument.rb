@@ -18,26 +18,67 @@ module CommandMapper
     # @param [Symbol] name
     #   The argument's name.
     #
-    # @param [Types::Type, Hash, :required, :optional] value
+    # @param [Boolean] required
+    #   Specifies whether the argument is required or can be omitted.
+    #
+    # @param [Types::Type, Hash] type
     #   The value type of the argument.
     #
-    # @param [Hash{Symbol => Object}] kwargs
-    #   Additional keyword arguments for {Arg#initialize}.
-    #
-    # @option kwargs [Boolean] :repeats
+    # @param [Boolean] repeats
     #   Specifies whether the argument can be given multiple times.
     #
     # @raise [ArgumentError]
-    #   The given `value:` must not be `false` or `nil`.
+    #   The given `type:` must not be `false` or `nil`.
     #
-    def initialize(name, value: :required, **kwargs)
-      @name = name
+    def initialize(name, required: true, type: Types::Str.new, repeats: false)
+      super(required: required, type: type)
 
-      unless value
-        raise(ArgumentError,"value: must not be false or nil")
+      @name    = name
+      @repeats = repeats
+    end
+
+    #
+    # Indicates whether the arg can be repeated multiple times or not.
+    #
+    # @return [Boolean]
+    #
+    def repeats?
+      @repeats
+    end
+
+    #
+    # Validates whether a given value is compatible with the arg.
+    #
+    # @param [Object] value
+    #
+    # @return [true, (false, String)]
+    #   Returns true if the value is valid, or `false` and a validation error
+    #   message if the value is not compatible.
+    #
+    def validate(value)
+      if repeats?
+        values = Array(value)
+
+        if required?
+          # argument requires atleast one value
+          if values.empty?
+            return [false, "requires at least one value"]
+          end
+        end
+
+        # validate each element in the value
+        values.each do |element|
+          valid, message = @type.validate(element)
+
+          unless valid
+            return valid, message
+          end
+        end
+
+        return true
+      else
+        super(value)
       end
-
-      super(value: value, **kwargs)
     end
 
     #
@@ -90,7 +131,7 @@ module CommandMapper
     def emit_arg_value(argv,value)
       # explicitly ignore nil values
       unless value.nil?
-        argv << @value.format(value)
+        argv << @type.format(value)
       end
     end
 

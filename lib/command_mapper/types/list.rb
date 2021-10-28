@@ -1,4 +1,5 @@
 require 'command_mapper/types/type'
+require 'command_mapper/types/str'
 
 module CommandMapper
   module Types
@@ -23,15 +24,10 @@ module CommandMapper
       # @param [String] separator
       #   The list separator character.
       #
-      # @param [Type, Hash, :required, :optional] value
+      # @param [Type, Hash] value
       #   The list's value type.
       #
-      # @param [Hash{Symbol => Object}] kwargs
-      #   Additional keyword arguments for {Type#initialize}.
-      #
-      def initialize(separator: ',', value: :required, **kwargs)
-        super(**kwargs)
-
+      def initialize(separator: ',', value: Str.new)
         if value.nil?
           raise(ArgumentError,"value: keyword cannot be nil")
         end

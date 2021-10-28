@@ -486,13 +486,15 @@ describe CommandMapper::Command do
         option '--opt1', value: {required: true}
         option '--opt2', value: {required: true}
         option '--opt3', value: {required: true}
-        argument :arg1, value: {required: false}
-        argument :arg2, value: {required: false}
-        argument :arg3, value: {required: false}
+
+        argument :arg1, required: false
+        argument :arg2, required: false
+        argument :arg3, required: false
 
         subcommand 'subcmd' do
           option '--sub-opt1', value: {required: true}
-          argument :sub_arg1, value: {required: true}
+
+          argument :sub_arg1, required: true
         end
       end
     end
@@ -669,9 +671,10 @@ describe CommandMapper::Command do
               option '--opt1', value: {required: true}
               option '--opt2', value: {required: true}
               option '--opt3', value: {required: true}
-              argument :arg1, value: {required: false}
-              argument :arg2, value: {required: true}
-              argument :arg3, value: {required: false}
+
+              argument :arg1, required: false
+              argument :arg2, required: true
+              argument :arg3, required: false
             end
           end
         end

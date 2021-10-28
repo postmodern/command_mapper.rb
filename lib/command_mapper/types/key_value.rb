@@ -1,4 +1,5 @@
 require 'command_mapper/types/type'
+require 'command_mapper/types/str'
 
 module CommandMapper
   module Types
@@ -28,18 +29,16 @@ module CommandMapper
       # @param [String] separator
       #   The key-value separator.
       #
-      # @param [Type, Hash, :required, :optional] key
+      # @param [Type, Hash] key
       #   The key's value type.
       #
-      # @param [Type, Hash, :required, :optional] value
+      # @param [Type, Hash] value
       #   The value's value type.
       #
       # @param [Hash{Symbol => Object}]
       #   Additional keyword arguments for {Type#initialize}.
       #
-      def initialize(separator: '=', key: :required, value: :required, **kwargs)
-        super(**kwargs)
-
+      def initialize(separator: '=', key: Str.new, value: Str.new)
         @separator = separator
 
         if key.nil?

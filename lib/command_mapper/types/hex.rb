@@ -16,9 +16,7 @@ module CommandMapper
       # @param [Hash{Symbol => Object}] kwargs
       #   Additional keyword arguments for {Type#initialize}.
       #
-      def initialize(leading_zero: false, **kwargs)
-        super(**kwargs)
-
+      def initialize(leading_zero: false)
         @leading_zero = leading_zero
       end
 

@@ -1,34 +1,53 @@
 require 'command_mapper/types/type'
+require 'command_mapper/types/str'
 
 module CommandMapper
   #
   # The base class for both {Option options} and {Argument arguments}.
   #
   class Arg
-    # The argument's value type.
+    # The argument's arg's type.
     #
-    # @return [Type, nil]
-    attr_reader :value
+    # @return [Types::Type, nil]
+    attr_reader :type
 
     #
     # Initializes the argument.
     #
-    # @param [Type, Hash, :required, :optional, nil] value
+    # @param [Boolean] required
+    #   Specifies whether the argument is required or can be omitted.
     #
-    # @param [Boolean] repeats
+    # @param [Types::Type, Hash, nil] type
     #
-    def initialize(value: nil, repeats: false)
-      @value   = Types::Type(value)
-      @repeats = repeats
+    # @raise [ArgumentError]
+    #   The `type` keyword argument was given a `nil` value.
+    #
+    def initialize(required: true, type: Types::Str.new)
+      @required = required
+
+      if type.nil?
+        raise(ArgumentError,"type: keyword cannot be nil")
+      end
+
+      @type = Types::Type(type)
     end
 
     #
-    # Indicates whether the arg can be repeated multiple times or not.
+    # Specifies whether the argument value is required.
     #
     # @return [Boolean]
     #
-    def repeats?
-      @repeats
+    def required?
+      @required
+    end
+
+    #
+    # Specifies whether the argument value can be omitted.
+    #
+    # @return [Boolean]
+    #
+    def optional?
+      !@required
     end
 
     #
@@ -41,29 +60,17 @@ module CommandMapper
     #   message if the value is not compatible.
     #
     def validate(value)
-      if repeats?
-        values = Array(value)
-
-        if @value.required?
-          # argument requires atleast one value
-          if values.empty?
-            return [false, "requires at least one value"]
-          end
+      if value.nil?
+        if required?
+          return [false, "does not allow a nil value"]
         end
-
-        # validate each element in the value
-        values.each do |element|
-          valid, message = @value.validate(element)
-
-          unless valid
-            return valid, message
-          end
-        end
-
-        return true
-      else
-        return @value.validate(value)
       end
+
+      if @type
+        return @type.validate(value)
+      end
+
+      return true
     end
 
   end

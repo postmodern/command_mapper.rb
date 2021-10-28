@@ -12,16 +12,16 @@ describe CommandMapper::Types::KeyValue do
       expect(subject.key).to be_kind_of(CommandMapper::Types::Str)
     end
 
-    it "must require a 'key' value by default" do
-      expect(subject.key.required?).to be(true)
+    it "must require a non-empty 'key' value by default" do
+      expect(subject.key.allow_empty?).to be(false)
     end
 
     it "must initialize #value" do
       expect(subject.value).to be_kind_of(CommandMapper::Types::Str)
     end
 
-    it "must require a 'value' value by default" do
-      expect(subject.value.required?).to be(true)
+    it "must require a non-empty 'value' value by default" do
+      expect(subject.value.allow_empty?).to be(false)
     end
 
     context "when given the separator: keyword" do
@@ -31,30 +31,6 @@ describe CommandMapper::Types::KeyValue do
 
       it "must set #separator" do
         expect(subject.separator).to eq(separator)
-      end
-    end
-
-    context "when given the key: :optional" do
-      subject { described_class.new(key: :optional) }
-
-      it "must initialize #key" do
-        expect(subject.key).to be_kind_of(CommandMapper::Types::Str)
-      end
-
-      it "must not require a 'key' value by default" do
-        expect(subject.key.required?).to be(false)
-      end
-    end
-
-    context "when given the value: :optional" do
-      subject { described_class.new(value: :optional) }
-
-      it "must initialize #value" do
-        expect(subject.value).to be_kind_of(CommandMapper::Types::Str)
-      end
-
-      it "must not require a 'value' value by default" do
-        expect(subject.value.required?).to be(false)
       end
     end
 

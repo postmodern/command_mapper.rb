@@ -40,33 +40,33 @@ module CommandMapper
       option "--askpass"
       option "--background"
       option "--bell"
-      option "--close-from", equals: true, value: :required
-      option "--chdir", equals: true, value: :required
-      option "--preserve-env", equals: true, value: :required
+      option "--close-from", equals: true, value: true
+      option "--chdir", equals: true, value: true
+      option "--preserve-env", equals: true, value: true
       option "--edit"
-      option "--group", equals: true, value: :required
+      option "--group", equals: true, value: true
       option "--set-home"
       option "--help"
-      option "--host", equals: true, value: :required
+      option "--host", equals: true, value: true
       option "--login"
       option "--remove-timestamp"
       option "--reset-timestamp"
       option "--list"
       option "--non-interactive"
       option "--preserve-groups"
-      option "--prompt", equals: true, value: :required
-      option "--chroot", equals: true, value: :required
-      option "--role", equals: true, value: :required
+      option "--prompt", equals: true, value: true
+      option "--chroot", equals: true, value: true
+      option "--role", equals: true, value: true
       option "--stdin"
       option "--shell"
-      option "--type", equals: true, value: :required
-      option "--command-timeout", equals: true, value: :required
-      option "--other-user", equals: true, value: :required
-      option "--user", equals: true, value: :required
+      option "--type", equals: true, value: true
+      option "--command-timeout", equals: true, value: true
+      option "--other-user", equals: true, value: true
+      option "--user", equals: true, value: true
       option "--version"
       option "--validate"
 
-      argument :command, value: :optional, repeats: true
+      argument :command, required: false, repeats: true
     end
 
   end

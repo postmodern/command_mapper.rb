@@ -12,12 +12,7 @@ module CommandMapper
       # @param [Boolean] allow_blank
       #   Specifies whether the argument may accept blank values.
       #
-      # @param [Hash{Symbol => Object}] kwargs
-      #   Additional keyword arguments for {Type#initialize}.
-      #
-      def initialize(allow_empty: false, allow_blank: false, **kwargs)
-        super(**kwargs)
-
+      def initialize(allow_empty: false, allow_blank: false)
         @allow_empty = allow_empty
         @allow_blank = allow_blank
       end
@@ -57,12 +52,6 @@ module CommandMapper
       #     `false` will be returned.
       #
       def validate(value)
-        valid, message = super(value)
-
-        unless valid
-          return valid, message
-        end
-
         if value.respond_to?(:empty?) && value.empty?
           unless allow_empty?
             return [false, "does not allow an empty value"]

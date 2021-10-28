@@ -15,12 +15,6 @@ module CommandMapper
       # @return [true, (false, String)]
       #
       def validate(value)
-        valid, message = super(value)
-
-        unless valid
-          return valid, message
-        end
-
         case value
         when Integer
           return true

@@ -1,73 +1,137 @@
 require 'spec_helper'
-require 'arg_examples'
 require 'command_mapper/arg'
 require 'command_mapper/types/list'
 
 describe CommandMapper::Arg do
-  include CommandMapper
-
   describe "#initialize" do
-    it "must default #repeats? to false" do
-      expect(subject.repeats?).to be(false)
+    it "must default #type to a Types::Str object" do
+      expect(subject.type).to be_kind_of(Types::Str)
     end
 
-    context "when given the repeats: true keyword argument" do
-      subject { described_class.new(repeats: true) }
-
-      it "#repeats? must be true" do
-        expect(subject.repeats?).to be(true)
-      end
-    end
-
-    context "when given the value: keyword argument" do
+    context "when given the type: keyword argument" do
       context "and it's a custom Types::Type class" do
-        let(:value) { Types::List.new(separator: ',') }
+        let(:type) { Types::List.new(separator: ',') }
 
-        subject { described_class.new(value: value) }
+        subject { described_class.new(type: type) }
 
-        it "must set #value" do
-          expect(subject.value).to eq(value)
+        it "must set #type" do
+          expect(subject.type).to eq(type)
         end
       end
 
-      context "when given a Hash" do
-        context "when given the required: false keyword argument" do
-          subject { described_class.new(value: {required: false}) }
-
-          it "value's #required? must be true" do
-            expect(subject.value.required?).to be(false)
-          end
+      context "but it's nil" do
+        it do
+          expect {
+            described_class.new(type: nil)
+          }.to raise_error(ArgumentError,"type: keyword cannot be nil")
         end
+      end
+    end
 
-        context "when given the required: false keyword argument" do
-          subject { described_class.new(value: {required: false}) }
+    context "when given the required: true keyword argument" do
+      subject { described_class.new(required: true) }
 
-          it "the value's #required? must be false" do
-            expect(subject.value.required?).to be(false)
-          end
-        end
+      it "type's #required? must be true" do
+        expect(subject.required?).to be(true)
+      end
+    end
+
+    context "when given the required: false keyword argument" do
+      subject { described_class.new(required: false) }
+
+      it "the #type's #required? must be false" do
+        expect(subject.required?).to be(false)
       end
     end
   end
 
-  let(:repeats) { false }
-  let(:accepts_value) { false }
-  let(:value_required) { false }
-  let(:value_allows_empty) { false }
-  let(:value_allows_blank) { false }
+  let(:required) { true }
+  let(:type)     { Types::Str.new }
 
   subject do
     described_class.new(
-      value: {
-        required:    value_required,
-        allow_empty: value_allows_empty,
-        allow_blank: value_allows_blank
-      },
-      repeats: repeats
+      required: required,
+      type:     type
     )
   end
 
+  describe "#required?" do
+    context "when initialized with required: true" do
+      subject { described_class.new(required: true) }
+
+      it "must be true" do
+        expect(subject.required?).to be(true)
+      end
+    end
+
+    context "when initialized with required: true" do
+      subject { described_class.new(required: false) }
+
+      it "must be false" do
+        expect(subject.required?).to be(false)
+      end
+    end
+  end
+
+  describe "#optional?" do
+    context "when initialized with required: false" do
+      subject { described_class.new(required: false) }
+
+      it "must be true" do
+        expect(subject.optional?).to be(true)
+      end
+    end
+
+    context "when initialized with required: true" do
+      subject { described_class.new(required: true) }
+
+      it "must be false" do
+        expect(subject.optional?).to be(false)
+      end
+    end
+  end
+
   describe "#validate" do
-    include_examples "Arg#validate"
+    context "when the argument requires a value" do
+      let(:required) { true }
+
+      context "is given a String" do
+        let(:value) { "foo" }
+
+        it "must return true" do
+          expect(subject.validate(value)).to be(true)
+        end
+      end
+
+      context "and is given nil" do
+        let(:value) { nil }
+
+        it "must return true" do
+          expect(subject.validate(value)).to eq(
+            [false, "does not allow a nil value"]
+          )
+        end
+      end
+    end
+
+    context "when the argument does not require a value" do
+      let(:required) { false }
+
+      context "is given a String" do
+        let(:value) { "foo" }
+
+        it "must return true" do
+          expect(subject.validate(value)).to be(true)
+        end
+      end
+
+      context "and is given nil" do
+        let(:value) { nil }
+
+        it "must return true" do
+          expect(subject.validate(value)).to be(true)
+        end
+      end
+    end
   end
 end

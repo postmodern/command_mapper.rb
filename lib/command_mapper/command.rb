@@ -195,7 +195,7 @@ module CommandMapper
     #
     # @example
     #   command 'grep' do
-    #     option "--regexp", equals: true, value: :required
+    #     option "--regexp", equals: true, value: true
     #     # ...
     #   end
     #
@@ -225,18 +225,26 @@ module CommandMapper
     # Defines an option for the command.
     #
     # @param [String] flag
+    #   The option's command-line flag.
     #
-    # @param [Hash{Symbol => Object}] value
-    #
-    # @option value [Types::Type, Hash, :required, :optional, nil] value
-    #   The format of the option's value.
+    # @param [Symbol, nil] name
+    #   The option's name.
     #
     # @param [Boolean] equals
-    #   Specifies whether the option is of the form `--opt=value` or
-    #   `--opt value`.
+    #   Specifies whether the option's flag and value should be separated with a
+    #   `=` character.
+    #
+    # @param [Hash, nil] value
+    #   The option's value.
+    #
+    # @option value [Boolean] :required
+    #   Specifies whether the option requires a value or not.
+    #
+    # @option value [Types:Type, Hash, nil] :type
+    #   The explicit type for the option's value.
     #
     # @param [Boolean] repeats
-    #   Specifies whether the option can be repeated multiple times.
+    #   Specifies whether the option can be given multiple times.
     #
     # @api public
     #
@@ -247,13 +255,13 @@ module CommandMapper
     #   option '-F', name: :foo
     #
     # @example Defining an option who's value is required:
-    #   option '--file', value: :required
+    #   option '--file', value: true
     #
     # @example Defining an option who's value is optional:
-    #   option '--file', value: :optional
+    #   option '--file', value: {required: false}
     #
     # @example Defining an `--opt=value` option:
-    #   option '--foo', equals: true, value: :required
+    #   option '--foo', equals: true, value: true
     #
     # @example Defining an option that can be repeated multiple times:
     #   option '--foo', repeats: true
@@ -264,7 +272,7 @@ module CommandMapper
     # @raise [ArgumentError]
     #   The option flag conflicts with a pre-existing internal method.
     #
-    def self.option(flag, name: nil, value: nil, repeats: false, equals: false, &block)
+    def self.option(flag, name: nil, equals: nil, value: nil, repeats: false, &block)
       option = Option.new(flag, name:    name,
                                 equals:  equals,
                                 value:   value,
@@ -304,8 +312,11 @@ module CommandMapper
     #
     # @param [Symbol] name
     #
-    # @param [Types::Type, Hash, :required, :optional] value
-    #   The explicit value type for the argument.
+    # @param [Boolean] required
+    #   Specifies whether the argument is required or can be omitted.
+    #
+    # @param [Types::Type, Hash, nil] type
+    #   The explicit type for the argument.
     #
     # @param [Boolean] repeats
     #   Specifies whether the option can be repeated multiple times.
@@ -319,14 +330,16 @@ module CommandMapper
     #   argument :files, repeats: true
     #
     # @example Define an optional argument:
-    #   argument :file, value: {required: false}
+    #   argument :file, required: false
     #
     # @raise [ArgumentError]
     #   The argument name conflicts with a pre-existing internal method.
     #
-    def self.argument(name, value: :required, repeats: false)
+    def self.argument(name, required: true, type: Str.new, repeats: false)
       name     = name.to_sym
-      argument = Argument.new(name, value: value, repeats: repeats)
+      argument = Argument.new(name, required: required,
+                                    type:     type,
+                                    repeats:  repeats)
 
       self.arguments[argument.name] = argument
 
@@ -475,7 +488,7 @@ module CommandMapper
         self.class.arguments.each do |name,argument|
           value = self[name]
 
-          if value.nil? && argument.value.required?
+          if value.nil? && argument.required?
             raise(ArgumentRequired,"argument #{name} is required")
           else
             argument.argv(additional_args,value)

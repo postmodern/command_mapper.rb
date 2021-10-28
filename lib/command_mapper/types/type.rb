@@ -6,57 +6,18 @@ module CommandMapper
     class Type
 
       #
-      # Initializes the type.
+      # The default `validate` method for all types.
       #
-      # @param [Boolean] required
-      #   Specifies whether the argument is required or can be omitted.
-      #
-      def initialize(required: true)
-        @required = required
-      end
-
-      #
-      # Specifies whether the argument value is required.
-      #
-      # @return [Boolean]
-      #
-      def required?
-        @required
-      end
-
-      #
-      # Specifies whether the argument value can be omitted.
-      #
-      # @return [Boolean]
-      #
-      def optional?
-        !@required
-      end
-
-      #
-      # Validates the given value.
-      #
-      # @param [Object] value
-      #   The given value to validate.
+      # @param [Object]
       #
       # @return [true, (false, String)]
-      #   Returns true if the valid is considered valid, or false and a
-      #   validation message if the value is not valid.
-      #   * If `nil` is given and a value is required, then `false` will be
-      #     returned.
       #
       def validate(value)
-        if value.nil?
-          if required?
-            return [false, "does not allow a nil value"]
-          end
-        end
-
-        return true
+        true
       end
 
       #
-      # Validates and converts the value to a String.
+      # The default `format` method for all types.
       #
       # @param [#to_s] value
       #
@@ -74,7 +35,7 @@ module CommandMapper
     #
     # Converts a value into a {Type} object.
     #
-    # @param [Type, Hash, :required, :optional, nil] value
+    # @param [Type, Hash, nil] value
     #
     # @return [Type]
     #
@@ -84,11 +45,9 @@ module CommandMapper
       case value
       when Type      then value
       when Hash      then Str.new(**value)
-      when :required then Str.new(required: true)
-      when :optional then Str.new(required: false)
       when nil       then nil
       else
-        raise(ArgumentError,"value must be a #{Type}, Hash, :required, :optional, or nil: #{value.inspect}")
+        raise(ArgumentError,"value must be a #{Type}, Hash, or nil: #{value.inspect}")
       end
     end
 

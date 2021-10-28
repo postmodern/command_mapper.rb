@@ -89,20 +89,6 @@ describe CommandMapper::Types::Str do
   end
 
   describe "#validate" do
-    subject { described_class.new(required: true) }
-
-    context "and a nil value is given" do
-      it "must return false and a validation error message" do
-        expect(subject.validate(nil)).to eq([false, "does not allow a nil value"])
-      end
-    end
-
-    context "and a non-nil value is given" do
-      it "must return true" do
-        expect(subject.validate("foo")).to be(true)
-      end
-    end
-
     context "and an empty String is given" do
       it "must return false and a validation error message" do
         expect(subject.validate("")).to eq([false, "does not allow an empty value"])
@@ -112,22 +98,6 @@ describe CommandMapper::Types::Str do
     context "and a blank String is given" do
       it "must return false and a validation error message" do
         expect(subject.validate("  ")).to eq([false, "does not allow a blank value"])
-      end
-    end
-
-    context "when initialized with required: false" do
-      subject { described_class.new(required: false) }
-
-      context "and a nil is given" do
-        it "must return nil" do
-          expect(subject.validate(nil)).to be(true)
-        end
-      end
-
-      context "and a non-nil value is given" do
-        it "must return true" do
-          expect(subject.validate("foo")).to be(true)
-        end
       end
     end
 

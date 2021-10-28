@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'arg_examples'
 require 'command_mapper/option'
 require 'command_mapper/types/list'
 require 'command_mapper/types/key_value'
@@ -51,12 +50,38 @@ describe CommandMapper::Option do
     end
 
     context "when value: is given" do
-      let(:value_options) { {required: true} }
+      context "and when value: is true" do
+        subject { described_class.new(flag, value: true) }
 
-      subject { described_class.new(flag, value: value_options) }
+        it "must initialize #value as an OptionValue" do
+          expect(subject.value).to be_kind_of(OptionValue)
+        end
 
-      it "must initialize #value with the value: options" do
-        expect(subject.value).to be_kind_of(Types::Type)
+        it "must set #value.required? to true" do
+          expect(subject.value.required?).to be(true)
+        end
+      end
+
+      context "and when value: is a Hash" do
+        let(:value_required) { true }
+        let(:value_type)     { Types::KeyValue.new }
+        let(:value_kwargs) do
+          {
+            required: value_required,
+            type:     value_type
+          }
+        end
+
+        subject { described_class.new(flag, value: value_kwargs) }
+
+        it "must initialize #value as an OptionValue" do
+          expect(subject.value).to be_kind_of(OptionValue)
+        end
+
+        it "must initialize #value with the value: ... Hash" do
+          expect(subject.value.required?).to be(value_required)
+          expect(subject.value.type).to eq(value_type)
+        end
       end
     end
   end
@@ -157,21 +182,27 @@ describe CommandMapper::Option do
 
   let(:repeats) { false }
   let(:accepts_value) { false }
+
   let(:value_required) { false }
   let(:value_allows_empty) { false }
   let(:value_allows_blank) { false }
   let(:value_type) do
     {
-      required:    value_required,
       allow_empty: value_allows_empty,
       allow_blank: value_allows_blank
+    }
+  end
+  let(:value_kwargs) do
+    {
+      required: value_required,
+      type:     value_type
     }
   end
 
   subject do
     if accepts_value
-      described_class.new(flag, name: name,
-                                value: value_type,
+      described_class.new(flag, name:    name,
+                                value:   value_kwargs,
                                 repeats: repeats)
     else
       described_class.new(flag, name: name, repeats: repeats)
@@ -179,8 +210,6 @@ describe CommandMapper::Option do
   end
 
   describe "#validate" do
-    include_examples "Arg#validate"
-
     context "when the option does not accept a value" do
       let(:allows_value) { false }
 
