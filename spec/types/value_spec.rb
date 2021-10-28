@@ -7,14 +7,6 @@ describe CommandMapper::Types::Value do
       expect(subject.required?).to be(true)
     end
 
-    it "must default allow_empty: to false" do
-      expect(subject.allow_empty?).to be(false)
-    end
-
-    it "must default allow_blank: to false" do
-      expect(subject.allow_blank?).to be(false)
-    end
-
     context "when given required: true" do
       subject { described_class.new(required: true) }
 
@@ -28,38 +20,6 @@ describe CommandMapper::Types::Value do
 
       it "must set required: to false" do
         expect(subject.required?).to be(false)
-      end
-    end
-
-    context "when given allow_empty: true" do
-      subject { described_class.new(allow_empty: true) }
-
-      it "must set allow_empty: to true" do
-        expect(subject.allow_empty?).to be(true)
-      end
-    end
-
-    context "when given allow_empty: false" do
-      subject { described_class.new(allow_empty: false) }
-
-      it "must set allow_empty: to false" do
-        expect(subject.allow_empty?).to be(false)
-      end
-    end
-
-    context "when given allow_blank: true" do
-      subject { described_class.new(allow_blank: true) }
-
-      it "must set allow_blank: to true" do
-        expect(subject.allow_blank?).to be(true)
-      end
-    end
-
-    context "when given allow_blank: false" do
-      subject { described_class.new(allow_blank: false) }
-
-      it "must set allow_blank: to false" do
-        expect(subject.allow_blank?).to be(false)
       end
     end
   end
@@ -108,50 +68,6 @@ describe CommandMapper::Types::Value do
     end
   end
 
-  describe "#allow_empty?" do
-    it "must be false by default" do
-      expect(subject.allow_empty?).to be(false)
-    end
-
-    context "when initialized with allow_empty: true" do
-      subject { described_class.new(allow_empty: true) }
-
-      it "must be true" do
-        expect(subject.allow_empty?).to be(true)
-      end
-    end
-
-    context "when initialized with allow_empty: true" do
-      subject { described_class.new(allow_empty: false) }
-
-      it "must be false" do
-        expect(subject.allow_empty?).to be(false)
-      end
-    end
-  end
-
-  describe "#allow_blank?" do
-    it "must be false by default" do
-      expect(subject.allow_blank?).to be(false)
-    end
-
-    context "when initialized with allow_blank: true" do
-      subject { described_class.new(allow_blank: true) }
-
-      it "must be true" do
-        expect(subject.allow_blank?).to be(true)
-      end
-    end
-
-    context "when initialized with allow_blank: true" do
-      subject { described_class.new(allow_blank: false) }
-
-      it "must be false" do
-        expect(subject.allow_blank?).to be(false)
-      end
-    end
-  end
-
   describe "#validate" do
     subject { described_class.new(required: true) }
 
@@ -164,18 +80,6 @@ describe CommandMapper::Types::Value do
     context "and a non-nil value is given" do
       it "must return true" do
         expect(subject.validate("foo")).to be(true)
-      end
-    end
-
-    context "and an empty String is given" do
-      it "must return false and a validation error message" do
-        expect(subject.validate("")).to eq([false, "does not allow an empty value"])
-      end
-    end
-
-    context "and a blank String is given" do
-      it "must return false and a validation error message" do
-        expect(subject.validate("  ")).to eq([false, "does not allow a blank value"])
       end
     end
 
@@ -194,26 +98,6 @@ describe CommandMapper::Types::Value do
         end
       end
     end
-
-    context "but it's also initialized with allow_empty: true" do
-      subject { described_class.new(allow_empty: true) }
-
-      context "and a blank String is given" do
-        it "must return true" do
-          expect(subject.validate("")).to be(true)
-        end
-      end
-    end
-
-    context "but it's also initialized with allow_blank: true" do
-      subject { described_class.new(allow_blank: true) }
-
-      context "and a blank String is given" do
-        it "must return true" do
-          expect(subject.validate("  ")).to be(true)
-        end
-      end
-    end
   end
 
   describe "#format" do
@@ -229,20 +113,19 @@ describe "CommandMapper::Types::Value()" do
 
     subject { CommandMapper::Types::Value(value) }
 
-    it "must return the value" do
+    it "must return the CommandMapper::Types::Value object" do
       expect(subject).to be(value)
     end
   end
 
   context "when given a Hash" do
-    let(:value) { {required: true, allow_empty: true} }
+    let(:value) { {required: true} }
 
     subject { CommandMapper::Types::Value(value) }
 
-    it "must initialize a new CommandMapper::Types::Value" do
-      expect(subject).to be_kind_of(CommandMapper::Types::Value)
+    it "must initialize a new CommandMapper::Types::Str" do
+      expect(subject).to be_kind_of(CommandMapper::Types::Str)
       expect(subject.required?).to be(true)
-      expect(subject.allow_empty?).to be(true)
     end
   end
 
@@ -251,8 +134,8 @@ describe "CommandMapper::Types::Value()" do
 
     subject { CommandMapper::Types::Value(value) }
 
-    it "must initialize a new CommandMapper::Types::Value" do
-      expect(subject).to be_kind_of(CommandMapper::Types::Value)
+    it "must initialize a new CommandMapper::Types::Str" do
+      expect(subject).to be_kind_of(CommandMapper::Types::Str)
     end
 
     it "must set initialize the new value with required: true" do
@@ -265,8 +148,8 @@ describe "CommandMapper::Types::Value()" do
 
     subject { CommandMapper::Types::Value(value) }
 
-    it "must initialize a new CommandMapper::Types::Value" do
-      expect(subject).to be_kind_of(CommandMapper::Types::Value)
+    it "must initialize a new CommandMapper::Types::Str" do
+      expect(subject).to be_kind_of(CommandMapper::Types::Str)
     end
 
     it "must set initialize the new value with required: false" do

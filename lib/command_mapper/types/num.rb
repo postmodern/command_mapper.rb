@@ -8,16 +8,6 @@ module CommandMapper
     class Num < Value
 
       #
-      # Initializes the num type.
-      #
-      # @param [Hash{Symbol => Object}] kwargs
-      #   Additional keyword arguments for {Value#initialize}.
-      #
-      def initialize(allow_blank: false, **kwargs)
-        super(allow_blank: allow_blank, **kwargs)
-      end
-
-      #
       # Validates a value.
       #
       # @param [String, Integer] value
