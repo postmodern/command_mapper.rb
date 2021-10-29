@@ -52,14 +52,19 @@ module CommandMapper
       #     `false` will be returned.
       #
       def validate(value)
-        if value.respond_to?(:empty?) && value.empty?
-          unless allow_empty?
-            return [false, "does not allow an empty value"]
+        case value
+        when String, Symbol
+          if value.empty?
+            unless allow_empty?
+              return [false, "does not allow an empty value"]
+            end
+          elsif value =~ /\A\s+\z/
+            unless allow_blank?
+              return [false, "does not allow a blank value"]
+            end
           end
-        elsif value.respond_to?(:=~) && value =~ /\A\s+\z/
-          unless allow_blank?
-            return [false, "does not allow a blank value"]
-          end
+        else
+          return [false, "value is not a String"]
         end
 
         return true

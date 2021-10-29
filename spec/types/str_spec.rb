@@ -89,35 +89,93 @@ describe CommandMapper::Types::Str do
   end
 
   describe "#validate" do
-    context "and an empty String is given" do
-      it "must return false and a validation error message" do
-        expect(subject.validate("")).to eq([false, "does not allow an empty value"])
+    context "when a String is given" do
+      let(:value) { "foo" }
+
+      it "must return true" do
+        expect(subject.validate(value)).to be(true)
       end
-    end
 
-    context "and a blank String is given" do
-      it "must return false and a validation error message" do
-        expect(subject.validate("  ")).to eq([false, "does not allow a blank value"])
+      context "and it's empty" do
+        let(:value) { "" }
+
+        it "must return false and a validation error message" do
+          expect(subject.validate(value)).to eq([false, "does not allow an empty value"])
+        end
+
+        context "but #allow_empty? is true" do
+          subject { described_class.new(allow_empty: true) }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
       end
-    end
 
-    context "but it's also initialized with allow_empty: true" do
-      subject { described_class.new(allow_empty: true) }
+      context "and it's blank" do
+        let(:value) { " \t\n\r\v " }
 
-      context "and a blank String is given" do
-        it "must return true" do
-          expect(subject.validate("")).to be(true)
+        it "must return false and a validation error message" do
+          expect(subject.validate(value)).to eq([false, "does not allow a blank value"])
+        end
+
+        context "but #allow_blank? is true" do
+          subject { described_class.new(allow_blank: true) }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
         end
       end
     end
 
-    context "but it's also initialized with allow_blank: true" do
-      subject { described_class.new(allow_blank: true) }
+    context "when a Symbol is given" do
+      let(:value) { :foo }
 
-      context "and a blank String is given" do
-        it "must return true" do
-          expect(subject.validate("  ")).to be(true)
+      it "must return true" do
+        expect(subject.validate(value)).to be(true)
+      end
+
+      context "and it's empty" do
+        let(:value) { :"" }
+
+        it "must return false and a validation error message" do
+          expect(subject.validate(value)).to eq([false, "does not allow an empty value"])
         end
+
+        context "but #allow_empty? is true" do
+          subject { described_class.new(allow_empty: true) }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+      end
+
+      context "and it's blank" do
+        let(:value) { :" \t\n\r\v " }
+
+        it "must return false and a validation error message" do
+          expect(subject.validate(value)).to eq([false, "does not allow a blank value"])
+        end
+
+        context "but #allow_blank? is true" do
+          subject { described_class.new(allow_blank: true) }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+      end
+    end
+
+    context "when another kind of Object is given" do
+      let(:value) { Object.new }
+
+      it "must return [false, \"value is not a String\"]" do
+        expect(subject.validate(value)).to eq(
+          [false, "value is not a String"]
+        )
       end
     end
   end
