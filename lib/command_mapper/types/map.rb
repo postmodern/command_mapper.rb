@@ -24,12 +24,27 @@ module CommandMapper
       EnabledDisabled = new(true => 'enabled', false => 'disabled')
 
       #
+      # Validates a value.
+      #
+      # @param [Object] value
+      #
+      # @return [true, (false, String)]
+      #
+      def validate(value)
+        unless @map.has_key?(value)
+          return [false, "unknown value"]
+        end
+
+        return true
+      end
+
+      #
       # @param [Object] value
       #
       # @return [String]
       #
       def format(value)
-        super(@map.fetch(value,value))
+        super(@map.fetch(value))
       end
 
     end

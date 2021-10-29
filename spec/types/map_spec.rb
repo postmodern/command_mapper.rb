@@ -12,6 +12,25 @@ describe CommandMapper::Types::Map do
     end
   end
 
+  describe "#validate" do
+    context "when given a value that's in the map" do
+      let(:value) { 2 }
+
+      it "must return true" do
+        expect(subject.validate(value)).to be(true)
+      end
+    end
+    context "when given a value that is not in the map" do
+      let(:value) { 42 }
+
+      it "must return [false, \"unknown value\"]" do
+        expect(subject.validate(value)).to eq(
+          [false, "unknown value"]
+        )
+      end
+    end
+  end
+
   describe "#format" do
     context "when given a value that's in the map" do
       let(:value) { 2 }
@@ -25,7 +44,9 @@ describe CommandMapper::Types::Map do
       let(:value) { 42 }
 
       it "must return the String version of the value" do
-        expect(subject.format(value)).to eq(value.to_s)
+        expect {
+          subject.format(value)
+        }.to raise_error(KeyError)
       end
     end
   end
