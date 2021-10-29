@@ -192,7 +192,7 @@ describe CommandMapper::Types::Str do
 
       it "must return [false, \"cannot convert an Enumerable object into a String\"]" do
         expect(subject.validate(value)).to eq(
-          [false, "cannot convert an Enumerable object into a String"]
+          [false, "cannot convert a #{value.class} into a String"]
         )
       end
     end

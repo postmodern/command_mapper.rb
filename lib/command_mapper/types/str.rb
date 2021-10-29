@@ -58,7 +58,7 @@ module CommandMapper
             return [false, "value cannot be nil"]
           end
         when Enumerable
-          return [false, "cannot convert an Enumerable object into a String"]
+          return [false, "cannot convert a #{value.class} into a String"]
         else
           unless value.respond_to?(:to_s)
             return [false, "does not define a #to_s method"]
