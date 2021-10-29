@@ -54,6 +54,53 @@ module CommandMapper
       end
 
       #
+      # Valides the given value.
+      #
+      # @param [Object] value
+      #
+      # @return [true, (false, String)]
+      #
+      def validate(value)
+        case value
+        when Hash, Array
+          case value
+          when Hash
+            if value.length > 1
+              return [false, "value cannot contain multiple key:value pairs"]
+            end
+
+            key, value = value.first
+          when Array
+            if value.length < 2
+              return [false, "value must contain two elements"]
+            end
+
+            if value.length > 2
+              return [false, "value cannot contain more than two elements"]
+            end
+
+            key, value = value
+          end
+        else
+          return [false, "value must be a Hash or an Array"]
+        end
+
+        valid, message = @key.validate(key)
+
+        unless valid
+          return [false, message]
+        end
+
+        valid, message = @value.validate(value)
+
+        unless valid
+          return [false, message]
+        end
+
+        return true
+      end
+
+      #
       # Formats a value into a key-value pair.
       #
       # @param [Hash, Array, #to_s] value
@@ -69,11 +116,7 @@ module CommandMapper
           when Hash
             key, value = value.first
           when Array
-            if value.length <= 2
-              key, value = value
-            else
-              key, *value = value
-            end
+            key, value = value
           end
 
           "#{@key.format(key)}#{@separator}#{@value.format(value)}"

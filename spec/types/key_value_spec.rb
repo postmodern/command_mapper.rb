@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'command_mapper/types/key_value'
+require 'command_mapper/types/num'
 require 'command_mapper/types/list'
 
 describe CommandMapper::Types::KeyValue do
@@ -51,6 +52,124 @@ describe CommandMapper::Types::KeyValue do
     end
   end
 
+  describe "#validate" do
+    context "when given a Hash" do
+      context "and the Hash contains only one key:value pair" do
+        let(:key)   { "foo" }
+        let(:value) { "bar" }
+        let(:hash)  { {key => value} }
+
+        it "must return true" do
+          expect(subject.validate(hash)).to be(true)
+        end
+
+        context "when #key is a custom Types::Type object" do
+          let(:key_type) { Types::Num.new }
+          let(:key) { "foo" }
+
+          subject { described_class.new(key: key_type) }
+
+          it "must validate the key value using #key.validate" do
+            expect(subject.validate(hash)).to eq(
+              [false, "value contains non-numeric characters"]
+            )
+          end
+        end
+
+        context "when #value is a custom Types::Type object" do
+          let(:value_type) { Types::Num.new }
+          let(:value)      { "foo"          }
+
+          subject { described_class.new(value: value_type) }
+
+          it "must validate the key value using #key.validate" do
+            expect(subject.validate(hash)).to eq(
+              [false, "value contains non-numeric characters"]
+            )
+          end
+        end
+      end
+
+      context "but the Hash contains more than one pair" do
+        let(:hash)  { {"foo" => "bar", "baz" => "qux"} }
+
+        it "must return true" do
+          expect(subject.validate(hash)).to eq(
+            [false, "value cannot contain multiple key:value pairs"]
+          )
+        end
+      end
+    end
+
+    context "when given an Array" do
+      context "but the Array is empty" do
+        let(:array) { [] }
+
+        it "must return true" do
+          expect(subject.validate(array)).to eq(
+            [false, "value must contain two elements"]
+          )
+        end
+      end
+
+      context "and the Array contains only one elemnet" do
+        let(:array) { ["foo"] }
+
+        it "must return true" do
+          expect(subject.validate(array)).to eq(
+            [false, "value must contain two elements"]
+          )
+        end
+      end
+
+      context "and the Array contains only two elements" do
+        let(:key)   { "foo" }
+        let(:value) { "bar" }
+        let(:array) { [key, value] }
+
+        it "must return true" do
+          expect(subject.validate(array)).to be(true)
+        end
+
+        context "when #key is a custom Types::Type object" do
+          let(:key_type) { Types::Num.new }
+          let(:key) { "foo" }
+
+          subject { described_class.new(key: key_type) }
+
+          it "must validate the key value using #key.validate" do
+            expect(subject.validate(array)).to eq(
+              [false, "value contains non-numeric characters"]
+            )
+          end
+        end
+
+        context "when #value is a custom Types::Type object" do
+          let(:value_type) { Types::Num.new }
+          let(:value)      { "foo"          }
+
+          subject { described_class.new(value: value_type) }
+
+          it "must validate the key value using #key.validate" do
+            expect(subject.validate(array)).to eq(
+              [false, "value contains non-numeric characters"]
+            )
+          end
+        end
+      end
+
+      context "but the Array contains more than two elements" do
+        let(:array) { ["foo", "bar", "baz"] }
+
+        it "must return true" do
+          expect(subject.validate(array)).to eq(
+            [false, "value cannot contain more than two elements"]
+          )
+        end
+      end
+    end
+  end
+
   describe "#format" do
     context "when given a Hash" do
       let(:key)   { "foo" }
@@ -62,19 +181,19 @@ describe CommandMapper::Types::KeyValue do
       end
 
       context "when initialized with a custom key: keyword argument" do
-        subject { described_class.new(key: Types::List.new) }
+        subject { described_class.new(key: Types::Num.new) }
 
-        let(:key) { [1,2] }
+        let(:key) { 42 }
 
         it "must format the key using #key.format" do
-          expect(subject.format(hash)).to eq("#{key.join(',')}=#{value}")
+          expect(subject.format(hash)).to eq("#{key}=#{value}")
         end
       end
 
       context "when initialized with a custom key: keyword argument" do
         subject { described_class.new(value: Types::List.new) }
 
-        let(:value) { [1,2] }
+        let(:value) { %w[bar baz] }
 
         it "must format the value using #value.format" do
           expect(subject.format(hash)).to eq("#{key}=#{value.join(',')}")
@@ -101,22 +220,23 @@ describe CommandMapper::Types::KeyValue do
         expect(subject.format(array)).to eq("#{key}=#{value}")
       end
 
-      context "when the array has one element" do
-        let(:array) { [key] }
+      context "when initialized with a custom key: keyword argument" do
+        subject { described_class.new(key: Types::Num.new) }
 
-        it "must format only that key element" do
-          expect(subject.format(array)).to eq("#{key}=")
+        let(:key) { 42 }
+
+        it "must format the key using #key.format" do
+          expect(subject.format(array)).to eq("#{key}=#{value}")
         end
       end
 
-      context "when the array has more than two element" do
+      context "when initialized with a custom key: keyword argument" do
         subject { described_class.new(value: Types::List.new) }
 
-        let(:values) { [1,2,3]        }
-        let(:array)  { [key, *values] }
+        let(:value) { %w[bar baz] }
 
-        it "must format the additional elements using the value type" do
-          expect(subject.format(array)).to eq("#{key}=#{values.join(',')}")
+        it "must format the value using #value.format" do
+          expect(subject.format(array)).to eq("#{key}=#{value.join(',')}")
         end
       end
 
