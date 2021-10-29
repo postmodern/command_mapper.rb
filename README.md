@@ -22,6 +22,7 @@ allow safely and securely executing commands.
     * `KeyValue`: `KEY:VALUE` or `KEY=VALUE`
     * `KeyValueList`: `KEY:VALUE,...`, or `KEY=VALUE;...`, etc.
     * `Map`: `enabled|disables` or `yes|no`
+    * `Enum`: `type1`, `type2`, `type3`, etc.
     * `InputPath`: a path to a pre-existing file or directory
     * `InputFile`: a path to a pre-existing file
     * `InputDir`: a path to a pre-existing directory
