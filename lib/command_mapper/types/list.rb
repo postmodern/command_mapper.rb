@@ -13,10 +13,10 @@ module CommandMapper
       # @return [String]
       attr_reader :separator
 
-      # The value type.
+      # The list element type.
       #
       # @return [Type]
-      attr_reader :value
+      attr_reader :type
 
       #
       # Initializes the list type.
@@ -27,13 +27,32 @@ module CommandMapper
       # @param [Type, Hash] value
       #   The list's value type.
       #
-      def initialize(separator: ',', value: Str.new)
-        if value.nil?
-          raise(ArgumentError,"value: keyword cannot be nil")
+      def initialize(separator: ',', type: Str.new)
+        if type.nil?
+          raise(ArgumentError,"type: keyword cannot be nil")
         end
 
         @separator = separator
-        @value     = Types::Type(value)
+        @type      = Types::Type(type)
+      end
+
+      #
+      # Validates the value.
+      #
+      # @param [Object] value
+      #
+      # @return [true, (false, String)]
+      #
+      def validate(value)
+        Array(value).each do |element|
+          valid, message = @type.validate(element)
+
+          unless valid
+            return [false, "contains an invalid value: #{message}"]
+          end
+        end
+
+        return true
       end
 
       #
@@ -44,7 +63,7 @@ module CommandMapper
       # @return [String]
       #
       def format(value)
-        Array(value).map(&@value.method(:format)).join(@separator)
+        Array(value).map(&@type.method(:format)).join(@separator)
       end
 
     end

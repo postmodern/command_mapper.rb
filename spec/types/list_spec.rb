@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'command_mapper/types/list'
+require 'command_mapper/types/num'
 
 describe CommandMapper::Types::List do
   describe "#initialize" do
@@ -17,30 +18,68 @@ describe CommandMapper::Types::List do
       end
     end
 
-    context "when given value: keyword argument" do
+    context "when given type: keyword argument" do
       context "and it's a Types::Type object" do
-        let(:value) { Types::Num.new }
+        let(:type) { Types::Num.new }
 
-        subject { described_class.new(value: value) }
+        subject { described_class.new(type: type) }
 
-        it "must set a custom #value" do
-          expect(subject.value).to eq(value)
+        it "must set a custom #type" do
+          expect(subject.type).to eq(type)
         end
       end
 
       context "but it's nil" do
         it do
           expect {
-            described_class.new(value: nil)
-          }.to raise_error(ArgumentError,"value: keyword cannot be nil")
+            described_class.new(type: nil)
+          }.to raise_error(ArgumentError,"type: keyword cannot be nil")
+        end
+      end
+    end
+  end
+
+  describe "#validate" do
+    context "when given a single value" do
+      let(:value) { "foo" }
+
+      it "must return true" do
+        expect(subject.validate(value)).to be(true)
+      end
+
+      context "and the value is invalid" do
+        let(:value) { 42 }
+
+        it "must return the validation error from #type.validate" do
+          expect(subject.validate(value)).to eq(
+            [false, "contains an invalid value: value is not a String"]
+          )
+        end
+      end
+    end
+
+    context "when given multiple values" do
+      let(:values) { %w[foo bar baz] }
+
+      it "must return true" do
+        expect(subject.validate(values)).to be(true)
+      end
+
+      context "but one of the values is invalid" do
+        let(:values) { ["foo", 42, "bar"] }
+
+        it "must return the validation error from #type.validate" do
+          expect(subject.validate(values)).to eq(
+            [false, "contains an invalid value: value is not a String"]
+          )
         end
       end
     end
   end
 
   describe "#format" do
-    context "when given one value" do
-      let(:value) { 42 }
+    context "when given a single value" do
+      let(:value) { "foo" }
 
       it "must return the String version of that value" do
         expect(subject.format(value)).to eq(value.to_s)
@@ -48,7 +87,7 @@ describe CommandMapper::Types::List do
     end
 
     context "when given multiple values" do
-      let(:values) { [1,2,3] }
+      let(:values) { %w[foo bar baz] }
 
       it "must join the values with ','" do
         expect(subject.format(values)).to eq(values.join(','))

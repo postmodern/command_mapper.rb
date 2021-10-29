@@ -21,16 +21,10 @@ module CommandMapper
       #   Additional keyword arguments for {KeyValue#initialize}.
       #
       def initialize(separator: ',', key_value_separator: '=', **kwargs)
-        value = KeyValue.new(separator: key_value_separator, **kwargs)
-
-        super(separator: separator, value: value)
-      end
-
-      #
-      # @return [KeyValue]
-      #
-      def key_value
-        value
+        super(
+          type:      KeyValue.new(separator: key_value_separator, **kwargs),
+          separator: separator
+        )
       end
 
       #
@@ -43,7 +37,7 @@ module CommandMapper
       #   The formatted key-value list.
       #
       def format(value)
-        super(Array(value).map(&@value.method(:format)))
+        super(Array(value).map(&@type.method(:format)))
       end
 
     end
