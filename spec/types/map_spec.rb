@@ -12,6 +12,15 @@ describe CommandMapper::Types::Map do
     end
   end
 
+  describe ".[]" do
+    subject { described_class[map] }
+
+    it "must create a new Map with the given values" do
+      expect(subject).to be_kind_of(described_class)
+      expect(subject.map).to eq(map)
+    end
+  end
+
   describe "#validate" do
     context "when given a value that's in the map" do
       let(:value) { 2 }

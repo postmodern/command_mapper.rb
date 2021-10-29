@@ -17,6 +17,18 @@ module CommandMapper
         @map = map
       end
 
+      #
+      # Creates a new map.
+      #
+      # @param [Hash{Object => String}] map
+      #   The map of values to Strings.
+      #
+      # @return [Map]
+      #
+      def self.[](map)
+        new(map)
+      end
+
       # Maps boolean values to "yes" and "no"
       YesNo = new(true => 'yes', false => 'no')
 
