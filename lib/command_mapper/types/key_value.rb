@@ -66,23 +66,23 @@ module CommandMapper
           case value
           when Hash
             if value.length > 1
-              return [false, "value cannot contain multiple key:value pairs"]
+              return [false, "cannot contain multiple key:value pairs"]
             end
 
             key, value = value.first
           when Array
             if value.length < 2
-              return [false, "value must contain two elements"]
+              return [false, "must contain two elements"]
             end
 
             if value.length > 2
-              return [false, "value cannot contain more than two elements"]
+              return [false, "cannot contain more than two elements"]
             end
 
             key, value = value
           end
         else
-          return [false, "value must be a Hash or an Array"]
+          return [false, "must be a Hash or an Array"]
         end
 
         valid, message = @key.validate(key)

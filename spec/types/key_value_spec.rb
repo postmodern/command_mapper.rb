@@ -95,7 +95,7 @@ describe CommandMapper::Types::KeyValue do
 
         it "must return true" do
           expect(subject.validate(hash)).to eq(
-            [false, "value cannot contain multiple key:value pairs"]
+            [false, "cannot contain multiple key:value pairs"]
           )
         end
       end
@@ -107,7 +107,7 @@ describe CommandMapper::Types::KeyValue do
 
         it "must return true" do
           expect(subject.validate(array)).to eq(
-            [false, "value must contain two elements"]
+            [false, "must contain two elements"]
           )
         end
       end
@@ -117,7 +117,7 @@ describe CommandMapper::Types::KeyValue do
 
         it "must return true" do
           expect(subject.validate(array)).to eq(
-            [false, "value must contain two elements"]
+            [false, "must contain two elements"]
           )
         end
       end
@@ -163,7 +163,7 @@ describe CommandMapper::Types::KeyValue do
 
         it "must return true" do
           expect(subject.validate(array)).to eq(
-            [false, "value cannot contain more than two elements"]
+            [false, "cannot contain more than two elements"]
           )
         end
       end
