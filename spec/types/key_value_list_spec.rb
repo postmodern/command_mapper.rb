@@ -7,12 +7,12 @@ describe CommandMapper::Types::KeyValueList do
       expect(subject.separator).to eq(',')
     end
 
-    it "must initialize #value to a Types::KeyValue object" do
-      expect(subject.value).to be_kind_of(Types::KeyValue)
+    it "must initialize #type to a Types::KeyValue object" do
+      expect(subject.type).to be_kind_of(Types::KeyValue)
     end
 
-    it "must default #value.separator to '='" do
-      expect(subject.value.separator).to eq('=')
+    it "must default #type.separator to '='" do
+      expect(subject.type.separator).to eq('=')
     end
 
     context "when given the separator: keyword" do
@@ -30,8 +30,8 @@ describe CommandMapper::Types::KeyValueList do
 
       subject { described_class.new(key_value_separator: separator) }
 
-      it "must set #key_value.separator" do
-        expect(subject.key_value.separator).to eq(separator)
+      it "must set #type.separator" do
+        expect(subject.type.separator).to eq(separator)
       end
     end
   end
@@ -44,9 +44,9 @@ describe CommandMapper::Types::KeyValueList do
 
         let(:array) { [[key, value]] }
 
-        it "must join the key and value with #key_value_separator" do
+        it "must join the key and value with #type.separator" do
           expect(subject.format(array)).to eq(
-            "#{key}#{subject.key_value.separator}#{value}"
+            "#{key}#{subject.type.separator}#{value}"
           )
         end
       end
@@ -59,9 +59,9 @@ describe CommandMapper::Types::KeyValueList do
 
         let(:array) { [[key1, value1], [key2, value2]] }
 
-        it "must join the keys and values with #key_value.separator, and then with #separator" do
+        it "must join the keys and values with #type.separator, and then with #separator" do
           expect(subject.format(array)).to eq(
-            "#{key1}#{subject.key_value.separator}#{value1}#{subject.separator}#{key2}#{subject.key_value.separator}#{value2}"
+            "#{key1}#{subject.type.separator}#{value1}#{subject.separator}#{key2}#{subject.type.separator}#{value2}"
           )
         end
       end
@@ -74,9 +74,9 @@ describe CommandMapper::Types::KeyValueList do
 
         let(:hash) { {key => value} }
 
-        it "must join the key and value with #key_value_separator" do
+        it "must join the key and value with #type.separator" do
           expect(subject.format(hash)).to eq(
-            "#{key}#{subject.key_value.separator}#{value}"
+            "#{key}#{subject.type.separator}#{value}"
           )
         end
       end
@@ -89,9 +89,9 @@ describe CommandMapper::Types::KeyValueList do
 
         let(:hash) { {key1 => value1, key2 => value2} }
 
-        it "must join the keys and values with #key_value.separator, and then with #separator" do
+        it "must join the keys and values with #type.separator, and then with #separator" do
           expect(subject.format(hash)).to eq(
-            "#{key1}#{subject.key_value.separator}#{value1}#{subject.separator}#{key2}#{subject.key_value.separator}#{value2}"
+            "#{key1}#{subject.type.separator}#{value1}#{subject.separator}#{key2}#{subject.type.separator}#{value2}"
           )
         end
       end
