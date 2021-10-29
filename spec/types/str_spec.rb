@@ -187,13 +187,45 @@ describe CommandMapper::Types::Str do
       end
     end
 
-    context "when another kind of Object is given" do
-      let(:value) { Object.new }
+    context "when an Enumerable object is given" do
+      let(:value) { %w[foo bar] }
 
-      it "must return [false, \"value is not a String\"]" do
+      it "must return [false, \"cannot convert an Enumerable object into a String\"]" do
         expect(subject.validate(value)).to eq(
-          [false, "value is not a String"]
+          [false, "cannot convert an Enumerable object into a String"]
         )
+      end
+    end
+
+    context "when another kind of Object is given" do
+      module TestStr
+        class CustomObject
+          def to_s
+            "foo"
+          end
+        end
+      end
+
+      let(:value) { TestStr::CustomObject.new }
+
+      it "must return true" do
+        expect(subject.validate(value)).to be(true)
+      end
+
+      context "but the object does not define a #to_s method" do
+        module TestStr
+          class ObjectWithoutToS
+            undef to_s
+          end
+        end
+
+        let(:value) { TestStr::ObjectWithoutToS.new }
+
+        it "must return true" do
+          expect(subject.validate(value)).to eq(
+            [false, "does not define a #to_s method"]
+          )
+        end
       end
     end
   end

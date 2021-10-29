@@ -57,7 +57,15 @@ module CommandMapper
           unless allow_empty?
             return [false, "value cannot be nil"]
           end
-        when String, Symbol
+        when Enumerable
+          return [false, "cannot convert an Enumerable object into a String"]
+        else
+          unless value.respond_to?(:to_s)
+            return [false, "does not define a #to_s method"]
+          end
+
+          value = value.to_s
+
           if value.empty?
             unless allow_empty?
               return [false, "does not allow an empty value"]
@@ -67,8 +75,6 @@ module CommandMapper
               return [false, "does not allow a blank value"]
             end
           end
-        else
-          return [false, "value is not a String"]
         end
 
         return true

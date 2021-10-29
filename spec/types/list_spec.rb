@@ -66,11 +66,11 @@ describe CommandMapper::Types::List do
       end
 
       context "and the value is invalid" do
-        let(:value) { 42 }
+        let(:value) { "" }
 
         it "must return the validation error from #type.validate" do
           expect(subject.validate(value)).to eq(
-            [false, "contains an invalid value: value is not a String"]
+            [false, "contains an invalid value: does not allow an empty value"]
           )
         end
       end
@@ -102,11 +102,11 @@ describe CommandMapper::Types::List do
       end
 
       context "but one of the values is invalid" do
-        let(:values) { ["foo", 42, "bar"] }
+        let(:values) { ["foo", nil, "bar"] }
 
         it "must return the validation error from #type.validate" do
           expect(subject.validate(values)).to eq(
-            [false, "contains an invalid value: value is not a String"]
+            [false, "contains an invalid value: value cannot be nil"]
           )
         end
       end
