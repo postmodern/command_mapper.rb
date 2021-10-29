@@ -63,6 +63,8 @@ module CommandMapper
       if value.nil?
         if required?
           return [false, "does not allow a nil value"]
+        else
+          return true
         end
       end
 
