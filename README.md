@@ -26,12 +26,11 @@ allow safely and securely executing commands.
     * `InputFile`: a path to a pre-existing file
     * `InputDir`: a path to a pre-existing directory
 * Supports mapping in sub-commands.
-* Safely executes commands and their individual command-line arguments,
-  in order to prevent command or option injection.
 * Allows running the command via `IO.popen` to read the command's output.
 * Allows running commands with additional environment variables.
 * Allows overriding the command name or path to the command.
 * Allows running commands via `sudo`.
+* Prevents command injection and option injection.
 
 ## Examples
 
