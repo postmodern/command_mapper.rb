@@ -61,4 +61,30 @@ describe CommandMapper::Types::Num do
       end
     end
   end
+
+  describe "#format" do
+    context "when given a String" do
+      let(:value) { "1234567890" }
+
+      it "must return the same String" do
+        expect(subject.format(value)).to eq(value)
+      end
+    end
+
+    context "when given an Intger" do
+      let(:value) { 1234567890 }
+
+      it "must convert the Integer into a String" do
+        expect(subject.format(value)).to eq(value.to_s)
+      end
+    end
+
+    context "when given another type of Object" do
+      let(:value) { 1.0 }
+
+      it "must call #to_i then #to_s" do
+        expect(subject.format(value)).to eq(value.to_i.to_s)
+      end
+    end
+  end
 end

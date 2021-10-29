@@ -31,6 +31,20 @@ module CommandMapper
         return true
       end
 
+      #
+      # Formats a numeric value.
+      #
+      # @param [String, Integer, #to_i] value
+      #
+      # @return [String]
+      #
+      def format(value)
+        case value
+        when Integer, String then value.to_s
+        else                      value.to_i.to_s
+        end
+      end
+
     end
   end
 end
