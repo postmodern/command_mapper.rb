@@ -8,8 +8,8 @@
 
 ## Description
   
-Command Mapper maps a command's arguments to Class attributes to allow easily
-and safely automating commands.
+Command Mapper maps a command's options and arguments to Class attributes to
+allow safely and securely executing commands.
 
 ## Features
 

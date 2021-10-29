@@ -1,8 +1,8 @@
 name: command_mapper
-summary: Maps commands and options to Ruby classes
+summary: Safe and secure execution of commands.
 description:
-  CommandMapper maps commands and their options to classes, keyword arguments,
-  and methods.
+  Command Mapper maps a command's arguments to Class attributes to allow safely
+  and securely executing commands.
 
 license: MIT
 authors: Postmodern
