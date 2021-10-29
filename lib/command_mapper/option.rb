@@ -112,7 +112,7 @@ module CommandMapper
     #
     # Validates whether the given value is compatible with the option.
     #
-    # @param [Object] value
+    # @param [Array<Object>, Object] value
     #
     # @return [true, (false, String)]
     #   Returns true if the value is valid, or `false` and a validation error
@@ -120,7 +120,31 @@ module CommandMapper
     #
     def validate(value)
       if accepts_value?
-        @value.validate(value)
+        if repeats?
+          values = case value
+                   when Array then value
+                   else            [value]
+                   end
+
+          if @value.required?
+            # option requires atleast one value
+            if values.empty?
+              return [false, "requires at least one value"]
+            end
+          end
+
+          values.each do |element|
+            valid, message = @value.validate(element)
+
+            unless valid
+              return [false, message]
+            end
+          end
+
+          return true
+        else
+          @value.validate(value)
+        end
       else
         case value
         when true, false, nil
@@ -167,7 +191,10 @@ module CommandMapper
             emit_option_flag_and_value(argv,element)
           end
         else
-          emit_option_flag_and_value(argv,value)
+          # explicitly ignore nil values
+          unless value.nil?
+            emit_option_flag_and_value(argv,value)
+          end
         end
       else
         emit_option_flag_only(argv,value)
@@ -188,10 +215,13 @@ module CommandMapper
     #   Indicates whether to emit the option's flag or not.
     #
     def emit_option_flag_only(argv,value)
-      if value == true
+      case value
+      when true
         argv << @flag
-      elsif repeats? && value.kind_of?(Integer)
-        value.times { argv << @flag }
+      when Integer
+        if repeats?
+          value.times { argv << @flag }
+        end
       end
     end
 
@@ -205,8 +235,9 @@ module CommandMapper
     #   The value for the option.
     #
     def emit_option_flag_and_value(argv,value)
-      # explicitly ignore nil values
-      unless value.nil?
+      if value.nil? && !@value.required?
+        argv << @flag
+      else
         value = @value.format(value)
 
         if equals?
@@ -216,6 +247,6 @@ module CommandMapper
         end
       end
     end
-
   end
+
 end

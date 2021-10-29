@@ -183,7 +183,7 @@ describe CommandMapper::Option do
   let(:repeats) { false }
   let(:accepts_value) { false }
 
-  let(:value_required) { false }
+  let(:value_required) { true }
   let(:value_allows_empty) { false }
   let(:value_allows_blank) { false }
   let(:value_type) do
@@ -210,11 +210,214 @@ describe CommandMapper::Option do
   end
 
   describe "#validate" do
+    context "when the option accepts a value" do
+      let(:accepts_value)  { true }
+      let(:value_required) { true }
+
+      context "when the option can be specified multiple times" do
+        let(:repeats) { true }
+
+        context "and is given an Array" do
+          context "and all elements of the Array are Strings" do
+            let(:values) { %w[foo bar baz] }
+
+            it "must return true" do
+              expect(subject.validate(values)).to be(true)
+            end
+          end
+
+          context "but one of the Array's elements is nil" do
+            let(:values) { ["foo", nil, "bar"] }
+
+            it "must return [false, \"does not accept a nil value\"]" do
+              expect(subject.validate(values)).to eq(
+                [false, "does not accept a nil value"]
+              )
+            end
+
+            context "but #value.required? is false" do
+              let(:value_required) { false }
+
+              it "must return true" do
+                expect(subject.validate(values)).to be(true)
+              end
+            end
+          end
+
+          context "but the Array contains Hashes" do
+            let(:values) do
+              [{"foo" => 1}, {"bar" => 2 }]
+            end
+
+            it "must return true" do
+              expect(subject.validate(values)).to eq(
+                [false, "cannot convert a Hash into a String"]
+              )
+            end
+
+            context "but #value.type is a Types::KeyValue object" do
+              let(:value_type) { Types::KeyValue.new }
+
+              let(:values) do
+                [{"foo" => 1}, {"bar" => 2 }]
+              end
+
+              it "must return true" do
+                expect(subject.validate(values)).to be(true)
+              end
+
+              context "but one of the Hashes is empty" do
+                let(:values) do
+                  [{"foo" => 1}, {}]
+                end
+
+                it "must return [false, \"requires at least one value\"]" do
+                  expect(subject.validate(values)).to eq(
+                    [false, "cannot be empty"]
+                  )
+                end
+              end
+            end
+          end
+
+          context "but it's empty" do
+            let(:value) { [] }
+
+            it "must return [false, \"requires at least one value\"]" do
+              expect(subject.validate(value)).to eq(
+                [false, "requires at least one value"]
+              )
+            end
+          end
+        end
+
+        context "and it's only given one value" do
+          context "and it's a String" do
+            let(:value) { "foo" }
+
+            it "must return true" do
+              expect(subject.validate(value)).to be(true)
+            end
+          end
+
+          context "and it's a Hash" do
+            let(:value) do
+              {"foo" => "bar"}
+            end
+
+            it "must return [false, \"cannot convert a Hash into a String\"]" do
+              expect(subject.validate(value)).to eq(
+                [false, "cannot convert a Hash into a String"]
+              )
+            end
+
+            context "but #value.type is a Types::KeyValue object" do
+              let(:value_type) { Types::KeyValue.new }
+
+              it "must return true" do
+                expect(subject.validate(value)).to be(true)
+              end
+
+              context "but it's empty" do
+                let(:value) { {} }
+
+                it "must return [false, \"cannot be empty\"]" do
+                  expect(subject.validate(value)).to eq(
+                    [false, "cannot be empty"]
+                  )
+                end
+              end
+            end
+          end
+        end
+      end
+
+      context "when the option can only be specified once" do
+        let(:repeats) { false }
+
+        context "and is given a String" do
+          let(:value) { "foo" }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+
+        context "and is given an Array" do
+          let(:value) { [1,2,3,4] }
+
+          it "must return [false, \"cannot convert a Array into a String\"]" do
+            expect(subject.validate(value)).to eq(
+              [false, "cannot convert a Array into a String"]
+            )
+          end
+
+          context "when #value.type is a Types::List object" do
+            let(:value_type) { Types::List.new }
+
+            it "must return true" do
+              expect(subject.validate(value)).to be(true)
+            end
+
+            context "but one of the Array elements is nil" do
+              let(:value) { [1,2,nil,4] }
+
+              it "must return [false, \"contains an invalid value: value cannot be nil\"]" do
+                expect(subject.validate(value)).to eq(
+                  [false, "contains an invalid value: value cannot be nil"]
+                )
+              end
+            end
+
+            context "but it's empty" do
+              let(:value) { [] }
+
+              it "must return [false, \"cannot be empty\"]" do
+                expect(subject.validate(value)).to eq(
+                  [false, "cannot be empty"]
+                )
+              end
+            end
+          end
+        end
+
+        context "and it's a Hash" do
+          let(:value) do
+            {"foo" => "bar"}
+          end
+
+          it "must return [false, \"cannot convert a Hash into a String\"]" do
+            expect(subject.validate(value)).to eq(
+              [false, "cannot convert a Hash into a String"]
+            )
+          end
+
+          context "but #value.type is a Types::KeyValue object" do
+            let(:value_type) { Types::KeyValue.new }
+
+            it "must return true" do
+              expect(subject.validate(value)).to be(true)
+            end
+
+            context "but it's empty" do
+              let(:value) { {} }
+
+              it "must return [false, \"cannot be empty\"]" do
+                expect(subject.validate(value)).to eq(
+                  [false, "cannot be empty"]
+                )
+              end
+            end
+          end
+        end
+      end
+    end
+
     context "when the option does not accept a value" do
       let(:allows_value) { false }
 
-      shared_examples "when a Boolean is given" do
-        context "is given true" do
+      shared_examples "and a Boolean is given" do
+        context "and is given true" do
           let(:value) { true }
 
           it "must return true" do
@@ -222,7 +425,7 @@ describe CommandMapper::Option do
           end
         end
 
-        context "is given false" do
+        context "and is given false" do
           let(:value) { false }
 
           it "must return true" do
@@ -230,7 +433,7 @@ describe CommandMapper::Option do
           end
         end
 
-        context "is given nil" do
+        context "and is given nil" do
           let(:value) { nil }
 
           it "must return true" do
@@ -243,9 +446,31 @@ describe CommandMapper::Option do
       context "and when the option can be repeated" do
         let(:repeats) { true }
 
-        include_examples "when a Boolean is given"
+        context "and is given true" do
+          let(:value) { true }
 
-        context "is given an Integer" do
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+
+        context "and is given false" do
+          let(:value) { false }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+
+        context "and is given nil" do
+          let(:value) { nil }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+
+        context "and is given an Integer" do
           let(:value) { 3 }
 
           it "must return true" do
@@ -256,8 +481,6 @@ describe CommandMapper::Option do
 
       context "but the option can only be specified once" do
         let(:repeats) { false }
-
-        include_examples "when a Boolean is given"
 
         context "is given an Integer" do
           let(:value) { 3 }
@@ -279,69 +502,147 @@ describe CommandMapper::Option do
       context "when the option can be specified multiple times" do
         let(:repeats) { true }
 
-        context "and it's given multiple values" do
-          let(:values) { ["foo", "bar"] }
+        context "and it's given an Array" do
+          context "and all elements of the Array are Strings" do
+            let(:values) { %w[foo bar baz] }
 
-          it "must return an argv of the option flags followed by values" do
-            expect(subject.argv(values)).to eq(
-              [flag, values[0], flag, values[1]]
-            )
-          end
-
-          context "and the values contain nil values" do
-            let(:values) { ["foo", nil, "bar"] }
-
-            it "must filter out any nil values" do
+            it "must return an argv of the option flags followed by values" do
               expect(subject.argv(values)).to eq(
-                [flag, values[0], flag, values[2]]
+                [
+                  flag, values[0],
+                  flag, values[1],
+                  flag, values[2]
+                ]
               )
+            end
+
+            context "but one of the Array's elements is invalid" do
+              let(:value)   { ["foo", " ", "baz"] }
+              let(:message) { "does not allow a blank value" }
+
+              it do
+                expect {
+                  subject.argv(value)
+                }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): #{message}")
+              end
             end
           end
 
-          context "when initializes with a custom value: type" do
-            let(:value_type) { Types::KeyValue.new }
+          context "but one of the Array's elements is nil" do
+            let(:values) { ["foo", nil, "bar"] }
 
+            it do
+              expect {
+                subject.argv(values)
+              }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{values.inspect}): does not accept a nil value")
+            end
+
+            context "but #value.required? is false" do
+              let(:value_required) { false }
+
+              it "must only emit the option's flag for nil values" do
+                expect(subject.argv(values)).to eq(
+                  [
+                    flag, values[0],
+                    flag,
+                    flag, values[2]
+                  ]
+                )
+              end
+            end
+          end
+
+          context "but the Array contains Hashes" do
             let(:values) do
               [{"foo" => 1}, {"bar" => 2 }]
             end
 
-            it "must format each value using #value.format" do
-              expect(subject.argv(values)).to eq(
-                [
-                  flag, subject.value.format(values[0]),
-                  flag, subject.value.format(values[1])
-                ]
-              )
+            it do
+              expect {
+                subject.argv(values)
+              }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{values.inspect}): cannot convert a Hash into a String")
+            end
+
+            context "but #value.type is a Types::KeyValue object" do
+              let(:value_type) { Types::KeyValue.new }
+
+              it "must format each value using #value.format" do
+                expect(subject.argv(values)).to eq(
+                  [
+                    flag, subject.value.format(values[0]),
+                    flag, subject.value.format(values[1])
+                  ]
+                )
+              end
+
+              context "but one of the Hashes is empty" do
+                let(:values) do
+                  [{"foo" => 1}, {}]
+                end
+
+                it do
+                  expect {
+                    subject.argv(values)
+                  }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{values.inspect}): cannot be empty")
+                end
+              end
+            end
+          end
+
+          context "but it's empty" do
+            let(:value) { [] }
+
+            it do
+              expect {
+                subject.argv(value)
+              }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): requires at least one value")
             end
           end
         end
 
         context "and it's only given one value" do
-          let(:value) { "foo" }
+          context "and it's a String" do
+            let(:value) { "foo" }
 
-          it "must return an argv only containing the option flag and value" do
-            expect(subject.argv(value)).to eq([flag, value])
-          end
+            it "must return an argv only containing the option flag and value" do
+              expect(subject.argv(value)).to eq([flag, value])
+            end
 
-          context "is given nil" do
-            let(:value) { nil }
+            context "but it's invalid" do
+              let(:value)   { " " }
+              let(:message) { "does not allow a blank value" }
 
-            it "must return an empty argv" do
-              expect(subject.argv(value)).to eq([])
+              it do
+                expect {
+                  subject.argv(value)
+                }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): #{message}")
+              end
             end
           end
 
-          context "when initializes with a custom value: type" do
-            let(:value_type) { Types::KeyValue.new }
-
+          context "and it's a Hash" do
             let(:value) do
               {"foo" => "bar"}
             end
 
-            it "must format the value using #value.format" do
-              expect(subject.argv(value)).to eq(
-                [flag, subject.value.format(value)]
-              )
+            context "but #value.type is a Types::KeyValue object" do
+              let(:value_type) { Types::KeyValue.new }
+
+              it "must format the value using #value.format" do
+                expect(subject.argv(value)).to eq(
+                  [flag, subject.value.format(value)]
+                )
+              end
+
+              context "but it's empty" do
+                let(:value) { {} }
+
+                it do
+                  expect {
+                    subject.argv(value)
+                  }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): cannot be empty")
+                end
+              end
             end
           end
         end
@@ -349,38 +650,96 @@ describe CommandMapper::Option do
 
       context "when the option can only be specified once" do
         let(:repeats) { false }
-        let(:value)   { "foo" }
 
-        it "must return an argv only containing the option flag and value" do
-          expect(subject.argv(value)).to eq([flag, value])
-        end
+        context "and it's a String" do
+          let(:value) { "foo" }
 
-        context "is given nil" do
-          let(:value) { nil }
+          it "must return an argv only containing the option flag and value" do
+            expect(subject.argv(value)).to eq([flag, value])
+          end
 
-          it "must return an empty argv" do
-            expect(subject.argv(value)).to eq([])
+          context "but it's invalid" do
+            let(:value)   { " " }
+            let(:message) { "does not allow a blank value" }
+
+            it do
+              expect {
+                subject.argv(value)
+              }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): #{message}")
+            end
           end
         end
 
-        context "when initializes with a custom value: type" do
-          let(:value_type) { Types::List.new }
-          let(:value)      { [1,2,3,4]       }
+        context "and it's an Array" do
+          let(:value) { %w[foo bar baz] }
 
-          it "must format the value using #value.format" do
-            expect(subject.argv(value)).to eq([flag, subject.value.format(value)])
+          it do
+            expect {
+              subject.argv(value)
+            }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): cannot convert a Array into a String")
+          end
+
+          context "but #value.type is a Types::List object" do
+            let(:value_type) { Types::List.new }
+
+            it "must format the value using #value.format" do
+              expect(subject.argv(value)).to eq(
+                [flag, subject.value.format(value)]
+              )
+            end
+
+            context "but one of the Array's elements is nil" do
+              let(:value) { ["foo", nil, "baz"] }
+
+              it do
+                expect {
+                  subject.argv(value)
+                }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): contains an invalid value: value cannot be nil")
+              end
+            end
+
+            context "but it's empty" do
+              let(:value) { [] }
+
+              it do
+                expect {
+                  subject.argv(value)
+                }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): cannot be empty")
+              end
+            end
           end
         end
-      end
 
-      context "when the given value is invalid" do
-        let(:value) { "  " }
-        let(:message) { "does not allow a blank value" }
+        context "and it's a Hash" do
+          let(:value) do
+            {"foo" => "bar"}
+          end
 
-        it do
-          expect {
-            subject.argv(value)
-          }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): #{message}")
+          it do
+            expect {
+              subject.argv(value)
+            }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): cannot convert a Hash into a String")
+          end
+
+          context "but #value.type is a Types::KeyValue object" do
+            let(:value_type) { Types::KeyValue.new }
+
+            it "must format the value using #value.format" do
+              expect(subject.argv(value)).to eq(
+                [flag, subject.value.format(value)]
+              )
+            end
+
+            context "but it's empty" do
+              let(:value) { {} }
+
+              it do
+                expect {
+                  subject.argv(value)
+                }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): cannot be empty")
+              end
+            end
+          end
         end
       end
     end

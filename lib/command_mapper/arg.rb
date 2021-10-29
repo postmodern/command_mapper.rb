@@ -62,17 +62,17 @@ module CommandMapper
     def validate(value)
       if value.nil?
         if required?
-          return [false, "does not allow a nil value"]
+          return [false, "does not accept a nil value"]
         else
           return true
         end
-      end
+      else
+        if @type
+          return @type.validate(value)
+        end
 
-      if @type
-        return @type.validate(value)
+        return true
       end
-
-      return true
     end
 
   end

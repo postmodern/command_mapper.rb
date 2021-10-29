@@ -108,7 +108,7 @@ describe CommandMapper::Arg do
 
         it "must return true" do
           expect(subject.validate(value)).to eq(
-            [false, "does not allow a nil value"]
+            [false, "does not accept a nil value"]
           )
         end
       end

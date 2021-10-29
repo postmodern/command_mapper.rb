@@ -49,7 +49,7 @@ module CommandMapper
     #
     # Validates whether a given value is compatible with the arg.
     #
-    # @param [Object] value
+    # @param [Array<Object>, Object] value
     #
     # @return [true, (false, String)]
     #   Returns true if the value is valid, or `false` and a validation error
@@ -57,7 +57,10 @@ module CommandMapper
     #
     def validate(value)
       if repeats?
-        values = Array(value)
+        values = case value
+                 when Array then value
+                 else            [value]
+                 end
 
         if required?
           # argument requires atleast one value
@@ -71,7 +74,7 @@ module CommandMapper
           valid, message = @type.validate(element)
 
           unless valid
-            return valid, message
+            return [valid, message]
           end
         end
 
