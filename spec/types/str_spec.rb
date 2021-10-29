@@ -89,6 +89,24 @@ describe CommandMapper::Types::Str do
   end
 
   describe "#validate" do
+    context "when given nil" do
+      let(:value) { nil }
+
+      it "must return [false, \"value cannot be nil\"]" do
+        expect(subject.validate(value)).to eq(
+          [false, "value cannot be nil"]
+        )
+      end
+
+      context "but #allow_empty? is true" do
+        subject { described_class.new(allow_empty: true) }
+
+        it "must return true" do
+          expect(subject.validate(value)).to be(true)
+        end
+      end
+    end
+
     context "when a String is given" do
       let(:value) { "foo" }
 

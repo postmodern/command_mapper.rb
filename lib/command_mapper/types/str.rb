@@ -53,6 +53,10 @@ module CommandMapper
       #
       def validate(value)
         case value
+        when nil
+          unless allow_empty?
+            return [false, "value cannot be nil"]
+          end
         when String, Symbol
           if value.empty?
             unless allow_empty?
