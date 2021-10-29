@@ -209,6 +209,40 @@ def foo=(value)
 end
 ```
 
+### Custom Types
+
+```ruby
+class PortRange < CommandMapper::Types::Type
+
+  def validate(value)
+    case value
+    when Integer
+      true
+    when Range
+      if value.begin.kind_of?(Integer)
+        true
+      else
+        [false, "port range can only contain Integers"]
+      end
+    else
+      [false, "port range must be an Integer or a Range of Integers"]
+    end
+  end
+
+  def format(value)
+    case value
+    when Integer
+      "#{value}"
+    when Range
+      "#{value.begin}-#{value.end}"
+    end
+  end
+
+end
+
+option :ports, value: {required: true, type: PortRange.new}
+```
+
 ### Running
 
 Keyword arguments:
