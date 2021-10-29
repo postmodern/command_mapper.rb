@@ -88,13 +88,13 @@ module CommandMapper
         valid, message = @key.validate(key)
 
         unless valid
-          return [false, message]
+          return [false, "key is invalid: #{message}"]
         end
 
         valid, message = @value.validate(value)
 
         unless valid
-          return [false, message]
+          return [false, "value is invalid: #{message}"]
         end
 
         return true

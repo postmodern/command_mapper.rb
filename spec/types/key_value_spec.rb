@@ -71,7 +71,7 @@ describe CommandMapper::Types::KeyValue do
 
           it "must validate the key value using #key.validate" do
             expect(subject.validate(hash)).to eq(
-              [false, "value contains non-numeric characters"]
+              [false, "key is invalid: value contains non-numeric characters"]
             )
           end
         end
@@ -84,7 +84,7 @@ describe CommandMapper::Types::KeyValue do
 
           it "must validate the key value using #key.validate" do
             expect(subject.validate(hash)).to eq(
-              [false, "value contains non-numeric characters"]
+              [false, "value is invalid: value contains non-numeric characters"]
             )
           end
         end
@@ -139,7 +139,7 @@ describe CommandMapper::Types::KeyValue do
 
           it "must validate the key value using #key.validate" do
             expect(subject.validate(array)).to eq(
-              [false, "value contains non-numeric characters"]
+              [false, "key is invalid: value contains non-numeric characters"]
             )
           end
         end
@@ -152,7 +152,7 @@ describe CommandMapper::Types::KeyValue do
 
           it "must validate the key value using #key.validate" do
             expect(subject.validate(array)).to eq(
-              [false, "value contains non-numeric characters"]
+              [false, "value is invalid: value contains non-numeric characters"]
             )
           end
         end
