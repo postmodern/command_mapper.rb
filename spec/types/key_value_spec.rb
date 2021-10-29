@@ -54,6 +54,16 @@ describe CommandMapper::Types::KeyValue do
 
   describe "#validate" do
     context "when given a Hash" do
+      context "but it's empty" do
+        let(:hash) { {} }
+
+        it "must return [false, \"cannot be empty\"]" do
+          expect(subject.validate(hash)).to eq(
+            [false, "cannot be empty"]
+          )
+        end
+      end
+
       context "and the Hash contains only one key:value pair" do
         let(:key)   { "foo" }
         let(:value) { "bar" }

@@ -62,25 +62,26 @@ module CommandMapper
       #
       def validate(value)
         case value
-        when Hash, Array
-          case value
-          when Hash
-            if value.length > 1
-              return [false, "cannot contain multiple key:value pairs"]
-            end
-
-            key, value = value.first
-          when Array
-            if value.length < 2
-              return [false, "must contain two elements"]
-            end
-
-            if value.length > 2
-              return [false, "cannot contain more than two elements"]
-            end
-
-            key, value = value
+        when Hash
+          if value.length < 1
+            return [false, "cannot be empty"]
           end
+
+          if value.length > 1
+            return [false, "cannot contain multiple key:value pairs"]
+          end
+
+          key, value = value.first
+        when Array
+          if value.length < 2
+            return [false, "must contain two elements"]
+          end
+
+          if value.length > 2
+            return [false, "cannot contain more than two elements"]
+          end
+
+          key, value = value
         else
           return [false, "must be a Hash or an Array"]
         end
