@@ -8,9 +8,6 @@ module CommandMapper
     #
     class KeyValueList < List
 
-      # @return [KeyValue]
-      attr_reader :key_value
-
       #
       # Initializes the key-value list.
       #
@@ -24,22 +21,29 @@ module CommandMapper
       #   Additional keyword arguments for {KeyValue#initialize}.
       #
       def initialize(separator: ',', key_value_separator: '=', **kwargs)
-        super(separator: separator)
+        value = KeyValue.new(separator: key_value_separator, **kwargs)
 
-        @key_value = KeyValue.new(separator: key_value_separator, **kwargs)
+        super(separator: separator, value: value)
+      end
+
+      #
+      # @return [KeyValue]
+      #
+      def key_value
+        value
       end
 
       #
       # Formats the value.
       #
-      # @param [Hash, Array(key, value)] value
+      # @param [Hash, Array((key, value))] value
       #   The list of key-value pairs.
       #
       # @return [String]
       #   The formatted key-value list.
       #
       def format(value)
-        super(Array(value).map(&@key_value.method(:format)))
+        super(Array(value).map(&@value.method(:format)))
       end
 
     end

@@ -7,8 +7,12 @@ describe CommandMapper::Types::KeyValueList do
       expect(subject.separator).to eq(',')
     end
 
-    it "must default #key_value.separator to '='" do
-      expect(subject.key_value.separator).to eq('=')
+    it "must initialize #value to a Types::KeyValue object" do
+      expect(subject.value).to be_kind_of(Types::KeyValue)
+    end
+
+    it "must default #value.separator to '='" do
+      expect(subject.value.separator).to eq('=')
     end
 
     context "when given the separator: keyword" do
