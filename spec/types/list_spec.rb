@@ -47,6 +47,24 @@ describe CommandMapper::Types::List do
         expect(subject.validate(value)).to be(true)
       end
 
+      context "but the value is nil" do
+        let(:value) { nil }
+
+        it "must return [false, \"cannot be empty\"]" do
+          expect(subject.validate(value)).to eq(
+            [false, "cannot be empty"]
+          )
+        end
+
+        context "when #allow_empty? is true" do
+          subject { described_class.new(allow_empty: true) }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
+      end
+
       context "and the value is invalid" do
         let(:value) { 42 }
 
@@ -63,6 +81,24 @@ describe CommandMapper::Types::List do
 
       it "must return true" do
         expect(subject.validate(values)).to be(true)
+      end
+
+      context "but the value is []" do
+        let(:value) { [] }
+
+        it "must return [false, \"cannot be empty\"]" do
+          expect(subject.validate(value)).to eq(
+            [false, "cannot be empty"]
+          )
+        end
+
+        context "when #allow_empty? is true" do
+          subject { described_class.new(allow_empty: true) }
+
+          it "must return true" do
+            expect(subject.validate(value)).to be(true)
+          end
+        end
       end
 
       context "but one of the values is invalid" do

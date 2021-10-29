@@ -27,13 +27,24 @@ module CommandMapper
       # @param [Type, Hash] value
       #   The list's value type.
       #
-      def initialize(separator: ',', type: Str.new)
+      def initialize(separator: ',', type: Str.new, allow_empty: false)
         if type.nil?
           raise(ArgumentError,"type: keyword cannot be nil")
         end
 
         @separator = separator
         @type      = Types::Type(type)
+
+        @allow_empty = allow_empty
+      end
+
+      #
+      # Specifies whether the option's value may accept empty values.
+      #
+      # @return [Boolean]
+      #
+      def allow_empty?
+        @allow_empty
       end
 
       #
@@ -44,7 +55,15 @@ module CommandMapper
       # @return [true, (false, String)]
       #
       def validate(value)
-        Array(value).each do |element|
+        values = Array(value)
+
+        if values.empty?
+          unless allow_empty?
+            return [false, "cannot be empty"]
+          end
+        end
+
+        values.each do |element|
           valid, message = @type.validate(element)
 
           unless valid
