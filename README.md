@@ -127,25 +127,25 @@ option "--include-dir", repeats: true
 Defines an option that accepts a numeric value:
 
 ```ruby
-option "--count", value: Num.new
+option "--count", value: {type: Num.new}
 ```
 
 Defines an option that accepts a comma-separated list:
 
 ```ruby
-option "--list", value: List.new
+option "--list", value: {type: List.new}
 ```
 
 Defines an option that accepts a `key=value` pair:
 
 ```ruby
-option "--param", value: KeyValue.new
+option "--param", value: {type: KeyValue.new}
 ```
 
 Defines an option that accepts a `key:value` pair:
 
 ```ruby
-option "--param", value: KeyValue.new(separator: ':')
+option "--param", value: {type: KeyValue.new(separator: ':')}
 ```
 
 Custom methods:
@@ -185,13 +185,13 @@ argument :files, repeats: true
 Define an argument that accepts an existing file:
 
 ```ruby
-argument :file, value: InputFile.new
+argument :file, type: InputFile.new
 ```
 
 Define an argument that accepts an existing directory:
 
 ```ruby
-argument :dir, value: InputDir.new
+argument :dir, type: InputDir.new
 ```
 
 Custom methods:
