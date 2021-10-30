@@ -294,6 +294,43 @@ Grep.sudo(patterns: "Error", file: "/var/log/syslog")
 # ...
 ```
 
+### Code Gen
+
+[command_mapper-gen] can automatically generate command classes from a command's
+`--help` output and/or man page.
+
+```
+$ gem install command_mapper-gen
+$ command_mapper-gen cat
+require 'command_mapper/command'
+
+#
+# Represents the `cat` command
+#
+class Cat < CommandMapper::Command
+
+  command "cat" do
+    option "--show-all"
+    option "--number-nonblank"
+    option "-e", name: 	# FIXME: name
+    option "--show-ends"
+    option "--number"
+    option "--squeeze-blank"
+    option "-t", name: 	# FIXME: name
+    option "--show-tabs"
+    option "-u", name: 	# FIXME: name
+    option "--show-nonprinting"
+    option "--help"
+    option "--version"
+
+    argument :file, required: false
+  end
+
+end
+```
+
+[command_mapper-gen]: https://github.com/postmodern/command_mapper-gen.rb#readme
+
 ## Requirements
 
 * [ruby] >= 2.0.0
