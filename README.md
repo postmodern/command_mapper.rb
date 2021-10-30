@@ -148,6 +148,12 @@ Defines an option that accepts a `key:value` pair:
 option "--param", value: {type: KeyValue.new(separator: ':')}
 ```
 
+Defines an option that accepts a finite number of values:
+
+```ruby
+option "--type", value: {type: Enum[:foo, :bar, :baz]}
+```
+
 Custom methods:
 
 ```ruby
