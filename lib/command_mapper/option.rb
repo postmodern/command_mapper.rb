@@ -191,10 +191,7 @@ module CommandMapper
             emit_option_flag_and_value(argv,element)
           end
         else
-          # explicitly ignore nil values
-          unless value.nil?
-            emit_option_flag_and_value(argv,value)
-          end
+          emit_option_flag_and_value(argv,value)
         end
       else
         emit_option_flag_only(argv,value)
