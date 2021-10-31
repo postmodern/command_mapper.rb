@@ -232,7 +232,7 @@ module CommandMapper
     #   The value for the option.
     #
     def emit_option_flag_and_value(argv,value)
-      if value.nil? && !@value.required?
+      if !@value.required? && value == true
         argv << @flag
       else
         value = @value.format(value)

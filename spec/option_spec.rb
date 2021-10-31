@@ -528,19 +528,13 @@ describe CommandMapper::Option do
             end
           end
 
-          context "but one of the Array's elements is nil" do
-            let(:values) { ["foo", nil, "bar"] }
-
-            it do
-              expect {
-                subject.argv(values)
-              }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{values.inspect}): does not accept a nil value")
-            end
+          context "but one of the Array's elements is true" do
+            let(:values) { ["foo", true, "bar"] }
 
             context "but #value.required? is false" do
               let(:value_required) { false }
 
-              it "must only emit the option's flag for nil values" do
+              it "must only emit the option's flag for true values" do
                 expect(subject.argv(values)).to eq(
                   [
                     flag, values[0],
@@ -650,6 +644,18 @@ describe CommandMapper::Option do
 
       context "when the option can only be specified once" do
         let(:repeats) { false }
+
+        context "and it's true" do
+          let(:value) { true }
+
+          context "but #value.required? is false" do
+            let(:value_required) { false }
+
+            it "must only emit the option's flag for true values" do
+              expect(subject.argv(value)).to eq([flag])
+            end
+          end
+        end
 
         context "and it's a String" do
           let(:value) { "foo" }
