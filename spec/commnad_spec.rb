@@ -404,10 +404,12 @@ describe CommandMapper::Command do
   describe ".subcommand" do
     module TestCommand
       class DefinesSubcommand < CommandMapper::Command
-        subcommand "subcmd" do
-          option '--foo'
-          option '--bar'
-          argument :baz
+        command 'cmd' do
+          subcommand "subcmd" do
+            option '--foo'
+            option '--bar'
+            argument :baz
+          end
         end
       end
     end
@@ -434,6 +436,83 @@ describe CommandMapper::Command do
 
     it "must define a writter method for the subcommand" do
       expect(subject.instance_methods(false)).to include(:subcmd=)
+    end
+
+    context "when the reader method is called" do
+      let(:foo) { 'value1' }
+      let(:bar) { 'value2' }
+      let(:baz) { 'value3' }
+
+      subject { command_class.new }
+
+      context "when no subcommand data has been populated" do
+        it "must return nil" do
+          expect(subject.subcmd).to be(nil)
+        end
+      end
+
+      context "when the subcommand has been set" do
+        before do
+          subject.subcmd = {foo: foo, bar: bar, baz: baz}
+        end
+
+        it "must return an instance of the defined subcommand class" do
+          expect(subject.subcmd).to be_kind_of(command_class::Subcmd)
+        end
+      end
+
+      context "with a block" do
+        before do
+          subject.subcmd do |sub|
+            sub.foo = foo
+            sub.bar = bar
+            sub.baz = baz
+          end
+        end
+
+        it "must use the block to populate the new subcommand instance" do
+          expect(subject.subcmd.foo).to eq(foo)
+          expect(subject.subcmd.bar).to eq(bar)
+          expect(subject.subcmd.baz).to eq(baz)
+        end
+      end
+    end
+
+    context "when the writter method is called" do
+      let(:foo) { 'value1' }
+      let(:bar) { 'value2' }
+      let(:baz) { 'value3' }
+
+      context "with a Hash" do
+        subject { command_class.new }
+
+        before do
+          subject.subcmd = {foo: foo, bar: bar, baz: baz}
+        end
+
+        it "must set @command_subcommand to an instance of the defined subcommand class " do
+          expect(subject.instance_variable_get('@command_subcommand')).to be_kind_of(command_class::Subcmd)
+        end
+
+        it "must set the attributes of the subcommand" do
+          expect(subject.subcmd.foo).to eq(foo)
+          expect(subject.subcmd.bar).to eq(bar)
+          expect(subject.subcmd.baz).to eq(baz)
+        end
+      end
+
+      context "when nil" do
+        subject { command_class.new }
+
+        before do
+          subject.subcmd = {foo: foo, bar: bar, baz: baz}
+          subject.subcmd = nil
+        end
+
+        it "must set @commnad_subcommand to nil" do
+          expect(subject.instance_variable_get('@command_subcommand')).to be(nil)
+        end
+      end
     end
 
     context "when the subcommand name contains a '-'" do

@@ -418,7 +418,9 @@ module CommandMapper
       end
 
       define_method(:"#{method_name}=") do |options|
-        @command_subcommand = subcommand_class.new(options)
+        @command_subcommand = if options
+                                subcommand_class.new(options)
+                              end
       end
     end
 
