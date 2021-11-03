@@ -67,11 +67,7 @@ module CommandMapper
           return true
         end
       else
-        if @type
-          return @type.validate(value)
-        end
-
-        return true
+        return @type.validate(value)
       end
     end
 
