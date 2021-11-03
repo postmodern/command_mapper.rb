@@ -601,7 +601,12 @@ describe CommandMapper::Command do
       end
 
       it "must initialize a new command with the Hash of params and call #run" do
-        expect(subject).to receive(:new).with(params).and_return(command_instance)
+        if RUBY_VERSION < '3.'
+          expect(subject).to receive(:new).with({},params).and_return(command_instance)
+        else
+          expect(subject).to receive(:new).with(params).and_return(command_instance)
+        end
+
         expect(command_instance).to receive(:run_command).and_return(return_value)
 
         expect(subject.run(params)).to be(return_value)
@@ -634,7 +639,12 @@ describe CommandMapper::Command do
       end
 
       it "must initialize a new command with the Hash of params and call #capture" do
-        expect(subject).to receive(:new).with(params).and_return(command_instance)
+        if RUBY_VERSION < '3.'
+          expect(subject).to receive(:new).with({},params).and_return(command_instance)
+        else
+          expect(subject).to receive(:new).with(params).and_return(command_instance)
+        end
+
         expect(command_instance).to receive(:capture_command).and_return(return_value)
 
         expect(subject.capture(params)).to be(return_value)
@@ -667,7 +677,12 @@ describe CommandMapper::Command do
       end
 
       it "must initialize a new command with the Hash of params and call #popen" do
-        expect(subject).to receive(:new).with(params).and_return(command_instance)
+        if RUBY_VERSION < '3.'
+          expect(subject).to receive(:new).with({},params).and_return(command_instance)
+        else
+          expect(subject).to receive(:new).with(params).and_return(command_instance)
+        end
+
         expect(command_instance).to receive(:popen_command).and_return(return_value)
 
         expect(subject.popen(params)).to be(return_value)
@@ -700,7 +715,12 @@ describe CommandMapper::Command do
       end
 
       it "must initialize a new command with the Hash of params and call #sudo" do
-        expect(subject).to receive(:new).with(params).and_return(command_instance)
+        if RUBY_VERSION < '3.'
+          expect(subject).to receive(:new).with({},params).and_return(command_instance)
+        else
+          expect(subject).to receive(:new).with(params).and_return(command_instance)
+        end
+
         expect(command_instance).to receive(:sudo_command).and_return(return_value)
 
         expect(subject.sudo(params)).to be(return_value)
