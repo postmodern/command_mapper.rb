@@ -54,9 +54,9 @@ describe CommandMapper::Types::Hex do
         context "and the String contains a newline" do
           let(:value) { "01234\n56789" }
 
-          it "must return [false, \"value is not in hexadecimal format\"]" do
+          it "must return [false, \"not in hex format (...)\"]" do
             expect(subject.validate(value)).to eq(
-              [false, "value is not in hexadecimal format"]
+              [false, "not in hex format (#{value.inspect})"]
             )
           end
         end
@@ -80,9 +80,9 @@ describe CommandMapper::Types::Hex do
         context "and the String contains a newline" do
           let(:value) { "abc\ndef" }
 
-          it "must return [false, \"value is not in hexadecimal format\"]" do
+          it "must return [false, \"not in hex format (...)\"]" do
             expect(subject.validate(value)).to eq(
-              [false, "value is not in hexadecimal format"]
+              [false, "not in hex format (#{value.inspect})"]
             )
           end
         end
@@ -91,18 +91,18 @@ describe CommandMapper::Types::Hex do
       context "but the String does not contain other characters" do
         let(:value) { "foo" }
 
-        it "must return [false, \"value is not in hexadecimal format\"]" do
+        it "must return [false, \"not in hex format (...)\"]" do
           expect(subject.validate(value)).to eq(
-            [false, "value is not in hexadecimal format"]
+            [false, "not in hex format (#{value.inspect})"]
           )
         end
 
         context "and the String contains a newline" do
           let(:value) { "foo\nbar" }
 
-          it "must return [false, \"value is not in hexadecimal format\"]" do
+          it "must return [false, \"not in hex format (...)\"]" do
             expect(subject.validate(value)).to eq(
-              [false, "value is not in hexadecimal format"]
+              [false, "not in hex format (#{value.inspect})"]
             )
           end
         end

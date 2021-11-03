@@ -55,24 +55,24 @@ module CommandMapper
         case value
         when nil
           unless allow_empty?
-            return [false, "value cannot be nil"]
+            return [false, "cannot be nil"]
           end
         when Enumerable
-          return [false, "cannot convert a #{value.class} into a String"]
+          return [false, "cannot convert a #{value.class} into a String (#{value.inspect})"]
         else
           unless value.respond_to?(:to_s)
-            return [false, "does not define a #to_s method"]
+            return [false, "does not define a #to_s method (#{value.inspect})"]
           end
 
-          value = value.to_s
+          string = value.to_s
 
-          if value.empty?
+          if string.empty?
             unless allow_empty?
               return [false, "does not allow an empty value"]
             end
-          elsif value =~ /\A\s+\z/
+          elsif string =~ /\A\s+\z/
             unless allow_blank?
-              return [false, "does not allow a blank value"]
+              return [false, "does not allow a blank value (#{value.inspect})"]
             end
           end
         end

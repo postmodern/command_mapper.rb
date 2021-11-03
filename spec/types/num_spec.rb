@@ -22,9 +22,9 @@ describe CommandMapper::Types::Num do
         context "and the String contains a newline" do
           let(:value) { "01234\n56789" }
 
-          it "must return [false, \"value is not in hexadecimal format\"]" do
+          it "must return [false, \"contains non-numeric characters (...)\"]" do
             expect(subject.validate(value)).to eq(
-              [false, "value contains non-numeric characters"]
+              [false, "contains non-numeric characters (#{value.inspect})"]
             )
           end
         end
@@ -33,9 +33,9 @@ describe CommandMapper::Types::Num do
       context "and it contains non-digits" do
         let(:value) { "12abc34" }
 
-        it "must return [false, \"value must be numeric\"]" do
+        it "must return [false, \"contains non-numeric characters (...)\"]" do
           expect(subject.validate(value)).to eq(
-            [false, "value contains non-numeric characters"]
+            [false, "contains non-numeric characters (#{value.inspect})"]
           )
         end
       end
@@ -55,7 +55,7 @@ describe CommandMapper::Types::Num do
 
         it "must return [false, \"value cannot be converted into an Integer\"]" do
           expect(subject.validate(value)).to eq(
-            [false, "value cannot be converted into an Integer"]
+            [false, "cannot be converted into an Integer (#{value.inspect})"]
           )
         end
       end

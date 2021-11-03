@@ -20,11 +20,11 @@ module CommandMapper
           return true
         when String
           unless value =~ /\A\d+\z/
-            return [false, "value contains non-numeric characters"]
+            return [false, "contains non-numeric characters (#{value.inspect})"]
           end
         else
           unless value.respond_to?(:to_i)
-            return [false, "value cannot be converted into an Integer"]
+            return [false, "cannot be converted into an Integer (#{value.inspect})"]
           end
         end
 

@@ -249,9 +249,9 @@ describe CommandMapper::Option do
               [{"foo" => 1}, {"bar" => 2 }]
             end
 
-            it "must return true" do
+            it "must return [false, \"cannot convert a Hash into a String (...)\"]" do
               expect(subject.validate(values)).to eq(
-                [false, "cannot convert a Hash into a String"]
+                [false, "cannot convert a Hash into a String (#{values[0].inspect})"]
               )
             end
 
@@ -305,9 +305,9 @@ describe CommandMapper::Option do
               {"foo" => "bar"}
             end
 
-            it "must return [false, \"cannot convert a Hash into a String\"]" do
+            it "must return [false, \"cannot convert a Hash into a String (...)\"]" do
               expect(subject.validate(value)).to eq(
-                [false, "cannot convert a Hash into a String"]
+                [false, "cannot convert a Hash into a String (#{value.inspect})"]
               )
             end
 
@@ -346,9 +346,9 @@ describe CommandMapper::Option do
         context "and is given an Array" do
           let(:value) { [1,2,3,4] }
 
-          it "must return [false, \"cannot convert a Array into a String\"]" do
+          it "must return [false, \"cannot convert a Array into a String (...)\"]" do
             expect(subject.validate(value)).to eq(
-              [false, "cannot convert a Array into a String"]
+              [false, "cannot convert a Array into a String (#{value.inspect})"]
             )
           end
 
@@ -362,9 +362,9 @@ describe CommandMapper::Option do
             context "but one of the Array elements is nil" do
               let(:value) { [1,2,nil,4] }
 
-              it "must return [false, \"contains an invalid value: value cannot be nil\"]" do
+              it "must return [false, \"element cannot be nil\"]" do
                 expect(subject.validate(value)).to eq(
-                  [false, "contains an invalid value: value cannot be nil"]
+                  [false, "element cannot be nil"]
                 )
               end
             end
@@ -386,9 +386,9 @@ describe CommandMapper::Option do
             {"foo" => "bar"}
           end
 
-          it "must return [false, \"cannot convert a Hash into a String\"]" do
+          it "must return [false, \"cannot convert a Hash into a String (...)\"]" do
             expect(subject.validate(value)).to eq(
-              [false, "cannot convert a Hash into a String"]
+              [false, "cannot convert a Hash into a String (#{value.inspect})"]
             )
           end
 
@@ -518,12 +518,11 @@ describe CommandMapper::Option do
 
             context "but one of the Array's elements is invalid" do
               let(:value)   { ["foo", " ", "baz"] }
-              let(:message) { "does not allow a blank value" }
 
               it do
                 expect {
                   subject.argv(value)
-                }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): #{message}")
+                }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): does not allow a blank value (#{value[1].inspect})")
               end
             end
           end
@@ -554,7 +553,7 @@ describe CommandMapper::Option do
             it do
               expect {
                 subject.argv(values)
-              }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{values.inspect}): cannot convert a Hash into a String")
+              }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{values.inspect}): cannot convert a Hash into a String (#{values[0].inspect})")
             end
 
             context "but #value.type is a Types::KeyValue object" do
@@ -603,13 +602,12 @@ describe CommandMapper::Option do
             end
 
             context "but it's invalid" do
-              let(:value)   { " " }
-              let(:message) { "does not allow a blank value" }
+              let(:value) { " " }
 
               it do
                 expect {
                   subject.argv(value)
-                }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): #{message}")
+                }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): does not allow a blank value (#{value.inspect})")
               end
             end
           end
@@ -665,13 +663,12 @@ describe CommandMapper::Option do
           end
 
           context "but it's invalid" do
-            let(:value)   { " " }
-            let(:message) { "does not allow a blank value" }
+            let(:value) { " " }
 
             it do
               expect {
                 subject.argv(value)
-              }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): #{message}")
+              }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): does not allow a blank value (#{value.inspect})")
             end
           end
         end
@@ -682,7 +679,7 @@ describe CommandMapper::Option do
           it do
             expect {
               subject.argv(value)
-            }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): cannot convert a Array into a String")
+            }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): cannot convert a Array into a String (#{value.inspect})")
           end
 
           context "but #value.type is a Types::List object" do
@@ -700,7 +697,7 @@ describe CommandMapper::Option do
               it do
                 expect {
                   subject.argv(value)
-                }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): contains an invalid value: value cannot be nil")
+                }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): element cannot be nil")
               end
             end
 
@@ -724,7 +721,7 @@ describe CommandMapper::Option do
           it do
             expect {
               subject.argv(value)
-            }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): cannot convert a Hash into a String")
+            }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): cannot convert a Hash into a String (#{value.inspect})")
           end
 
           context "but #value.type is a Types::KeyValue object" do

@@ -70,7 +70,7 @@ describe CommandMapper::Types::List do
 
         it "must return the validation error from #type.validate" do
           expect(subject.validate(value)).to eq(
-            [false, "contains an invalid value: does not allow an empty value"]
+            [false, "element does not allow an empty value"]
           )
         end
       end
@@ -106,7 +106,7 @@ describe CommandMapper::Types::List do
 
         it "must return the validation error from #type.validate" do
           expect(subject.validate(values)).to eq(
-            [false, "contains an invalid value: value cannot be nil"]
+            [false, "element cannot be nil"]
           )
         end
       end

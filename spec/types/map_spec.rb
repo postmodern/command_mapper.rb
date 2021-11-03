@@ -32,9 +32,9 @@ describe CommandMapper::Types::Map do
     context "when given a value that is not in the map" do
       let(:value) { 42 }
 
-      it "must return [false, \"unknown value\"]" do
+      it "must return [false, \"unknown value (...)\"]" do
         expect(subject.validate(value)).to eq(
-          [false, "unknown value"]
+          [false, "unknown value (#{value.inspect})"]
         )
       end
     end

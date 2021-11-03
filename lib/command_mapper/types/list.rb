@@ -67,7 +67,7 @@ module CommandMapper
           valid, message = @type.validate(element)
 
           unless valid
-            return [false, "contains an invalid value: #{message}"]
+            return [false, "element #{message}"]
           end
         end
 

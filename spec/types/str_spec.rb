@@ -92,9 +92,9 @@ describe CommandMapper::Types::Str do
     context "when given nil" do
       let(:value) { nil }
 
-      it "must return [false, \"value cannot be nil\"]" do
+      it "must return [false, \"cannot be nil\"]" do
         expect(subject.validate(value)).to eq(
-          [false, "value cannot be nil"]
+          [false, "cannot be nil"]
         )
       end
 
@@ -117,7 +117,7 @@ describe CommandMapper::Types::Str do
       context "and it's empty" do
         let(:value) { "" }
 
-        it "must return false and a validation error message" do
+        it "must return [false, \"does not allow an empty value\"]" do
           expect(subject.validate(value)).to eq([false, "does not allow an empty value"])
         end
 
@@ -133,8 +133,8 @@ describe CommandMapper::Types::Str do
       context "and it's blank" do
         let(:value) { " \t\n\r\v " }
 
-        it "must return false and a validation error message" do
-          expect(subject.validate(value)).to eq([false, "does not allow a blank value"])
+        it "must return [false, \"does not allow a blank value (...)\"]" do
+          expect(subject.validate(value)).to eq([false, "does not allow a blank value (#{value.inspect})"])
         end
 
         context "but #allow_blank? is true" do
@@ -157,7 +157,7 @@ describe CommandMapper::Types::Str do
       context "and it's empty" do
         let(:value) { :"" }
 
-        it "must return false and a validation error message" do
+        it "must return [false, \"does not allow an empty value\"]" do
           expect(subject.validate(value)).to eq([false, "does not allow an empty value"])
         end
 
@@ -173,8 +173,8 @@ describe CommandMapper::Types::Str do
       context "and it's blank" do
         let(:value) { :" \t\n\r\v " }
 
-        it "must return false and a validation error message" do
-          expect(subject.validate(value)).to eq([false, "does not allow a blank value"])
+        it "must return [false, \"does not allow a blank value (...)\"]" do
+          expect(subject.validate(value)).to eq([false, "does not allow a blank value (#{value.inspect})"])
         end
 
         context "but #allow_blank? is true" do
@@ -190,9 +190,9 @@ describe CommandMapper::Types::Str do
     context "when an Enumerable object is given" do
       let(:value) { %w[foo bar] }
 
-      it "must return [false, \"cannot convert an Enumerable object into a String\"]" do
+      it "must return [false, \"cannot convert an Enumerable object into a String (...)\"]" do
         expect(subject.validate(value)).to eq(
-          [false, "cannot convert a #{value.class} into a String"]
+          [false, "cannot convert a #{value.class} into a String (#{value.inspect})"]
         )
       end
     end
@@ -221,9 +221,9 @@ describe CommandMapper::Types::Str do
 
         let(:value) { TestStr::ObjectWithoutToS.new }
 
-        it "must return true" do
+        it "must return [false, \"dpes not define a #to_s method (...)\"]" do
           expect(subject.validate(value)).to eq(
-            [false, "does not define a #to_s method"]
+            [false, "does not define a #to_s method (#{value.inspect})"]
           )
         end
       end

@@ -90,9 +90,9 @@ describe CommandMapper::Argument do
           context "but one of the Array's elements is nil" do
             let(:values) { ["foo", nil, "bar"] }
 
-            it "must return [false, \"value cannot be nil\"]" do
+            it "must return [false, \"cannot be nil\"]" do
               expect(subject.validate(values)).to eq(
-                [false, "value cannot be nil"]
+                [false, "cannot be nil"]
               )
             end
           end
@@ -102,9 +102,9 @@ describe CommandMapper::Argument do
               [{"foo" => 1}, {"bar" => 2 }]
             end
 
-            it "must return true" do
+            it "must return [false, \"cannot convert a Hash into a String (...)\"]" do
               expect(subject.validate(values)).to eq(
-                [false, "cannot convert a Hash into a String"]
+                [false, "cannot convert a Hash into a String (#{values[0].inspect})"]
               )
             end
 
@@ -166,9 +166,9 @@ describe CommandMapper::Argument do
               {"foo" => "bar"}
             end
 
-            it "must return [false, \"cannot convert a Hash into a String\"]" do
+            it "must return [false, \"cannot convert a Hash into a String (...)\"]" do
               expect(subject.validate(value)).to eq(
-                [false, "cannot convert a Hash into a String"]
+                [false, "cannot convert a Hash into a String (#{value.inspect})"]
               )
             end
 
@@ -207,9 +207,9 @@ describe CommandMapper::Argument do
         context "and is given an Array" do
           let(:value) { [1,2,3,4] }
 
-          it "must return [false, \"cannot convert a Array into a String\"]" do
+          it "must return [false, \"cannot convert a Array into a String (...)\"]" do
             expect(subject.validate(value)).to eq(
-              [false, "cannot convert a Array into a String"]
+              [false, "cannot convert a Array into a String (#{value.inspect})"]
             )
           end
 
@@ -223,9 +223,9 @@ describe CommandMapper::Argument do
             context "but one of the Array elements is nil" do
               let(:value) { [1,2,nil,4] }
 
-              it "must return [false, \"contains an invalid value: value cannot be nil\"]" do
+              it "must return [false, \"element cannot be nil\"]" do
                 expect(subject.validate(value)).to eq(
-                  [false, "contains an invalid value: value cannot be nil"]
+                  [false, "element cannot be nil"]
                 )
               end
             end
@@ -247,9 +247,9 @@ describe CommandMapper::Argument do
             {"foo" => "bar"}
           end
 
-          it "must return [false, \"cannot convert a Hash into a String\"]" do
+          it "must return [false, \"cannot convert a Hash into a String (...)\"]" do
             expect(subject.validate(value)).to eq(
-              [false, "cannot convert a Hash into a String"]
+              [false, "cannot convert a Hash into a String (#{value.inspect})"]
             )
           end
 
@@ -293,18 +293,17 @@ describe CommandMapper::Argument do
             it do
               expect {
                 subject.argv(values)
-              }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{values.inspect}): value cannot be nil")
+              }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{values.inspect}): cannot be nil")
             end
           end
 
           context "but one of the Array's elements is invalid" do
-            let(:value)   { ["foo", " ", "baz"] }
-            let(:message) { "does not allow a blank value" }
+            let(:value) { ["foo", " ", "baz"] }
 
             it do
               expect {
                 subject.argv(value)
-              }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{value.inspect}): #{message}")
+              }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{value.inspect}): does not allow a blank value (#{value[1].inspect})")
             end
           end
 
@@ -316,7 +315,7 @@ describe CommandMapper::Argument do
             it do
               expect {
                 subject.argv(values)
-              }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{values.inspect}): cannot convert a Hash into a String")
+              }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{values.inspect}): cannot convert a Hash into a String (#{values[0].inspect})")
             end
 
             context "but #type is a Types::KeyValue object" do
@@ -367,13 +366,12 @@ describe CommandMapper::Argument do
         end
 
         context "but the String is invalid" do
-          let(:value)   { " " }
-          let(:message) { "does not allow a blank value" }
+          let(:value) { " " }
 
           it do
             expect {
               subject.argv(value)
-            }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{value.inspect}): #{message}")
+            }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{value.inspect}): does not allow a blank value (#{value.inspect})")
           end
         end
       end
@@ -423,7 +421,7 @@ describe CommandMapper::Argument do
       it do
         expect {
           subject.argv(value)
-        }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{value.inspect}): cannot convert a Array into a String")
+        }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{value.inspect}): cannot convert a Array into a String (#{value.inspect})")
       end
 
       context "but #type is a Types::List object" do
@@ -441,7 +439,7 @@ describe CommandMapper::Argument do
           it do
             expect {
               subject.argv(value)
-            }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{value.inspect}): contains an invalid value: value cannot be nil")
+            }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{value.inspect}): element cannot be nil")
           end
         end
 
@@ -452,7 +450,7 @@ describe CommandMapper::Argument do
           it do
             expect {
               subject.argv(value)
-            }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{value.inspect}): contains an invalid value: does not allow a blank value")
+            }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{value.inspect}): element does not allow a blank value (#{value[1].inspect})")
           end
         end
 
@@ -476,7 +474,7 @@ describe CommandMapper::Argument do
       it do
         expect {
           subject.argv(value)
-        }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{value.inspect}): cannot convert a Hash into a String")
+        }.to raise_error(ValidationError,"argument #{name} was given an invalid value (#{value.inspect}): cannot convert a Hash into a String (#{value.inspect})")
       end
 
       context "but #type is a Types::KeyValue object" do

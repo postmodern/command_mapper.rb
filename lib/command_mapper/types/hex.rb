@@ -40,7 +40,7 @@ module CommandMapper
         case value
         when String
           unless value =~ /\A(?:0x)?[A-Fa-f0-9]+\z/
-            return [false, "value is not in hexadecimal format"]
+            return [false, "not in hex format (#{value.inspect})"]
           end
 
           return true

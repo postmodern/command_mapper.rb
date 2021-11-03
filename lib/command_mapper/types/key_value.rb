@@ -68,34 +68,34 @@ module CommandMapper
           end
 
           if value.length > 1
-            return [false, "cannot contain multiple key:value pairs"]
+            return [false, "cannot contain multiple key:value pairs (#{value.inspect})"]
           end
 
           key, value = value.first
         when Array
           if value.length < 2
-            return [false, "must contain two elements"]
+            return [false, "must contain two elements (#{value.inspect})"]
           end
 
           if value.length > 2
-            return [false, "cannot contain more than two elements"]
+            return [false, "cannot contain more than two elements (#{value.inspect})"]
           end
 
           key, value = value
         else
-          return [false, "must be a Hash or an Array"]
+          return [false, "must be a Hash or an Array (#{value.inspect})"]
         end
 
         valid, message = @key.validate(key)
 
         unless valid
-          return [false, "key is invalid: #{message}"]
+          return [false, "key #{message}"]
         end
 
         valid, message = @value.validate(value)
 
         unless valid
-          return [false, "value is invalid: #{message}"]
+          return [false, "value #{message}"]
         end
 
         return true

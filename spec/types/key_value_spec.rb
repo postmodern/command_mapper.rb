@@ -81,7 +81,7 @@ describe CommandMapper::Types::KeyValue do
 
           it "must validate the key value using #key.validate" do
             expect(subject.validate(hash)).to eq(
-              [false, "key is invalid: value contains non-numeric characters"]
+              [false, "key contains non-numeric characters (#{key.inspect})"]
             )
           end
         end
@@ -94,7 +94,7 @@ describe CommandMapper::Types::KeyValue do
 
           it "must validate the key value using #key.validate" do
             expect(subject.validate(hash)).to eq(
-              [false, "value is invalid: value contains non-numeric characters"]
+              [false, "value contains non-numeric characters (#{value.inspect})"]
             )
           end
         end
@@ -103,9 +103,9 @@ describe CommandMapper::Types::KeyValue do
       context "but the Hash contains more than one pair" do
         let(:hash)  { {"foo" => "bar", "baz" => "qux"} }
 
-        it "must return true" do
+        it "must return [false, \"cannot contain multiple key:value pairs (...)\"]" do
           expect(subject.validate(hash)).to eq(
-            [false, "cannot contain multiple key:value pairs"]
+            [false, "cannot contain multiple key:value pairs (#{hash.inspect})"]
           )
         end
       end
@@ -115,9 +115,9 @@ describe CommandMapper::Types::KeyValue do
       context "but the Array is empty" do
         let(:array) { [] }
 
-        it "must return true" do
+        it "must return [false, \"must contain two elements (...)\"]" do
           expect(subject.validate(array)).to eq(
-            [false, "must contain two elements"]
+            [false, "must contain two elements (#{array.inspect})"]
           )
         end
       end
@@ -127,7 +127,7 @@ describe CommandMapper::Types::KeyValue do
 
         it "must return true" do
           expect(subject.validate(array)).to eq(
-            [false, "must contain two elements"]
+            [false, "must contain two elements (#{array.inspect})"]
           )
         end
       end
@@ -149,7 +149,7 @@ describe CommandMapper::Types::KeyValue do
 
           it "must validate the key value using #key.validate" do
             expect(subject.validate(array)).to eq(
-              [false, "key is invalid: value contains non-numeric characters"]
+              [false, "key contains non-numeric characters (#{key.inspect})"]
             )
           end
         end
@@ -162,7 +162,7 @@ describe CommandMapper::Types::KeyValue do
 
           it "must validate the key value using #key.validate" do
             expect(subject.validate(array)).to eq(
-              [false, "value is invalid: value contains non-numeric characters"]
+              [false, "value contains non-numeric characters (#{value.inspect})"]
             )
           end
         end
@@ -171,9 +171,9 @@ describe CommandMapper::Types::KeyValue do
       context "but the Array contains more than two elements" do
         let(:array) { ["foo", "bar", "baz"] }
 
-        it "must return true" do
+        it "must return [false, \"cannot contain more than two elements (...)\"]" do
           expect(subject.validate(array)).to eq(
-            [false, "cannot contain more than two elements"]
+            [false, "cannot contain more than two elements (#{array.inspect})"]
           )
         end
       end

@@ -23,7 +23,7 @@ module CommandMapper
 
         unless value.empty?
           unless File.directory?(value)
-            return false, "directory does not exist"
+            return [false, "directory does not exist (#{value.inspect})"]
           end
         end
 
