@@ -589,6 +589,138 @@ describe CommandMapper::Command do
 
   let(:command_class) { TestCommand::ExampleCommand }
 
+  describe ".run" do
+    let(:command_instance) { double(:command_instance) }
+    let(:return_value)     { double(:boolean)          }
+
+    subject { command_class }
+
+    context "when called with a Hash of params" do
+      let(:params) do
+        {opt1: opt1, arg1: arg1}
+      end
+
+      it "must initialize a new command with the Hash of params and call #run" do
+        expect(subject).to receive(:new).with(params).and_return(command_instance)
+        expect(command_instance).to receive(:run_command).and_return(return_value)
+
+        expect(subject.run(params)).to be(return_value)
+      end
+    end
+
+    context "when called with keyword aguments" do
+      let(:kwargs) do
+        {opt1: opt1, arg1: arg1}
+      end
+
+      it "must initialize a new command with the keyword arguments and call #run" do
+        expect(subject).to receive(:new).with({},**kwargs).and_return(command_instance)
+        expect(command_instance).to receive(:run_command).and_return(return_value)
+
+        expect(subject.run(**kwargs)).to be(return_value)
+      end
+    end
+  end
+
+  describe ".capture" do
+    let(:command_instance) { double(:command_instance) }
+    let(:return_value)     { double(:string)           }
+
+    subject { command_class }
+
+    context "when called with a Hash of params" do
+      let(:params) do
+        {opt1: opt1, arg1: arg1}
+      end
+
+      it "must initialize a new command with the Hash of params and call #capture" do
+        expect(subject).to receive(:new).with(params).and_return(command_instance)
+        expect(command_instance).to receive(:capture_command).and_return(return_value)
+
+        expect(subject.capture(params)).to be(return_value)
+      end
+    end
+
+    context "when called with keyword aguments" do
+      let(:kwargs) do
+        {opt1: opt1, arg1: arg1}
+      end
+
+      it "must initialize a new command with the keyword arguments and call #capture" do
+        expect(subject).to receive(:new).with({},**kwargs).and_return(command_instance)
+        expect(command_instance).to receive(:capture_command).and_return(return_value)
+
+        expect(subject.capture(**kwargs)).to be(return_value)
+      end
+    end
+  end
+
+  describe ".popen" do
+    let(:command_instance) { double(:command_instance) }
+    let(:return_value)     { double(:io)               }
+
+    subject { command_class }
+
+    context "when called with a Hash of params" do
+      let(:params) do
+        {opt1: opt1, arg1: arg1}
+      end
+
+      it "must initialize a new command with the Hash of params and call #popen" do
+        expect(subject).to receive(:new).with(params).and_return(command_instance)
+        expect(command_instance).to receive(:popen_command).and_return(return_value)
+
+        expect(subject.popen(params)).to be(return_value)
+      end
+    end
+
+    context "when called with keyword aguments" do
+      let(:kwargs) do
+        {opt1: opt1, arg1: arg1}
+      end
+
+      it "must initialize a new command with the keyword arguments and call #popen" do
+        expect(subject).to receive(:new).with({},**kwargs).and_return(command_instance)
+        expect(command_instance).to receive(:popen_command).and_return(return_value)
+
+        expect(subject.popen(**kwargs)).to be(return_value)
+      end
+    end
+  end
+
+  describe ".sudo" do
+    let(:command_instance) { double(:command_instance) }
+    let(:return_value)     { double(:boolean)          }
+
+    subject { command_class }
+
+    context "when called with a Hash of params" do
+      let(:params) do
+        {opt1: opt1, arg1: arg1}
+      end
+
+      it "must initialize a new command with the Hash of params and call #sudo" do
+        expect(subject).to receive(:new).with(params).and_return(command_instance)
+        expect(command_instance).to receive(:sudo_command).and_return(return_value)
+
+        expect(subject.sudo(params)).to be(return_value)
+      end
+    end
+
+    context "when called with keyword aguments" do
+      let(:kwargs) do
+        {opt1: opt1, arg1: arg1}
+      end
+
+      it "must initialize a new command with the keyword arguments and call #sudo" do
+        expect(subject).to receive(:new).with({},**kwargs).and_return(command_instance)
+        expect(command_instance).to receive(:sudo_command).and_return(return_value)
+
+        expect(subject.sudo(**kwargs)).to be(return_value)
+      end
+    end
+  end
+
   describe "#initialize" do
     subject { command_class.new() }
 
