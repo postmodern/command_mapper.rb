@@ -517,12 +517,22 @@ describe CommandMapper::Option do
             end
 
             context "but one of the Array's elements is invalid" do
-              let(:value)   { ["foo", " ", "baz"] }
+              let(:value) { ["foo", " ", "baz"] }
 
               it do
                 expect {
                   subject.argv(value)
                 }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): does not allow a blank value (#{value[1].inspect})")
+              end
+            end
+
+            context "but one of the Array's elements starts with a '-'" do
+              let(:value) { ["foo", "-bar", "baz"] }
+
+              it do
+                expect {
+                  subject.argv(value)
+                }.to raise_error(ValidationError,"option #{name} formatted value (#{value[1].inspect}) cannot start with a '-'")
               end
             end
           end
@@ -579,6 +589,16 @@ describe CommandMapper::Option do
                   }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{values.inspect}): cannot be empty")
                 end
               end
+
+              context "but one of the Hash's keys starts with a '-'" do
+                let(:value) { [{"foo" => 1}, {"-bar" => 2 }] }
+
+                it do
+                  expect {
+                    subject.argv(value)
+                  }.to raise_error(ValidationError,"option #{name} formatted value (\"-bar=2\") cannot start with a '-'")
+                end
+              end
             end
           end
 
@@ -610,6 +630,16 @@ describe CommandMapper::Option do
                 }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): does not allow a blank value (#{value.inspect})")
               end
             end
+
+            context "but it starts with a '-'" do
+              let(:value) { "-foo" }
+
+              it do
+                expect {
+                  subject.argv(value)
+                }.to raise_error(ValidationError,"option #{name} formatted value (#{value.inspect}) cannot start with a '-'")
+              end
+            end
           end
 
           context "and it's a Hash" do
@@ -633,6 +663,18 @@ describe CommandMapper::Option do
                   expect {
                     subject.argv(value)
                   }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): cannot be empty")
+                end
+              end
+
+              context "but the key starts with a '-'" do
+                let(:value) do
+                  {"-foo" => "bar"}
+                end
+
+                it do
+                  expect {
+                    subject.argv(value)
+                  }.to raise_error(ValidationError,"option #{name} formatted value (\"-foo=bar\") cannot start with a '-'")
                 end
               end
             end
@@ -669,6 +711,16 @@ describe CommandMapper::Option do
               expect {
                 subject.argv(value)
               }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): does not allow a blank value (#{value.inspect})")
+            end
+          end
+
+          context "but it starts with a '-'" do
+            let(:value) { "-foo" }
+
+            it do
+              expect {
+                subject.argv(value)
+              }.to raise_error(ValidationError,"option #{name} formatted value (#{value.inspect}) cannot start with a '-'")
             end
           end
         end
@@ -710,6 +762,16 @@ describe CommandMapper::Option do
                 }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): cannot be empty")
               end
             end
+
+            context "but the first element starts with a '-'" do
+              let(:value) { ["-foo", "bar", "baz"] }
+
+              it do
+                expect {
+                  subject.argv(value)
+                }.to raise_error(ValidationError,"option #{name} formatted value (#{value.join(',').inspect}) cannot start with a '-'")
+              end
+            end
           end
         end
 
@@ -740,6 +802,18 @@ describe CommandMapper::Option do
                 expect {
                   subject.argv(value)
                 }.to raise_error(ValidationError,"option #{name} was given an invalid value (#{value.inspect}): cannot be empty")
+              end
+            end
+
+            context "but the first key starts with a '-'" do
+              let(:value) do
+                {"-foo" => "bar"}
+              end
+
+              it do
+                expect {
+                  subject.argv(value)
+                }.to raise_error(ValidationError,"option #{name} formatted value (\"-foo=bar\") cannot start with a '-'")
               end
             end
           end

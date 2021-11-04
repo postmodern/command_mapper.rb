@@ -231,16 +231,23 @@ module CommandMapper
     # @param [Object] value
     #   The value for the option.
     #
+    # @raise [VAlidationError]
+    #   The formatted value starts with a `-` character.
+    #
     def emit_option_flag_and_value(argv,value)
       if !@value.required? && value == true
         argv << @flag
       else
-        value = @value.format(value)
+        string = @value.format(value)
+
+        if string.start_with?('-')
+          raise(ValidationError,"option #{@name} formatted value (#{string.inspect}) cannot start with a '-'")
+        end
 
         if equals?
-          argv << "#{@flag}=#{value}"
+          argv << "#{@flag}=#{string}"
         else
-          argv << @flag << value
+          argv << @flag << string
         end
       end
     end
