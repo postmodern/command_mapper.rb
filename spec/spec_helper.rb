@@ -1,6 +1,6 @@
 require 'rspec'
-require 'simplecov'
 require 'command_mapper/version'
-
 include CommandMapper
+
+require 'simplecov'
 SimpleCov.start
