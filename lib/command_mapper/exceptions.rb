@@ -1,10 +1,13 @@
 module CommandMapper
+  class Exception < RuntimeError
+  end
+
   #
   # Represents a argument or option value validation error.
   #
-  class ValidationError < ArgumentError
+  class ValidationError < Exception
   end
 
-  class ArgumentRequired < ValidationError
+  class ArgumentRequired < Exception
   end
 end
