@@ -1,6 +1,7 @@
 # command_mapper
 
 [![CI](https://github.com/postmodern/command_mapper.rb/actions/workflows/ruby.yml/badge.svg)](https://github.com/postmodern/command_mapper.rb/actions/workflows/ruby.yml)
+[![Code Climate](https://codeclimate.com/github/postmodern/command_mapper.rb.svg)](https://codeclimate.com/github/postmodern/command_mapper.rb)
 
 * [Source](https://github.com/postmodern/command_mapper)
 * [Issues](https://github.com/postmodern/command_mapper/issues)
@@ -16,13 +17,14 @@ allow safely and securely executing commands.
 * Supports defining commands as Ruby classes.
 * Supports mapping in options and additional arguments.
   * Supports common option types:
+    * `Str`: string values
     * `Num`: numeric values
     * `Hex`: hexadecimal values
+    * `Map`: `enabled|disables` or `yes|no`
+    * `Enum`: `{foo|bar|baz}`, etc.
     * `List`: `VALUE,...`
     * `KeyValue`: `KEY:VALUE` or `KEY=VALUE`
     * `KeyValueList`: `KEY:VALUE,...`, or `KEY=VALUE;...`, etc.
-    * `Map`: `enabled|disables` or `yes|no`
-    * `Enum`: `type1`, `type2`, `type3`, etc.
     * `InputPath`: a path to a pre-existing file or directory
     * `InputFile`: a path to a pre-existing file
     * `InputDir`: a path to a pre-existing directory
@@ -299,6 +301,8 @@ Grep.sudo(patterns: "Error", file: "/var/log/syslog")
 [command_mapper-gen] can automatically generate command classes from a command's
 `--help` output and/or man page.
 
+[command_mapper-gen]: https://github.com/postmodern/command_mapper-gen.rb#readme
+
 ```
 $ gem install command_mapper-gen
 $ command_mapper-gen cat
@@ -328,8 +332,6 @@ class Cat < CommandMapper::Command
 
 end
 ```
-
-[command_mapper-gen]: https://github.com/postmodern/command_mapper-gen.rb#readme
 
 ## Requirements
 
