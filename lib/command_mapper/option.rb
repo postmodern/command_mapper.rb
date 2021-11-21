@@ -121,43 +121,12 @@ module CommandMapper
     def validate(value)
       if accepts_value?
         if repeats?
-          values = case value
-                   when Array then value
-                   else            [value]
-                   end
-
-          if @value.required?
-            # option requires atleast one value
-            if values.empty?
-              return [false, "requires at least one value"]
-            end
-          end
-
-          values.each do |element|
-            valid, message = @value.validate(element)
-
-            unless valid
-              return [false, message]
-            end
-          end
-
-          return true
+          validate_repeating(value)
         else
           @value.validate(value)
         end
       else
-        case value
-        when true, false, nil
-          return true
-        when Integer
-          if repeats?
-            return true
-          else
-            return [false, "only repeating options may accept Integers"]
-          end
-        else
-          return [false, "only accepts true, false, or nil"]
-        end
+        validate_does_not_accept_value(value)
       end
     end
 
@@ -201,6 +170,63 @@ module CommandMapper
     end
 
     private
+
+    #
+    # Validates a value when the option can be repeated.
+    #
+    # @param [Array<Object>, Object] value
+    #
+    # @return [true, (false, String)]
+    #   Returns true if the value is valid, or `false` and a validation error
+    #   message if the value is not compatible.
+    #
+    def validate_repeating(value)
+      values = case value
+               when Array then value
+               else            [value]
+               end
+
+      if @value.required?
+        # option requires atleast one value
+        if values.empty?
+          return [false, "requires at least one value"]
+        end
+      end
+
+      values.each do |element|
+        valid, message = @value.validate(element)
+
+        unless valid
+          return [false, message]
+        end
+      end
+
+      return true
+    end
+
+    #
+    # Validates a value when the option does not accept a value.
+    #
+    # @param [Array<Object>, Object] value
+    #
+    # @return [true, (false, String)]
+    #   Returns true if the value is valid, or `false` and a validation error
+    #   message if the value is not compatible.
+    #
+    def validate_does_not_accept_value(value)
+      case value
+      when true, false, nil
+        return true
+      when Integer
+        if repeats?
+          return true
+        else
+          return [false, "only repeating options may accept Integers"]
+        end
+      else
+        return [false, "only accepts true, false, or nil"]
+      end
+    end
 
     #
     # Emits the option's flag.
