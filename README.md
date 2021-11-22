@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/postmodern/command_mapper.rb/actions/workflows/ruby.yml/badge.svg)](https://github.com/postmodern/command_mapper.rb/actions/workflows/ruby.yml)
 [![Code Climate](https://codeclimate.com/github/postmodern/command_mapper.rb.svg)](https://codeclimate.com/github/postmodern/command_mapper.rb)
+[![Gem Version](https://badge.fury.io/rb/command_mapper.svg)](https://badge.fury.io/rb/command_mapper)
 
 * [Source](https://github.com/postmodern/command_mapper)
 * [Issues](https://github.com/postmodern/command_mapper/issues)
