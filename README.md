@@ -331,7 +331,7 @@ class Cat < CommandMapper::Command
     option "--help"
     option "--version"
 
-    argument :file, required: false
+    argument :file, required: false, repeats: true
   end
 
 end
