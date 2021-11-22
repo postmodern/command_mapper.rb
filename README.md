@@ -61,7 +61,7 @@ class Grep < CommandMapper::Command
     option "--invert-match"
     option "--version"
     option "--help"
-    option "--max-count", equals: true, value: true
+    option "--max-count", equals: true, value: {type: Num.new}
     option "--byte-offset"
     option "--line-number"
     option "--line-buffered"
@@ -72,7 +72,7 @@ class Grep < CommandMapper::Command
     option "--quiet"
     option "--binary-files", equals: true, value: true
     option "--text"
-    option "-I", name: :ignore_binary
+    option "-I", name: 	# FIXME: name
     option "--directories", equals: true, value: true
     option "--devices", equals: true, value: true
     option "--recursive"
@@ -86,17 +86,17 @@ class Grep < CommandMapper::Command
     option "--count"
     option "--initial-tab"
     option "--null"
-    option "--before-context", equals: true, value: true
-    option "--after-context", equals: true, value: true
-    option "--context", equals: true, value: true
+    option "--before-context", equals: true, value: {type: Num.new}
+    option "--after-context", equals: true, value: {type: Num.new}
+    option "--context", equals: true, value: {type: Num.new}
     option "--group-separator", equals: true, value: true
     option "--no-group-separator"
-    option "--color", equals: true, value: {required: false}
-    option "--colour", equals: true, value: {required: false}
+    option "--color", equals: :optional, value: {required: false}
+    option "--colour", equals: :optional, value: {required: false}
     option "--binary"
-  
+
     argument :patterns
-    argument :file, required: false
+    argument :file, required: false, repeats: true
   end
 
 end
