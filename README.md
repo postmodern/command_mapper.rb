@@ -20,7 +20,7 @@ allow safely and securely executing commands.
     * `Str`: string values
     * `Num`: numeric values
     * `Hex`: hexadecimal values
-    * `Map`: maps `true`/`false` to `yes` or `no`, or `enabled` or `disabled`
+    * `Map`: maps `true`/`false` to `yes`/`no`, or `enabled`/`disabled`
       (aka `--opt=yes|no` or `--opt=enabled|disabled` values).
     * `Enum`: maps a finite set of Symbols to a finite set of Strings
       (aka `--opt={foo|bar|baz}` values).
