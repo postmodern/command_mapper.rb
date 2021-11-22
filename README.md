@@ -270,8 +270,8 @@ With a block:
 ```ruby
 Grep.run do |grep|
   grep.ignore_case = true
-  grep.patterns = "foo"
-  grep.file = "file.txt"
+  grep.patterns    = "foo"
+  grep.file        = "file.txt"
 end
 ```
 
