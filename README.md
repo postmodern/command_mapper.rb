@@ -20,11 +20,15 @@ allow safely and securely executing commands.
     * `Str`: string values
     * `Num`: numeric values
     * `Hex`: hexadecimal values
-    * `Map`: `enabled|disables` or `yes|no`
-    * `Enum`: `{foo|bar|baz}`, etc.
-    * `List`: `VALUE,...`
-    * `KeyValue`: `KEY:VALUE` or `KEY=VALUE`
-    * `KeyValueList`: `KEY:VALUE,...`, or `KEY=VALUE;...`, etc.
+    * `Map`: maps `true`/`false` to `yes` or `no`, or `enabled` or `disabled`
+      (aka `--opt=yes|no` or `--opt=enabled|disabled` values).
+    * `Enum`: maps a finite set of Symbols to a finite set of Strings
+      (aka `--opt={foo|bar|baz}` values).
+    * `List`: comma-separated list (aka `--opt VALUE,...`).
+    * `KeyValue`: maps a Hash or Array to key:value Strings
+      (aka `--opt KEY:VALUE` or `--opt KEY=VALUE` values).
+    * `KeyValueList`: a key-value list
+      (aka `--opt KEY:VALUE,...` or  `--opt KEY=VALUE;...` values).
     * `InputPath`: a path to a pre-existing file or directory
     * `InputFile`: a path to a pre-existing file
     * `InputDir`: a path to a pre-existing directory
