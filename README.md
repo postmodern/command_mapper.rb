@@ -18,27 +18,42 @@ allow safely and securely executing commands.
 * Supports defining commands as Ruby classes.
 * Supports mapping in options and additional arguments.
   * Supports common option types:
-    * `Str`: string values
-    * `Num`: numeric values
-    * `Hex`: hexadecimal values
-    * `Map`: maps `true`/`false` to `yes`/`no`, or `enabled`/`disabled`
-      (aka `--opt=yes|no` or `--opt=enabled|disabled` values).
-    * `Enum`: maps a finite set of Symbols to a finite set of Strings
-      (aka `--opt={foo|bar|baz}` values).
-    * `List`: comma-separated list (aka `--opt VALUE,...`).
-    * `KeyValue`: maps a Hash or Array to key:value Strings
-      (aka `--opt KEY:VALUE` or `--opt KEY=VALUE` values).
-    * `KeyValueList`: a key-value list
+    * [CommandMapper::Types::Str]: string values
+    * [CommandMapper::Types::Num]: numeric values
+    * [CommandMapper::Types::Hex]: hexadecimal values
+    * [CommandMapper::Types::Map]: maps `true`/`false` to `yes`/`no`, or
+      `enabled`/`disabled` (aka `--opt=yes|no` or
+      `--opt=enabled|disabled` values).
+    * [CommandMapper::Types::Enum]: maps a finite set of Symbols to a finite
+      set of Strings (aka `--opt={foo|bar|baz}` values).
+    * [CommandMapper::Types::List]: comma-separated list
+      (aka `--opt VALUE,...`).
+    * [CommandMapper::Types::KeyValue]: maps a Hash or Array to key:value
+      Strings (aka `--opt KEY:VALUE` or `--opt KEY=VALUE` values).
+    * [CommandMapper::Types::KeyValueList]: a key-value list
       (aka `--opt KEY:VALUE,...` or  `--opt KEY=VALUE;...` values).
-    * `InputPath`: a path to a pre-existing file or directory
-    * `InputFile`: a path to a pre-existing file
-    * `InputDir`: a path to a pre-existing directory
+    * [CommandMapper::Types::InputPath]: a path to a pre-existing file or
+      directory
+    * [CommandMapper::Types::InputFile]: a path to a pre-existing file
+    * [CommandMapper::Types::InputDir]: a path to a pre-existing directory
 * Supports mapping in sub-commands.
 * Allows running the command via `IO.popen` to read the command's output.
 * Allows running commands with additional environment variables.
 * Allows overriding the command name or path to the command.
 * Allows running commands via `sudo`.
 * Prevents command injection and option injection.
+
+[CommandMapper::Types::Str]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Str
+[CommandMapper::Types::Num]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Num
+[CommandMapper::Types::Hex]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Hex
+[CommandMapper::Types::Map]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Map
+[CommandMapper::Types::Enum]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Enum
+[CommandMapper::Types::List]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/List
+[CommandMapper::Types::KeyValue]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/KeyValue
+[CommandMapper::Types::KeyValueList]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/KeyValueList
+[CommandMapper::Types::InputPath]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/InputPath
+[CommandMapper::Types::InputFile]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/InputFile
+[CommandMapper::Types::InputDir]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/InputDir
 
 ## Examples
 
