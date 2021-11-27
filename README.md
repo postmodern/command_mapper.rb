@@ -18,24 +18,26 @@ allow safely and securely executing commands.
 * Supports defining commands as Ruby classes.
 * Supports mapping in options and additional arguments.
   * Supports common option types:
-    * [CommandMapper::Types::Str]: string values
-    * [CommandMapper::Types::Num]: numeric values
-    * [CommandMapper::Types::Hex]: hexadecimal values
-    * [CommandMapper::Types::Map]: maps `true`/`false` to `yes`/`no`, or
+    * [Str][CommandMapper::Types::Str]: string values
+    * [Num][CommandMapper::Types::Num]: numeric values
+    * [Hex][CommandMapper::Types::Hex]: hexadecimal values
+    * [Map][CommandMapper::Types::Map]: maps `true`/`false` to `yes`/`no`, or
       `enabled`/`disabled` (aka `--opt=yes|no` or
       `--opt=enabled|disabled` values).
-    * [CommandMapper::Types::Enum]: maps a finite set of Symbols to a finite
-      set of Strings (aka `--opt={foo|bar|baz}` values).
-    * [CommandMapper::Types::List]: comma-separated list
+    * [Enum][CommandMapper::Types::Enum]: maps a finite set of Symbols to a
+      finite set of Strings (aka `--opt={foo|bar|baz}` values).
+    * [List][CommandMapper::Types::List]: comma-separated list
       (aka `--opt VALUE,...`).
-    * [CommandMapper::Types::KeyValue]: maps a Hash or Array to key:value
-      Strings (aka `--opt KEY:VALUE` or `--opt KEY=VALUE` values).
-    * [CommandMapper::Types::KeyValueList]: a key-value list
+    * [KeyValue][CommandMapper::Types::KeyValue]: maps a Hash or Array to
+      key:value Strings (aka `--opt KEY:VALUE` or `--opt KEY=VALUE` values).
+    * [KeyValueList][CommandMapper::Types::KeyValueList]: a key-value list
       (aka `--opt KEY:VALUE,...` or  `--opt KEY=VALUE;...` values).
-    * [CommandMapper::Types::InputPath]: a path to a pre-existing file or
+    * [InputPath][CommandMapper::Types::InputPath]: a path to a pre-existing
+      file or directory
+    * [InputFile][CommandMapper::Types::InputFile]: a path to a pre-existing
+      file
+    * [InputDir][CommandMapper::Types::InputDir]: a path to a pre-existing
       directory
-    * [CommandMapper::Types::InputFile]: a path to a pre-existing file
-    * [CommandMapper::Types::InputDir]: a path to a pre-existing directory
 * Supports mapping in sub-commands.
 * Allows running the command via `IO.popen` to read the command's output.
 * Allows running commands with additional environment variables.
