@@ -39,8 +39,11 @@ module CommandMapper
       # Validates a value.
       #
       # @param [Object] value
+      #   The given value to validate.
       #
       # @return [true, (false, String)]
+      #   Returns true if the value is valid, or `false` and a validation error
+      #   message if the value is not compatible.
       #
       def validate(value)
         unless (@map.has_key?(value) || @map.has_value?(value))

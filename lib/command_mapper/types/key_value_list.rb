@@ -31,7 +31,7 @@ module CommandMapper
       # Formats the value.
       #
       # @param [Hash, Array((key, value))] value
-      #   The list of key-value pairs.
+      #   The list of key-value pairs to format.
       #
       # @return [String]
       #   The formatted key-value list.

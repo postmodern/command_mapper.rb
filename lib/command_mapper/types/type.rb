@@ -56,8 +56,11 @@ module CommandMapper
       # The default `validate` method for all types.
       #
       # @param [Object]
+      #   The given value to format.
       #
       # @return [true, (false, String)]
+      #   Returns true if the value is valid, or `false` and a validation error
+      #   message if the value is not compatible.
       #
       def validate(value)
         true
@@ -67,6 +70,7 @@ module CommandMapper
       # The default `format` method for all types.
       #
       # @param [#to_s] value
+      #   The given value to format.
       #
       # @return [String]
       #   The String version of the value.
@@ -83,10 +87,14 @@ module CommandMapper
     # Converts a value into a {Type} object.
     #
     # @param [Type, Hash, nil] value
+    #   The type value or `Hash` of keyword arguments.
     #
-    # @return [Type]
+    # @return [Type, Str]
+    #   The type object or a new {Str} type object if a `Hash` of keyword
+    #   arguments is given.
     #
     # @raise [ArgumentError]
+    #   The given type value was not a {Type}, `Hash`, or `nil`,
     #
     def self.Type(value)
       case value

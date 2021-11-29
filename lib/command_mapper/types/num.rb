@@ -11,8 +11,11 @@ module CommandMapper
       # Validates a value.
       #
       # @param [String, Integer] value
+      #   The given value to validate.
       #
       # @return [true, (false, String)]
+      #   Returns true if the value is valid, or `false` and a validation error
+      #   message if the value is not compatible.
       #
       def validate(value)
         case value
@@ -35,8 +38,10 @@ module CommandMapper
       # Formats a numeric value.
       #
       # @param [String, Integer, #to_i] value
+      #   The given value to format.
       #
       # @return [String]
+      #   The formatted numeric value.
       #
       def format(value)
         case value

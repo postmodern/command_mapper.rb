@@ -18,6 +18,7 @@ module CommandMapper
     #   Specifies whether the argument is required or can be omitted.
     #
     # @param [Types::Type, Hash, nil] type
+    #   The type of the arg's value.
     #
     # @raise [ArgumentError]
     #   The `type` keyword argument was given a `nil` value.
@@ -54,6 +55,7 @@ module CommandMapper
     # Validates whether a given value is compatible with the arg.
     #
     # @param [Object] value
+    #   The given value to validate.
     #
     # @return [true, (false, String)]
     #   Returns true if the value is valid, or `false` and a validation error

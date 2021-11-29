@@ -113,6 +113,7 @@ module CommandMapper
     # Validates whether the given value is compatible with the option.
     #
     # @param [Array<Object>, Object] value
+    #   The given value to validate.
     #
     # @return [true, (false, String)]
     #   Returns true if the value is valid, or `false` and a validation error
@@ -175,6 +176,7 @@ module CommandMapper
     # Validates a value when the option can be repeated.
     #
     # @param [Array<Object>, Object] value
+    #   The given value to validate.
     #
     # @return [true, (false, String)]
     #   Returns true if the value is valid, or `false` and a validation error
@@ -208,6 +210,7 @@ module CommandMapper
     # Validates a value when the option does not accept a value.
     #
     # @param [Array<Object>, Object] value
+    #   The given value to validate.
     #
     # @return [true, (false, String)]
     #   Returns true if the value is valid, or `false` and a validation error

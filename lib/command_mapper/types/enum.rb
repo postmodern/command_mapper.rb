@@ -23,8 +23,10 @@ module CommandMapper
       # Creates a new enum.
       #
       # @param [Array<Object>] values
+      #   List of enum values.
       #
       # @return [Enum]
+      #   The newly created enum object.
       #
       def self.[](*values)
         new(values)

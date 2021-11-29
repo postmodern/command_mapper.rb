@@ -11,8 +11,11 @@ module CommandMapper
       # Validates whether the path exists or not.
       #
       # @param [Object] value
+      #   The given value to validate.
       #
       # @return [true, (false, String)]
+      #   Returns true if the value is valid, or `false` and a validation error
+      #   message if the value is not compatible.
       #
       def validate(value)
         unless value.empty?

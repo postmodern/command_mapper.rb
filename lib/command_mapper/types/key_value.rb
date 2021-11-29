@@ -57,8 +57,11 @@ module CommandMapper
       # Valides the given value.
       #
       # @param [Object] value
+      #   The given value to validate.
       #
       # @return [true, (false, String)]
+      #   Returns true if the value is valid, or `false` and a validation error
+      #   message if the value is not compatible.
       #
       def validate(value)
         case value
@@ -105,7 +108,7 @@ module CommandMapper
       # Formats a value into a key-value pair.
       #
       # @param [Hash, Array, #to_s] value
-      #   The given value.
+      #   The given value to format.
       #
       # @return [String]
       #   The formatted key-value pair.

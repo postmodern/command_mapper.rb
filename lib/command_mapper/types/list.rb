@@ -51,8 +51,11 @@ module CommandMapper
       # Validates the value.
       #
       # @param [Object] value
+      #   The given value to validate.
       #
       # @return [true, (false, String)]
+      #   Returns true if the value is valid, or `false` and a validation error
+      #   message if the value is not compatible.
       #
       def validate(value)
         values = Array(value)
@@ -78,8 +81,10 @@ module CommandMapper
       # Formats the value into a list.
       #
       # @param [Object] value
+      #   The given value to format.
       #
       # @return [String]
+      #   The formatted list.
       #
       def format(value)
         Array(value).map(&@type.method(:format)).join(@separator)

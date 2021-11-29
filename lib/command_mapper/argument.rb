@@ -50,6 +50,7 @@ module CommandMapper
     # Validates whether a given value is compatible with the arg.
     #
     # @param [Array<Object>, Object] value
+    #   The given value to validate.
     #
     # @return [true, (false, String)]
     #   Returns true if the value is valid, or `false` and a validation error
