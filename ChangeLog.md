@@ -1,3 +1,12 @@
+### 0.1.1 / 2021-11-29
+
+* Fixed a bug where {CommandMapper::Types::Num}, {CommandMapper::Types::Hex},
+  {CommandMapper::Types::Enum}, {CommandMapper::Types::InputPath},
+  {CommandMapper::Types::InputFile}, and {CommandMapper::Types::InputDir} were
+  not being required by default.
+* Allow {CommandMapper::Types::Map} to accept values that have already been
+  mapped to a String.
+
 ### 0.1.0 / 2021-11-25
 
 * Initial release:
