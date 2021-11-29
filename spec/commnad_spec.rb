@@ -7,6 +7,9 @@ describe CommandMapper::Command do
       command 'foo'
     end
 
+    class InheritedCommandName < WithCommandName
+    end
+
     class NoCommandName < CommandMapper::Command
     end
   end
@@ -49,6 +52,14 @@ describe CommandMapper::Command do
 
       it "must set .command_name" do
         expect(subject.command_name).to eq('foo')
+      end
+    end
+
+    context "when the command class inherits from another command class" do
+      let(:command_class) { TestCommand::InheritedCommandName }
+
+      it "must check the superclass" do
+        expect(subject.command_name).to eq("foo")
       end
     end
   end

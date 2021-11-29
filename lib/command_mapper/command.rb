@@ -181,7 +181,11 @@ module CommandMapper
     # @api semipublic
     #
     def self.command_name
-      @command_name || raise(NotImplementedError,"#{self} did not call command(...)")
+      @command_name || if superclass < Command
+                         superclass.command_name
+                       else
+                         raise(NotImplementedError,"#{self} did not call command(...)")
+                       end
     end
 
     #
