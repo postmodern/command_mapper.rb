@@ -11,6 +11,10 @@ describe CommandMapper::Command do
     end
   end
 
+  it "must include Types" do
+    expect(command_class).to include(CommandMapper::Types)
+  end
+
   describe ".command_name" do
     subject { command_class }
 
