@@ -1,6 +1,7 @@
 require 'command_mapper/types/type'
 require 'command_mapper/types/str'
 require 'command_mapper/types/num'
+require 'command_mapper/types/hex'
 require 'command_mapper/types/map'
 require 'command_mapper/types/enum'
 require 'command_mapper/types/list'
