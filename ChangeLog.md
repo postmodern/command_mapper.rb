@@ -1,3 +1,9 @@
+### 0.1.2 / 2021-11-29
+
+* Fixed a bug where {CommandMapper::Command.command_name} was not checking the
+  superclass for the {CommandMapper::Command.command_name command_name}, if no
+  `command "..."` was defined in the subclass.
+
 ### 0.1.1 / 2021-11-29
 
 * Fixed a bug where {CommandMapper::Types::Num}, {CommandMapper::Types::Hex},
