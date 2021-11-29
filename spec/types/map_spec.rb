@@ -22,13 +22,22 @@ describe CommandMapper::Types::Map do
   end
 
   describe "#validate" do
-    context "when given a value that's in the map" do
+    context "when given a value that's a key in the map" do
       let(:value) { 2 }
 
       it "must return true" do
         expect(subject.validate(value)).to be(true)
       end
     end
+
+    context "when given a value that's a value in the map" do
+      let(:value) { "two" }
+
+      it "must return true" do
+        expect(subject.validate(value)).to be(true)
+      end
+    end
+
     context "when given a value that is not in the map" do
       let(:value) { 42 }
 
@@ -41,11 +50,19 @@ describe CommandMapper::Types::Map do
   end
 
   describe "#format" do
-    context "when given a value that's in the map" do
+    context "when given a value that's a key in the map" do
       let(:value) { 2 }
 
       it "must return the corresponding mapped value" do
         expect(subject.format(value)).to eq(map[value])
+      end
+    end
+
+    context "when given a value that's a value in the map" do
+      let(:value) { "two" }
+
+      it "must return the value" do
+        expect(subject.format(value)).to eq(value)
       end
     end
 
@@ -55,7 +72,7 @@ describe CommandMapper::Types::Map do
       it "must return the String version of the value" do
         expect {
           subject.format(value)
-        }.to raise_error(KeyError)
+        }.to raise_error(KeyError,"value (#{value.inspect}) is not a key or value in the map: #{map.inspect}")
       end
     end
   end
