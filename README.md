@@ -43,7 +43,10 @@ allow safely and securely executing commands.
 * Allows running commands with additional environment variables.
 * Allows overriding the command name or path to the command.
 * Allows running commands via `sudo`.
-* Prevents command injection and option injection.
+* Prevents [command injection] and [option injection].
+
+[command injection]: https://owasp.org/www-community/attacks/Command_Injection
+[option injection]: https://www.hackingarticles.in/exploiting-wildcard-for-privilege-escalation/
 
 [CommandMapper::Types::Str]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Str
 [CommandMapper::Types::Num]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Num
