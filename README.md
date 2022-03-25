@@ -382,7 +382,7 @@ gemspec.add_dependency 'command_mapper', '~> 0.1'
 
 ## License
 
-Copyright (c) 2021 Hal Brodigan
+Copyright (c) 2021-2022 Hal Brodigan
 
 See {file:LICENSE.txt} for license information.
 
