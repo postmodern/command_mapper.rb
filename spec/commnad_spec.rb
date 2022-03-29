@@ -615,7 +615,7 @@ describe CommandMapper::Command do
         {opt1: opt1, arg1: arg1}
       end
 
-      it "must initialize a new command with the Hash of params and call #run" do
+      it "must initialize a new command with the Hash of params and call #run_command" do
         if RUBY_VERSION < '3.'
           expect(subject).to receive(:new).with({},params).and_return(command_instance)
         else
@@ -633,7 +633,7 @@ describe CommandMapper::Command do
         {opt1: opt1, arg1: arg1}
       end
 
-      it "must initialize a new command with the keyword arguments and call #run" do
+      it "must initialize a new command with the keyword arguments and call #run_command" do
         expect(subject).to receive(:new).with({},**kwargs).and_return(command_instance)
         expect(command_instance).to receive(:run_command).and_return(return_value)
 
@@ -653,7 +653,7 @@ describe CommandMapper::Command do
         {opt1: opt1, arg1: arg1}
       end
 
-      it "must initialize a new command with the Hash of params and call #capture" do
+      it "must initialize a new command with the Hash of params and call #capture_command" do
         if RUBY_VERSION < '3.'
           expect(subject).to receive(:new).with({},params).and_return(command_instance)
         else
@@ -671,7 +671,7 @@ describe CommandMapper::Command do
         {opt1: opt1, arg1: arg1}
       end
 
-      it "must initialize a new command with the keyword arguments and call #capture" do
+      it "must initialize a new command with the keyword arguments and call #capture_command" do
         expect(subject).to receive(:new).with({},**kwargs).and_return(command_instance)
         expect(command_instance).to receive(:capture_command).and_return(return_value)
 
@@ -691,7 +691,7 @@ describe CommandMapper::Command do
         {opt1: opt1, arg1: arg1}
       end
 
-      it "must initialize a new command with the Hash of params and call #popen" do
+      it "must initialize a new command with the Hash of params and call #popen_command" do
         if RUBY_VERSION < '3.'
           expect(subject).to receive(:new).with({},params).and_return(command_instance)
         else
@@ -709,7 +709,7 @@ describe CommandMapper::Command do
         {opt1: opt1, arg1: arg1}
       end
 
-      it "must initialize a new command with the keyword arguments and call #popen" do
+      it "must initialize a new command with the keyword arguments and call #popen_command" do
         expect(subject).to receive(:new).with({},**kwargs).and_return(command_instance)
         expect(command_instance).to receive(:popen_command).and_return(return_value)
 
@@ -729,7 +729,7 @@ describe CommandMapper::Command do
         {opt1: opt1, arg1: arg1}
       end
 
-      it "must initialize a new command with the Hash of params and call #sudo" do
+      it "must initialize a new command with the Hash of params and call #sudo_command" do
         if RUBY_VERSION < '3.'
           expect(subject).to receive(:new).with({},params).and_return(command_instance)
         else
@@ -747,7 +747,7 @@ describe CommandMapper::Command do
         {opt1: opt1, arg1: arg1}
       end
 
-      it "must initialize a new command with the keyword arguments and call #sudo" do
+      it "must initialize a new command with the keyword arguments and call #sudo_command" do
         expect(subject).to receive(:new).with({},**kwargs).and_return(command_instance)
         expect(command_instance).to receive(:sudo_command).and_return(return_value)
 
