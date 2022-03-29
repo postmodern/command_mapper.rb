@@ -642,6 +642,44 @@ describe CommandMapper::Command do
     end
   end
 
+  describe ".spawn" do
+    let(:command_instance) { double(:command_instance) }
+    let(:return_value)     { double(:boolean)          }
+
+    subject { command_class }
+
+    context "when called with a Hash of params" do
+      let(:params) do
+        {opt1: opt1, arg1: arg1}
+      end
+
+      it "must initialize a new command with the Hash of params and call #spawn_command" do
+        if RUBY_VERSION < '3.'
+          expect(subject).to receive(:new).with({},params).and_return(command_instance)
+        else
+          expect(subject).to receive(:new).with(params).and_return(command_instance)
+        end
+
+        expect(command_instance).to receive(:spawn_command).and_return(return_value)
+
+        expect(subject.spawn(params)).to be(return_value)
+      end
+    end
+
+    context "when called with keyword aguments" do
+      let(:kwargs) do
+        {opt1: opt1, arg1: arg1}
+      end
+
+      it "must initialize a new command with the keyword arguments and call #spawn_command" do
+        expect(subject).to receive(:new).with({},**kwargs).and_return(command_instance)
+        expect(command_instance).to receive(:spawn_command).and_return(return_value)
+
+        expect(subject.spawn(**kwargs)).to be(return_value)
+      end
+    end
+  end
+
   describe ".capture" do
     let(:command_instance) { double(:command_instance) }
     let(:return_value)     { double(:string)           }
@@ -1123,6 +1161,16 @@ describe CommandMapper::Command do
       expect(Kernel).to receive(:system).with(env,*subject.command_argv)
 
       subject.run_command
+    end
+  end
+
+  describe "#spawn_command" do
+    subject { command_class.new({opt1: opt1, arg1: arg1}, command_env: env) }
+
+    it "must pass the command's env and argv to Kenrel.system" do
+      expect(Process).to receive(:spawn).with(env,*subject.command_argv)
+
+      subject.spawn_command
     end
   end
 

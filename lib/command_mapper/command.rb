@@ -109,6 +109,31 @@ module CommandMapper
     end
 
     #
+    # Initializes and spawns the command as a separate process, returning the
+    # PID of the process.
+    #
+    # @param [Hash{Symbol => Object}] params
+    #   The option values.
+    #
+    # @yield [self]
+    #   The newly initialized command.
+    #
+    # @yieldparam [Command] self
+    #
+    # @return [Integer]
+    #   The PID of the new command process.
+    #
+    # @raise [Errno::ENOENT]
+    #   The command could not be found.
+    #
+    # @since 0.2.0
+    #
+    def self.spawn(params={},**kwargs,&block)
+      command = new(params,**kwargs,&block)
+      command.spawn_command
+    end
+
+    #
     # Initializes and runs the command in a shell and captures all stdout
     # output.
     #
@@ -540,6 +565,22 @@ module CommandMapper
     #
     def run_command
       Kernel.system(@command_env,*command_argv)
+    end
+
+    #
+    # Spawns the command as a separate process, returning the PID of the
+    # process.
+    #
+    # @return [Integer]
+    #   The PID of the new command process.
+    #
+    # @raise [Errno::ENOENT]
+    #   The command could not be found.
+    #
+    # @since 0.2.0
+    #
+    def spawn_command
+      Process.spawn(@command_env,*command_argv)
     end
 
     #
