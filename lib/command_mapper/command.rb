@@ -109,7 +109,8 @@ module CommandMapper
     end
 
     #
-    # Runs the command in a shell and captures all stdout output.
+    # Initializes and runs the command in a shell and captures all stdout
+    # output.
     #
     # @param [Hash{Symbol => Object}] params
     #   The option values.
@@ -128,7 +129,7 @@ module CommandMapper
     end
 
     #
-    # Executes the command and returns an IO object to it.
+    # Initializes and executes the command and returns an IO object to it.
     #
     # @param [Hash{Symbol => Object}] params
     #   The option values.
@@ -146,7 +147,7 @@ module CommandMapper
     end
 
     #
-    # Initializes and runs the command through sudo.
+    # Initializes and runs the command through `sudo`.
     #
     # @param [Hash{Symbol => Object}] params
     #   The option values.
@@ -533,7 +534,7 @@ module CommandMapper
     end
 
     #
-    # Initializes and runs the command.
+    # Runs the command.
     #
     # @return [Boolean, nil]
     #
@@ -563,7 +564,7 @@ module CommandMapper
     end
 
     #
-    # Initializes and runs the command through sudo.
+    # Runs the command through `sudo`.
     #
     # @param [Hash{Symbol => Object}] sudo_params
     #   Additional keyword arguments for {Sudo#initialize}.
