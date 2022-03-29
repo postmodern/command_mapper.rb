@@ -539,7 +539,7 @@ module CommandMapper
     # @return [Boolean, nil]
     #
     def run_command
-      system(@command_env,*command_argv)
+      Kernel.system(@command_env,*command_argv)
     end
 
     #

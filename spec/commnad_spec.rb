@@ -1120,7 +1120,7 @@ describe CommandMapper::Command do
     subject { command_class.new({opt1: opt1, arg1: arg1}, command_env: env) }
 
     it "must pass the command's env and argv to Kenrel.system" do
-      expect(subject).to receive(:system).with(env,*subject.command_argv)
+      expect(Kernel).to receive(:system).with(env,*subject.command_argv)
 
       subject.run_command
     end
