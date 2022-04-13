@@ -76,7 +76,7 @@ class Grep < CommandMapper::Command
     option "--basic-regexp"
     option "--perl-regexp"
     option "--regexp", equals: true, value: true
-    option "--file", equals: true, value: true
+    option "--file", name: :patterns_file, equals: true, value: true
     option "--ignore-case"
     option "--no-ignore-case"
     option "--word-regexp"
