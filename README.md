@@ -389,13 +389,13 @@ $ gem install command_mapper
 ### Gemfile
 
 ```ruby
-gem 'command_mapper', '~> 0.1'
+gem 'command_mapper', '~> 0.2'
 ```
 
 ### gemspec
 
 ```ruby
-gemspec.add_dependency 'command_mapper', '~> 0.1'
+gemspec.add_dependency 'command_mapper', '~> 0.2'
 ```
 
 ## License
