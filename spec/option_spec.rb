@@ -177,6 +177,43 @@ describe CommandMapper::Option do
     end
   end
 
+  describe "#accepts_value?" do
+    context "when initialized with the value: keyword argument" do
+      context "and when value: is true" do
+        subject { described_class.new(flag, value: true) }
+
+        it "must return true" do
+          expect(subject.accepts_value?).to be(true)
+        end
+      end
+
+      context "and when value: is a Hash" do
+        let(:value_required) { true }
+        let(:value_type)     { Types::KeyValue.new }
+        let(:value_kwargs) do
+          {
+            required: value_required,
+            type:     value_type
+          }
+        end
+
+        subject { described_class.new(flag, value: value_kwargs) }
+
+        it "must return true" do
+          expect(subject.accepts_value?).to be(true)
+        end
+      end
+    end
+
+    context "when not initialied with the value: keyword argument" do
+      subject { described_class.new(flag) }
+
+      it "must return false" do
+        expect(subject.accepts_value?).to be(false)
+      end
+    end
+  end
+
   let(:flag) { "--opt" }
   let(:name) { "opt" }
 
