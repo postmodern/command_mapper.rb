@@ -232,6 +232,24 @@ describe CommandMapper::Option do
     end
   end
 
+  describe "#repeats?" do
+    context "when initialized with repeats: true" do
+      subject { described_class.new(flag, value: true, repeats: true) }
+
+      it "must return true" do
+        expect(subject.repeats?).to be(true)
+      end
+    end
+
+    context "when not initialized with repeats: true" do
+      subject { described_class.new(flag, value: true) }
+
+      it "must return false" do
+        expect(subject.repeats?).to be(false)
+      end
+    end
+  end
+
   let(:flag) { "--opt" }
   let(:name) { "opt" }
 
