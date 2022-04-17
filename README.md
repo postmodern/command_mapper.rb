@@ -148,7 +148,7 @@ option "--output", value: {required: true}
 Defines an option that uses an equals sign (ex: `--output=value`):
 
 ```ruby
-option "--output", value: {required: true}, equals: true
+option "--output", equals: true, value: {required: true}
 ```
 
 Defines an option that can be specified multiple times:
