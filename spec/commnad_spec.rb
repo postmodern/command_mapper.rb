@@ -616,7 +616,7 @@ describe CommandMapper::Command do
       end
 
       it "must initialize a new command with the Hash of params and call #run_command" do
-        if RUBY_VERSION < '3.'
+        if RUBY_VERSION < '3.' || RUBY_ENGINE == 'truffleruby'
           expect(subject).to receive(:new).with({},params).and_return(command_instance)
         else
           expect(subject).to receive(:new).with(params).and_return(command_instance)
@@ -654,7 +654,7 @@ describe CommandMapper::Command do
       end
 
       it "must initialize a new command with the Hash of params and call #capture_command" do
-        if RUBY_VERSION < '3.'
+        if RUBY_VERSION < '3.' || RUBY_ENGINE == 'truffleruby'
           expect(subject).to receive(:new).with({},params).and_return(command_instance)
         else
           expect(subject).to receive(:new).with(params).and_return(command_instance)
@@ -692,7 +692,7 @@ describe CommandMapper::Command do
       end
 
       it "must initialize a new command with the Hash of params and call #popen_command" do
-        if RUBY_VERSION < '3.'
+        if RUBY_VERSION < '3.' || RUBY_ENGINE == 'truffleruby'
           expect(subject).to receive(:new).with({},params).and_return(command_instance)
         else
           expect(subject).to receive(:new).with(params).and_return(command_instance)
@@ -730,7 +730,7 @@ describe CommandMapper::Command do
       end
 
       it "must initialize a new command with the Hash of params and call #sudo_command" do
-        if RUBY_VERSION < '3.'
+        if RUBY_VERSION < '3.' || RUBY_ENGINE == 'truffleruby'
           expect(subject).to receive(:new).with({},params).and_return(command_instance)
         else
           expect(subject).to receive(:new).with(params).and_return(command_instance)
