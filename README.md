@@ -46,7 +46,7 @@ allow safely and securely executing commands.
 * Prevents [command injection] and [option injection].
 
 [command injection]: https://owasp.org/www-community/attacks/Command_Injection
-[option injection]: https://www.hackingarticles.in/exploiting-wildcard-for-privilege-escalation/
+[option injection]: https://staaldraad.github.io/post/2019-11-24-argument-injection/
 
 [CommandMapper::Types::Str]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Str
 [CommandMapper::Types::Num]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Num
