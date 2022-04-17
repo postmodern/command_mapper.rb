@@ -277,10 +277,6 @@ module CommandMapper
     # @param [Symbol, nil] name
     #   The option's name.
     #
-    # @param [Boolean] equals
-    #   Specifies whether the option's flag and value should be separated with a
-    #   `=` character.
-    #
     # @param [Hash, nil] value
     #   The option's value.
     #
@@ -292,6 +288,14 @@ module CommandMapper
     #
     # @param [Boolean] repeats
     #   Specifies whether the option can be given multiple times.
+    #
+    # @param [Boolean] equals
+    #   Specifies whether the option's flag and value should be separated with a
+    #   `=` character.
+    #
+    # @param [Boolean] value_in_flag
+    #   Specifies that the value should be appended to the option's flag
+    #   (ex: `-Fvalue`).
     #
     # @api public
     #
@@ -307,6 +311,9 @@ module CommandMapper
     # @example Defining an option who's value is optional:
     #   option '--file', value: {required: false}
     #
+    # @example Defining an `-Fvalue` option:
+    #   option '--foo', value: true, value_in_flag: true
+    #
     # @example Defining an `--opt=value` option:
     #   option '--foo', equals: true, value: true
     #
@@ -320,11 +327,17 @@ module CommandMapper
     #   The option flag conflicts with a pre-existing internal method, or
     #   another argument or subcommand.
     #
-    def self.option(flag, name: nil, equals: nil, value: nil, repeats: false, &block)
+    def self.option(flag, name: nil, value: nil, repeats: false,
+                          # formatting options
+                          equals:        nil,
+                          value_in_flag: nil,
+                          &block)
       option = Option.new(flag, name:    name,
-                                equals:  equals,
                                 value:   value,
                                 repeats: repeats,
+                                # formatting options
+                                equals:        equals,
+                                value_in_flag: value_in_flag,
                                 &block)
 
       if is_internal_method?(option.name)

@@ -151,6 +151,12 @@ Defines an option that uses an equals sign (ex: `--output=value`):
 option "--output", equals: true, value: {required: true}
 ```
 
+Defines an option where the value is embedded into the flag (ex: `-Ivalue`):
+
+```ruby
+option "-I", value: {required: true}, value_in_flag: true
+```
+
 Defines an option that can be specified multiple times:
 
 ```ruby

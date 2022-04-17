@@ -41,6 +41,14 @@ describe CommandMapper::Option do
       end
     end
 
+    context "when value_in_flag: true is given" do
+      subject { described_class.new(flag, value_in_flag: true) }
+
+      it "#value_in_flag? must return true" do
+        expect(subject.value_in_flag?).to be(true)
+      end
+    end
+
     context "when given the repeats: true keyword argument" do
       subject { described_class.new(flag, repeats: true) }
 
@@ -250,6 +258,24 @@ describe CommandMapper::Option do
     end
   end
 
+  describe "#value_in_flag?" do
+    context "when initialized with value_in_flag: true" do
+      subject { described_class.new(flag, value: true, value_in_flag: true) }
+
+      it "must return true" do
+        expect(subject.value_in_flag?).to be(true)
+      end
+    end
+
+    context "when not initialized with value_in_flag: true" do
+      subject { described_class.new(flag, value: true) }
+
+      it "must return nil" do
+        expect(subject.value_in_flag?).to be(nil)
+      end
+    end
+  end
+
   let(:flag) { "--opt" }
   let(:name) { "opt" }
 
@@ -273,13 +299,16 @@ describe CommandMapper::Option do
   end
 
   let(:equals) { nil }
+  let(:value_in_flag) { nil }
 
   subject do
     if accepts_value
       described_class.new(flag, name:    name,
                                 value:   value_kwargs,
                                 repeats: repeats,
-                                equals:  equals)
+                                # formatting options
+                                equals:        equals,
+                                value_in_flag: value_in_flag)
     else
       described_class.new(flag, name: name, repeats: repeats)
     end
@@ -606,6 +635,20 @@ describe CommandMapper::Option do
               end
             end
 
+            context "and #value_in_flag? is true" do
+              let(:value_in_flag) { true }
+
+              it "must return an argv of option flag + value Strings" do
+                expect(subject.argv(values)).to eq(
+                  [
+                    "#{flag}#{values[0]}",
+                    "#{flag}#{values[1]}",
+                    "#{flag}#{values[2]}"
+                  ]
+                )
+              end
+            end
+
             context "but one of the Array's elements is invalid" do
               let(:value) { ["foo", " ", "baz"] }
 
@@ -681,6 +724,19 @@ describe CommandMapper::Option do
                 end
               end
 
+              context "and #value_in_flag? is true" do
+                let(:value_in_flag) { true }
+
+                it "must return an argv of option flag + value Strings" do
+                  expect(subject.argv(values)).to eq(
+                    [
+                      "#{flag}#{subject.value.format(values[0])}",
+                      "#{flag}#{subject.value.format(values[1])}"
+                    ]
+                  )
+                end
+              end
+
               context "but one of the Hashes is empty" do
                 let(:values) do
                   [{"foo" => 1}, {}]
@@ -732,6 +788,14 @@ describe CommandMapper::Option do
               end
             end
 
+            context "and #value_in_flag? is true" do
+              let(:value_in_flag) { true }
+
+              it "must return an argv containing an option flag + value String" do
+                expect(subject.argv(value)).to eq(["#{flag}#{value}"])
+              end
+            end
+
             context "but it's invalid" do
               let(:value) { " " }
 
@@ -773,6 +837,16 @@ describe CommandMapper::Option do
                 it "must return an argv containing an option flag=value String" do
                   expect(subject.argv(value)).to eq(
                     ["#{flag}=#{subject.value.format(value)}"]
+                  )
+                end
+              end
+
+              context "and #value_in_flag? is true" do
+                let(:value_in_flag) { true }
+
+                it "must return an argv of option flag + value Strings" do
+                  expect(subject.argv(value)).to eq(
+                    ["#{flag}#{subject.value.format(value)}"]
                   )
                 end
               end
@@ -833,6 +907,14 @@ describe CommandMapper::Option do
             end
           end
 
+          context "and #value_in_flag? is true" do
+            let(:value_in_flag) { true }
+
+            it "must return an argv containing an option flag + value String" do
+              expect(subject.argv(value)).to eq(["#{flag}#{value}"])
+            end
+          end
+
           context "but it's invalid" do
             let(:value) { " " }
 
@@ -878,6 +960,16 @@ describe CommandMapper::Option do
               it "must return an argv containing an option flag=value String" do
                 expect(subject.argv(value)).to eq(
                   ["#{flag}=#{subject.value.format(value)}"]
+                )
+              end
+            end
+
+            context "and #value_in_flag? is true" do
+              let(:value_in_flag) { true }
+
+              it "must return an argv containing an option flag + value String" do
+                expect(subject.argv(value)).to eq(
+                  ["#{flag}#{subject.value.format(value)}"]
                 )
               end
             end
@@ -940,6 +1032,16 @@ describe CommandMapper::Option do
               it "must return an argv containing an option flag=value String" do
                 expect(subject.argv(value)).to eq(
                   ["#{flag}=#{subject.value.format(value)}"]
+                )
+              end
+            end
+
+            context "and #value_in_flag? is true" do
+              let(:value_in_flag) { true }
+
+              it "must return an argv of option flag + value Strings" do
+                expect(subject.argv(value)).to eq(
+                  ["#{flag}#{subject.value.format(value)}"]
                 )
               end
             end

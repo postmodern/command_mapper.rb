@@ -31,10 +31,6 @@ module CommandMapper
     # @param [Symbol, nil] name
     #   The option's name.
     #
-    # @param [Boolean] equals
-    #   Specifies whether the option's flag and value should be separated with a
-    #   `=` character.
-    #
     # @param [Hash, nil] value
     #   The option's value.
     #
@@ -47,15 +43,29 @@ module CommandMapper
     # @param [Boolean] repeats
     #   Specifies whether the option can be given multiple times.
     #
-    def initialize(flag, name: nil, equals: nil, value: nil, repeats: false)
+    # @param [Boolean] equals
+    #   Specifies whether the option's flag and value should be separated with a
+    #   `=` character.
+    #
+    # @param [Boolean] value_in_flag
+    #   Specifies that the value should be appended to the option's flag
+    #   (ex: `-Fvalue`).
+    #
+    def initialize(flag, name: nil, value: nil, repeats: false,
+                         # formatting options
+                         equals:        nil,
+                         value_in_flag: nil)
       @flag    = flag
       @name    = name || self.class.infer_name_from_flag(flag)
-      @equals  = equals
       @value   = case value
                  when Hash then OptionValue.new(**value)
                  when true then OptionValue.new
                  end
       @repeats = repeats
+
+      # formatting options
+      @equals        = equals
+      @value_in_flag = value_in_flag
     end
 
     #
@@ -97,6 +107,15 @@ module CommandMapper
     end
 
     #
+    # Determines whether the option can be given multiple times.
+    #
+    # @return [Boolean]
+    #
+    def repeats?
+      @repeats
+    end
+
+    #
     # Indicates whether the option flag and value should be separated with a
     # `=` character.
     #
@@ -107,12 +126,12 @@ module CommandMapper
     end
 
     #
-    # Determines whether the option can be given multiple times.
+    # Indicates whether the value will be appended to the option's flag.
     #
     # @return [Boolean]
     #
-    def repeats?
-      @repeats
+    def value_in_flag?
+      @value_in_flag
     end
 
     #
@@ -281,6 +300,8 @@ module CommandMapper
 
         if equals?
           argv << "#{@flag}=#{string}"
+        elsif value_in_flag?
+          argv << "#{@flag}#{string}"
         else
           argv << @flag << string
         end
