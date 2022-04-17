@@ -214,6 +214,24 @@ describe CommandMapper::Option do
     end
   end
 
+  describe "#equals?" do
+    context "when initialized with equals: true" do
+      subject { described_class.new(flag, value: true, equals: true) }
+
+      it "must return true" do
+        expect(subject.equals?).to be(true)
+      end
+    end
+
+    context "when not initialized with equals: true" do
+      subject { described_class.new(flag, value: true) }
+
+      it "must return nil" do
+        expect(subject.equals?).to be(nil)
+      end
+    end
+  end
+
   let(:flag) { "--opt" }
   let(:name) { "opt" }
 
