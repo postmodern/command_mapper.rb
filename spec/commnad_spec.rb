@@ -69,6 +69,20 @@ describe CommandMapper::Command do
     end
   end
 
+  module TestCommand
+    class BaseClassWithOptions < CommandMapper::Command
+      option "--foo"
+      option "--bar"
+    end
+
+    class InheritedOptions < BaseClassWithOptions
+    end
+
+    class InheritsAndDefinesOptions < BaseClassWithOptions
+      option "--baz"
+    end
+  end
+
   describe ".options" do
     subject { command_class }
 
@@ -79,16 +93,6 @@ describe CommandMapper::Command do
     end
 
     context "and when the command inherits from another command class" do
-      module TestCommand
-        class BaseClassWithOptions < CommandMapper::Command
-          option "--foo"
-          option "--bar"
-        end
-
-        class InheritedOptions < BaseClassWithOptions
-        end
-      end
-
       let(:command_class) { TestCommand::InheritedOptions }
       let(:command_superclass) { TestCommand::BaseClassWithOptions }
 
@@ -97,12 +101,6 @@ describe CommandMapper::Command do
       end
 
       context "and when the class defines options of it's own" do
-        module TestCommand
-          class InheritsAndDefinesOptions < BaseClassWithOptions
-            option "--baz"
-          end
-        end
-
         let(:command_class) { TestCommand::InheritsAndDefinesOptions }
 
         it "must copy the options defined in the superclass" do
@@ -115,6 +113,38 @@ describe CommandMapper::Command do
 
         it "must not modify the superclass's options" do
           expect(command_superclass.options[:baz]).to be(nil)
+        end
+      end
+    end
+  end
+
+  describe ".has_option?" do
+    subject { command_class }
+
+    let(:name) { :bar }
+
+    context "when the command has no defined options" do
+      let(:command_class) { TestCommand::EmptyCommand }
+
+      it "must return false" do
+        expect(subject.has_option?(name)).to be(false)
+      end
+    end
+
+    context "when the command does have defined options" do
+      let(:command_class) { TestCommand::BaseClassWithOptions }
+
+      context "and has the option with the given name" do
+        it "must return true" do
+          expect(subject.has_option?(name)).to be(true)
+        end
+      end
+
+      context "but does not have the option with the given name" do
+        let(:name) { :xxx }
+
+        it "must return false" do
+          expect(subject.has_option?(name)).to be(false)
         end
       end
     end
@@ -242,6 +272,55 @@ describe CommandMapper::Command do
         }.to raise_error(ArgumentError,"option #{flag.inspect} maps to method name ##{name} and cannot override the internal method with same name: ##{name}")
       end
     end
+
+    context "when the option name conflicts with another defined argument" do
+      let(:command_class) do
+        Class.new(described_class) do
+          argument :foo
+        end
+      end
+
+      let(:flag) { "--foo" }
+      let(:name) { :foo    }
+
+      it do
+        expect {
+          subject.option(flag)
+        }.to raise_error(ArgumentError,"option #{flag.inspect} with name #{name.inspect} conflicts with another argument with the same name")
+      end
+    end
+
+    context "when the option name conflicts with another defined subcommand" do
+      let(:command_class) do
+        Class.new(described_class) do
+          subcommand 'foo' do
+          end
+        end
+      end
+
+      let(:flag) { "--foo" }
+      let(:name) { :foo    }
+
+      it do
+        expect {
+          subject.option(flag)
+        }.to raise_error(ArgumentError,"option #{flag.inspect} with name #{name.inspect} conflicts with another subcommand with the same name")
+      end
+    end
+  end
+
+  module TestCommand
+    class BaseClassWithArguments < CommandMapper::Command
+      argument :foo
+      argument :bar
+    end
+
+    class InheritedArguments < BaseClassWithArguments
+    end
+
+    class InheritsAndDefinesArguments < BaseClassWithArguments
+      argument :baz
+    end
   end
 
   describe ".arguments" do
@@ -254,16 +333,6 @@ describe CommandMapper::Command do
     end
 
     context "when the comand does have defined arguments" do
-      module TestCommand
-        class BaseClassWithArguments < CommandMapper::Command
-          argument :foo
-          argument :bar
-        end
-
-        class InheritedArguments < BaseClassWithArguments
-        end
-      end
-
       let(:command_class) { TestCommand::InheritedArguments }
       let(:command_superclass) { TestCommand::BaseClassWithArguments }
 
@@ -272,12 +341,6 @@ describe CommandMapper::Command do
       end
 
       context "and when the class defines arguments of it's own" do
-        module TestCommand
-          class InheritsAndDefinesArguments < BaseClassWithArguments
-            argument :baz
-          end
-        end
-
         let(:command_class) { TestCommand::InheritsAndDefinesArguments }
 
         it "must copy the arguments defined in the superclass" do
@@ -290,6 +353,38 @@ describe CommandMapper::Command do
 
         it "must not modify the superclass's arguments" do
           expect(command_superclass.arguments[:baz]).to be(nil)
+        end
+      end
+    end
+  end
+
+  describe ".has_argument?" do
+    subject { command_class }
+
+    let(:name) { :bar }
+
+    context "when the command has no defined arguments" do
+      let(:command_class) { TestCommand::EmptyCommand }
+
+      it "must return false" do
+        expect(subject.has_argument?(name)).to be(false)
+      end
+    end
+
+    context "when the command does have defined arguments" do
+      let(:command_class) { TestCommand::BaseClassWithArguments }
+
+      context "and has the argument with the given name" do
+        it "must return true" do
+          expect(subject.has_argument?(name)).to be(true)
+        end
+      end
+
+      context "but does not have the argument with the given name" do
+        let(:name) { :xxx }
+
+        it "must return false" do
+          expect(subject.has_argument?(name)).to be(false)
         end
       end
     end
@@ -357,6 +452,59 @@ describe CommandMapper::Command do
         }.to raise_error(ArgumentError,"argument #{name.inspect} cannot override internal method with same name: ##{name}")
       end
     end
+
+    context "when the argument name conflicts with another defined option" do
+      let(:command_class) do
+        Class.new(described_class) do
+          option '--foo'
+        end
+      end
+
+      let(:name) { :foo }
+
+      it do
+        expect {
+          subject.argument(name)
+        }.to raise_error(ArgumentError,"argument #{name.inspect} conflicts with another option with the same name")
+      end
+    end
+
+    context "when the argument name conflicts with another defined subcommand" do
+      let(:command_class) do
+        Class.new(described_class) do
+          subcommand 'foo' do
+          end
+        end
+      end
+
+      let(:name) { :foo }
+
+      it do
+        expect {
+          subject.argument(name)
+        }.to raise_error(ArgumentError,"argument #{name.inspect} conflicts with another subcommand with the same name")
+      end
+    end
+  end
+
+  module TestCommand
+    class BaseClassWithSubcommands < CommandMapper::Command
+      subcommand :foo do
+      end
+
+      subcommand :bar do
+      end
+    end
+
+    class InheritedSubcommands < BaseClassWithSubcommands
+    end
+
+    class InheritsAndDefinesSubcommands < BaseClassWithSubcommands
+
+      subcommand :baz do
+      end
+
+    end
   end
 
   describe ".subcommands" do
@@ -369,19 +517,6 @@ describe CommandMapper::Command do
     end
 
     context "when the comand does have defined subcommands" do
-      module TestCommand
-        class BaseClassWithSubcommands < CommandMapper::Command
-          subcommand :foo do
-          end
-
-          subcommand :bar do
-          end
-        end
-
-        class InheritedSubcommands < BaseClassWithSubcommands
-        end
-      end
-
       let(:command_class) { TestCommand::InheritedSubcommands }
       let(:command_superclass) { TestCommand::BaseClassWithSubcommands }
 
@@ -390,15 +525,6 @@ describe CommandMapper::Command do
       end
 
       context "and when the class defines subcommands of it's own" do
-        module TestCommand
-          class InheritsAndDefinesSubcommands < BaseClassWithSubcommands
-
-            subcommand :baz do
-            end
-
-          end
-        end
-
         let(:command_class) { TestCommand::InheritsAndDefinesSubcommands }
 
         it "must copy the subcommands defined in the superclass" do
@@ -411,6 +537,38 @@ describe CommandMapper::Command do
 
         it "must not modify the superclass's subcommands" do
           expect(command_superclass.subcommands[:baz]).to be(nil)
+        end
+      end
+    end
+  end
+
+  describe ".has_subcommand?" do
+    subject { command_class }
+
+    let(:name) { :bar }
+
+    context "when the command has no defined subcommands" do
+      let(:command_class) { TestCommand::EmptyCommand }
+
+      it "must return false" do
+        expect(subject.has_subcommand?(name)).to be(false)
+      end
+    end
+
+    context "when the command does have defined subcommands" do
+      let(:command_class) { TestCommand::BaseClassWithSubcommands }
+
+      context "and has the subcommand with the given name" do
+        it "must return true" do
+          expect(subject.has_subcommand?(name)).to be(true)
+        end
+      end
+
+      context "but does not have the subcommand with the given name" do
+        let(:name) { :xxx }
+
+        it "must return false" do
+          expect(subject.has_subcommand?(name)).to be(false)
         end
       end
     end
@@ -567,9 +725,43 @@ describe CommandMapper::Command do
 
       it do
         expect {
-          command_class.subcommand(name) do
+          subject.subcommand(name) do
           end
         }.to raise_error(ArgumentError,"subcommand #{name.inspect} maps to method name ##{method_name} and cannot override the internal method with same name: ##{method_name}")
+      end
+    end
+
+    context "when the subcommand name conflicts with another defined option" do
+      let(:command_class) do
+        Class.new(described_class) do
+          option '--foo'
+        end
+      end
+
+      let(:name) { 'foo' }
+
+      it do
+        expect {
+          subject.subcommand(name) do
+          end
+        }.to raise_error(ArgumentError,"subcommand #{name.inspect} conflicts with another option with the same name")
+      end
+    end
+
+    context "when the subcommand name conflicts with another defined argument" do
+      let(:command_class) do
+        Class.new(described_class) do
+          argument :foo
+        end
+      end
+
+      let(:name) { 'foo' }
+
+      it do
+        expect {
+          subject.subcommand(name) do
+          end
+        }.to raise_error(ArgumentError,"subcommand #{name.inspect} conflicts with another argument with the same name")
       end
     end
   end

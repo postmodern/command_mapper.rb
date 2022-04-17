@@ -252,6 +252,23 @@ module CommandMapper
     end
 
     #
+    # Determines if an option with the given name has been defined.
+    #
+    # @param [Symbol] name
+    #   The given name.
+    #
+    # @return [Boolean]
+    #   Specifies whether an option with the given name has been defined.
+    #
+    # @api semipublic
+    #
+    # @since 0.2.0
+    #
+    def self.has_option?(name)
+      options.has_key?(name)
+    end
+
+    #
     # Defines an option for the command.
     #
     # @param [String] flag
@@ -300,7 +317,8 @@ module CommandMapper
     #   option '--list', value: List.new
     #
     # @raise [ArgumentError]
-    #   The option flag conflicts with a pre-existing internal method.
+    #   The option flag conflicts with a pre-existing internal method, or
+    #   another argument or subcommand.
     #
     def self.option(flag, name: nil, equals: nil, value: nil, repeats: false, &block)
       option = Option.new(flag, name:    name,
@@ -309,16 +327,19 @@ module CommandMapper
                                 repeats: repeats,
                                 &block)
 
-      self.options[option.name] = option
-
       if is_internal_method?(option.name)
         if name
           raise(ArgumentError,"option #{flag.inspect} with name #{name.inspect} cannot override the internal method with same name: ##{option.name}")
         else
           raise(ArgumentError,"option #{flag.inspect} maps to method name ##{option.name} and cannot override the internal method with same name: ##{option.name}")
         end
+      elsif has_argument?(option.name)
+        raise(ArgumentError,"option #{flag.inspect} with name #{option.name.inspect} conflicts with another argument with the same name")
+      elsif has_subcommand?(option.name)
+        raise(ArgumentError,"option #{flag.inspect} with name #{option.name.inspect} conflicts with another subcommand with the same name")
       end
 
+      self.options[option.name] = option
       attr_accessor option.name
     end
 
@@ -335,6 +356,23 @@ module CommandMapper
                      else
                        {}
                      end
+    end
+
+    #
+    # Determines if an argument with the given name has been defined.
+    #
+    # @param [Symbol] name
+    #   The given name.
+    #
+    # @return [Boolean]
+    #   Specifies whether an argument with the given name has been defined.
+    #
+    # @api semipublic
+    #
+    # @since 0.2.0
+    #
+    def self.has_argument?(name)
+      arguments.has_key?(name)
     end
 
     #
@@ -363,7 +401,8 @@ module CommandMapper
     #   argument :file, required: false
     #
     # @raise [ArgumentError]
-    #   The argument name conflicts with a pre-existing internal method.
+    #   The argument name conflicts with a pre-existing internal method, or
+    #   another option or subcommand.
     #
     def self.argument(name, required: true, type: Str.new, repeats: false)
       name     = name.to_sym
@@ -371,12 +410,15 @@ module CommandMapper
                                     type:     type,
                                     repeats:  repeats)
 
-      self.arguments[argument.name] = argument
-
       if is_internal_method?(argument.name)
         raise(ArgumentError,"argument #{name.inspect} cannot override internal method with same name: ##{argument.name}")
+      elsif has_option?(argument.name)
+        raise(ArgumentError,"argument #{name.inspect} conflicts with another option with the same name")
+      elsif has_subcommand?(argument.name)
+        raise(ArgumentError,"argument #{name.inspect} conflicts with another subcommand with the same name")
       end
 
+      self.arguments[argument.name] = argument
       attr_accessor name
     end
 
@@ -393,6 +435,23 @@ module CommandMapper
                        else
                          {}
                        end
+    end
+
+    #
+    # Determines if a subcommand with the given name has been defined.
+    #
+    # @param [Symbol] name
+    #   The given name.
+    #
+    # @return [Boolean]
+    #   Specifies whether a subcommand with the given name has been defined.
+    #
+    # @api semipublic
+    #
+    # @since 0.2.0
+    #
+    def self.has_subcommand?(name)
+      subcommands.has_key?(name)
     end
 
     #
@@ -422,24 +481,29 @@ module CommandMapper
     #   end
     #
     # @raise [ArgumentError]
-    #   The subcommand name conflicts with a pre-existing internal method.
+    #   The subcommand name conflicts with a pre-existing internal method, or
+    #   another option or argument.
     #
     def self.subcommand(name,&block)
-      name = name.to_s
+      name            = name.to_s
+      method_name     = name.tr('-','_')
+      class_name      = name.split(/[_-]+/).map(&:capitalize).join
+      subcommand_name = method_name.to_sym
+
+      if is_internal_method?(method_name)
+        raise(ArgumentError,"subcommand #{name.inspect} maps to method name ##{method_name} and cannot override the internal method with same name: ##{method_name}")
+      elsif has_option?(subcommand_name)
+        raise(ArgumentError,"subcommand #{name.inspect} conflicts with another option with the same name")
+      elsif has_argument?(subcommand_name)
+        raise(ArgumentError,"subcommand #{name.inspect} conflicts with another argument with the same name")
+      end
 
       subcommand_class = Class.new(Command)
       subcommand_class.command(name)
       subcommand_class.class_eval(&block)
 
-      method_name = name.tr('-','_')
-      class_name  = name.split(/[_-]+/).map(&:capitalize).join
-
-      self.subcommands[method_name.to_sym] = subcommand_class
+      self.subcommands[subcommand_name] = subcommand_class
       const_set(class_name,subcommand_class)
-
-      if is_internal_method?(method_name)
-        raise(ArgumentError,"subcommand #{name.inspect} maps to method name ##{method_name} and cannot override the internal method with same name: ##{method_name}")
-      end
 
       define_method(method_name) do |&block|
         if block then @command_subcommand = subcommand_class.new(&block)
