@@ -199,11 +199,14 @@ describe CommandMapper::Option do
     }
   end
 
+  let(:equals) { nil }
+
   subject do
     if accepts_value
       described_class.new(flag, name:    name,
                                 value:   value_kwargs,
-                                repeats: repeats)
+                                repeats: repeats,
+                                equals:  equals)
     else
       described_class.new(flag, name: name, repeats: repeats)
     end
@@ -516,6 +519,20 @@ describe CommandMapper::Option do
               )
             end
 
+            context "and #equals? is true" do
+              let(:equals) { true }
+
+              it "must return an argv of option flag=value Strings" do
+                expect(subject.argv(values)).to eq(
+                  [
+                    "#{flag}=#{values[0]}",
+                    "#{flag}=#{values[1]}",
+                    "#{flag}=#{values[2]}"
+                  ]
+                )
+              end
+            end
+
             context "but one of the Array's elements is invalid" do
               let(:value) { ["foo", " ", "baz"] }
 
@@ -578,6 +595,19 @@ describe CommandMapper::Option do
                 )
               end
 
+              context "and #equals? is true" do
+                let(:equals) { true }
+
+                it "must return an argv of option flag=value Strings" do
+                  expect(subject.argv(values)).to eq(
+                    [
+                      "#{flag}=#{subject.value.format(values[0])}",
+                      "#{flag}=#{subject.value.format(values[1])}"
+                    ]
+                  )
+                end
+              end
+
               context "but one of the Hashes is empty" do
                 let(:values) do
                   [{"foo" => 1}, {}]
@@ -621,6 +651,14 @@ describe CommandMapper::Option do
               expect(subject.argv(value)).to eq([flag, value])
             end
 
+            context "and #equals? is true" do
+              let(:equals) { true }
+
+              it "must return an argv containing an option flag=value String" do
+                expect(subject.argv(value)).to eq(["#{flag}=#{value}"])
+              end
+            end
+
             context "but it's invalid" do
               let(:value) { " " }
 
@@ -654,6 +692,16 @@ describe CommandMapper::Option do
                 expect(subject.argv(value)).to eq(
                   [flag, subject.value.format(value)]
                 )
+              end
+
+              context "and #equals? is true" do
+                let(:equals) { true }
+
+                it "must return an argv containing an option flag=value String" do
+                  expect(subject.argv(value)).to eq(
+                    ["#{flag}=#{subject.value.format(value)}"]
+                  )
+                end
               end
 
               context "but it's empty" do
@@ -704,6 +752,14 @@ describe CommandMapper::Option do
             expect(subject.argv(value)).to eq([flag, value])
           end
 
+          context "and #equals? is true" do
+            let(:equals) { true }
+
+            it "must return an argv containing an option flag=value String" do
+              expect(subject.argv(value)).to eq(["#{flag}=#{value}"])
+            end
+          end
+
           context "but it's invalid" do
             let(:value) { " " }
 
@@ -741,6 +797,16 @@ describe CommandMapper::Option do
               expect(subject.argv(value)).to eq(
                 [flag, subject.value.format(value)]
               )
+            end
+
+            context "and #equals? is true" do
+              let(:equals) { true }
+
+              it "must return an argv containing an option flag=value String" do
+                expect(subject.argv(value)).to eq(
+                  ["#{flag}=#{subject.value.format(value)}"]
+                )
+              end
             end
 
             context "but one of the Array's elements is nil" do
@@ -793,6 +859,16 @@ describe CommandMapper::Option do
               expect(subject.argv(value)).to eq(
                 [flag, subject.value.format(value)]
               )
+            end
+
+            context "and #equals? is true" do
+              let(:equals) { true }
+
+              it "must return an argv containing an option flag=value String" do
+                expect(subject.argv(value)).to eq(
+                  ["#{flag}=#{subject.value.format(value)}"]
+                )
+              end
             end
 
             context "but it's empty" do
