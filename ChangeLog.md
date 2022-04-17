@@ -1,3 +1,16 @@
+### 0.2.0 / 2022-04-17
+
+* Added {CommandMapper::Command.spawn} and
+  {CommandMapper::Command#spawn_command}.
+* Added checks to {CommandMapper::Command.option},
+  {CommandMapper::Command.argument}, and {CommandMapper::Command.subcommand} to
+  avoid overwriting an existing option/argument/subcommand with the same name.
+* Added the `value_in_flag:` keyword argument to
+  {CommandMapper::Command.option} which indicates an option's value
+  should be appended to the flag (ex: `-Fvalue`).
+* Added the `range:` keyword argument to {CommandMapper::Types::Num#initialize}
+  for specifying the acceptable range of numbers.
+
 ### 0.1.2 / 2021-11-29
 
 * Fixed a bug where {CommandMapper::Command.command_name} was not checking the
