@@ -88,7 +88,7 @@ describe CommandMapper::Types::Hex do
         end
       end
 
-      context "but the String does not contain other characters" do
+      context "but the String contains other characters" do
         let(:value) { "foo" }
 
         it "must return [false, \"not in hex format (...)\"]" do
