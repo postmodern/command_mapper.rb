@@ -255,17 +255,17 @@ describe CommandMapper::Command do
 
     context "when the comand does have defined arguments" do
       module TestCommand
-        class BaseClassWithOptions < CommandMapper::Command
+        class BaseClassWithArguments < CommandMapper::Command
           argument :foo
           argument :bar
         end
 
-        class InheritedOptions < BaseClassWithOptions
+        class InheritedArguments < BaseClassWithArguments
         end
       end
 
-      let(:command_class) { TestCommand::InheritedOptions }
-      let(:command_superclass) { TestCommand::BaseClassWithOptions }
+      let(:command_class) { TestCommand::InheritedArguments }
+      let(:command_superclass) { TestCommand::BaseClassWithArguments }
 
       it "must copy the arguments defined in the superclass" do
         expect(subject.arguments).to eq(command_superclass.arguments)
@@ -273,12 +273,12 @@ describe CommandMapper::Command do
 
       context "and when the class defines arguments of it's own" do
         module TestCommand
-          class InheritsAndDefinesOptions < BaseClassWithOptions
+          class InheritsAndDefinesArguments < BaseClassWithArguments
             argument :baz
           end
         end
 
-        let(:command_class) { TestCommand::InheritsAndDefinesOptions }
+        let(:command_class) { TestCommand::InheritsAndDefinesArguments }
 
         it "must copy the arguments defined in the superclass" do
           expect(subject.arguments).to include(command_superclass.arguments)
@@ -370,7 +370,7 @@ describe CommandMapper::Command do
 
     context "when the comand does have defined subcommands" do
       module TestCommand
-        class BaseClassWithOptions < CommandMapper::Command
+        class BaseClassWithSubcommands < CommandMapper::Command
           subcommand :foo do
           end
 
@@ -378,12 +378,12 @@ describe CommandMapper::Command do
           end
         end
 
-        class InheritedOptions < BaseClassWithOptions
+        class InheritedSubcommands < BaseClassWithSubcommands
         end
       end
 
-      let(:command_class) { TestCommand::InheritedOptions }
-      let(:command_superclass) { TestCommand::BaseClassWithOptions }
+      let(:command_class) { TestCommand::InheritedSubcommands }
+      let(:command_superclass) { TestCommand::BaseClassWithSubcommands }
 
       it "must copy the subcommands defined in the superclass" do
         expect(subject.subcommands).to eq(command_superclass.subcommands)
@@ -391,7 +391,7 @@ describe CommandMapper::Command do
 
       context "and when the class defines subcommands of it's own" do
         module TestCommand
-          class InheritsAndDefinesOptions < BaseClassWithOptions
+          class InheritsAndDefinesSubcommands < BaseClassWithSubcommands
 
             subcommand :baz do
             end
@@ -399,7 +399,7 @@ describe CommandMapper::Command do
           end
         end
 
-        let(:command_class) { TestCommand::InheritsAndDefinesOptions }
+        let(:command_class) { TestCommand::InheritsAndDefinesSubcommands }
 
         it "must copy the subcommands defined in the superclass" do
           expect(subject.subcommands).to include(command_superclass.subcommands)
