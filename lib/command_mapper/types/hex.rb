@@ -14,9 +14,11 @@ module CommandMapper
       #   Specifies whether the hex value will start with `0x` or not.
       #
       # @param [Hash{Symbol => Object}] kwargs
-      #   Additional keyword arguments for {Type#initialize}.
+      #   Additional keyword arguments for {Num#initialize}.
       #
-      def initialize(leading_zero: false)
+      def initialize(leading_zero: false, **kwargs)
+        super(**kwargs)
+
         @leading_zero = leading_zero
       end
 
@@ -44,6 +46,12 @@ module CommandMapper
         when String
           unless value =~ /\A(?:0x)?[A-Fa-f0-9]+\z/
             return [false, "not in hex format (#{value.inspect})"]
+          end
+
+          if @range
+            unless @range.include?(value.to_i(16))
+              return [false, "unacceptable value (#{value.inspect})"]
+            end
           end
 
           return true

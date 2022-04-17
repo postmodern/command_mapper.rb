@@ -169,6 +169,12 @@ Defines an option that accepts a numeric value:
 option "--count", value: {type: Num.new}
 ```
 
+Define an option that only accepts a range of acceptable values:
+
+```ruby
+option "--count", value: {type: Num.new(range: 1..100)}
+```
+
 Defines an option that accepts a comma-separated list:
 
 ```ruby

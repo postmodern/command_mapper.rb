@@ -14,6 +14,16 @@ describe CommandMapper::Types::Hex do
         expect(subject.leading_zero?).to be(true)
       end
     end
+
+    context "when initialized with range: ..." do
+      let(:range) { 1..10 }
+
+      subject { described_class.new(range: range) }
+
+      it "must set #range" do
+        expect(subject.range).to eq(range)
+      end
+    end
   end
 
   describe "#leading_zero?" do
@@ -69,11 +79,59 @@ describe CommandMapper::Types::Hex do
           expect(subject.validate(value)).to be(true)
         end
 
+        context "when initialized with range: ..." do
+          let(:range) { 2..16 }
+
+          subject { described_class.new(range: range) }
+
+          context "and the value is within the range of values" do
+            let(:value) { 'a' }
+
+            it "must return true" do
+              expect(subject.validate(value)).to be(true)
+            end
+          end
+
+          context "but the value is not within the range of values" do
+            let(:value) { '0' }
+
+            it "must return [false, \"unacceptable value (...)\"]" do
+              expect(subject.validate(value)).to eq(
+                [false, "unacceptable value (#{value.inspect})"]
+              )
+            end
+          end
+        end
+
         context "and the String begins with a '0x'" do
           let(:value) { "0xabcdef" }
 
           it "must return true" do
             expect(subject.validate(value)).to be(true)
+          end
+
+          context "when initialized with range: ..." do
+            let(:range) { 2..16 }
+
+            subject { described_class.new(range: range) }
+
+            context "and the value is within the range of values" do
+              let(:value) { '0x4' }
+
+              it "must return true" do
+                expect(subject.validate(value)).to be(true)
+              end
+            end
+
+            context "but the value is not within the range of values" do
+              let(:value) { '0x0' }
+
+              it "must return [false, \"unacceptable value (...)\"]" do
+                expect(subject.validate(value)).to eq(
+                  [false, "unacceptable value (#{value.inspect})"]
+                )
+              end
+            end
           end
         end
 

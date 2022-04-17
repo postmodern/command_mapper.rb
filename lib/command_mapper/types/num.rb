@@ -7,6 +7,21 @@ module CommandMapper
     #
     class Num < Type
 
+      # The optional range of acceptable numbers.
+      #
+      # @return [Range, nil]
+      attr_reader :range
+
+      #
+      # Initializes the numeric value.
+      #
+      # @param [Range] range
+      #   Specifies the range of acceptable numbers.
+      #
+      def initialize(range: nil)
+        @range = range
+      end
+
       #
       # Validates a value.
       #
@@ -20,7 +35,7 @@ module CommandMapper
       def validate(value)
         case value
         when Integer
-          return true
+          # no-op
         when String
           unless value =~ /\A\d+\z/
             return [false, "contains non-numeric characters (#{value.inspect})"]
@@ -28,6 +43,12 @@ module CommandMapper
         else
           unless value.respond_to?(:to_i)
             return [false, "cannot be converted into an Integer (#{value.inspect})"]
+          end
+        end
+
+        if @range
+          unless @range.include?(value.to_i)
+            return [false, "unacceptable value (#{value.inspect})"]
           end
         end
 
