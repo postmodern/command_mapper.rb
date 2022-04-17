@@ -130,6 +130,8 @@ module CommandMapper
     #
     # @return [Boolean]
     #
+    # @since 0.2.0
+    #
     def value_in_flag?
       @value_in_flag
     end
