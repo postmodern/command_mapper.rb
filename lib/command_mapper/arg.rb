@@ -6,6 +6,7 @@ module CommandMapper
   # The base class for both {Option options} and {Argument arguments}.
   #
   class Arg
+
     # The argument's arg's type.
     #
     # @return [Types::Type, nil]
