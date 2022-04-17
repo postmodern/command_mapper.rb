@@ -4,6 +4,8 @@ module CommandMapper
   module Types
     class Map < Type
 
+      # The map of values to Strings.
+      #
       # @return [Hash{Object => String}]
       attr_reader :map
 

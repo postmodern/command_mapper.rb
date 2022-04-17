@@ -7,12 +7,18 @@ module CommandMapper
   #
   class Option
 
+    # The option's flag (ex: `-o` or `--output`).
+    #
     # @return [String]
     attr_reader :flag
 
+    # The option's name.
+    #
     # @return [Symbol]
     attr_reader :name
 
+    # Describes the option's value.
+    #
     # @return [OptionValue, nil]
     attr_reader :value
 
