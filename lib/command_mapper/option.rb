@@ -296,15 +296,15 @@ module CommandMapper
       else
         string = @value.format(value)
 
-        if string.start_with?('-')
-          raise(ValidationError,"option #{@name} formatted value (#{string.inspect}) cannot start with a '-'")
-        end
-
         if equals?
           argv << "#{@flag}=#{string}"
         elsif value_in_flag?
           argv << "#{@flag}#{string}"
         else
+          if string.start_with?('-')
+            raise(ValidationError,"option #{@name} formatted value (#{string.inspect}) cannot start with a '-'")
+          end
+
           argv << @flag << string
         end
       end
