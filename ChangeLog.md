@@ -1,4 +1,4 @@
-### 0.2.0 / 2022-04-17
+### 0.2.0 / 2022-04-18
 
 * Added {CommandMapper::Command.spawn} and
   {CommandMapper::Command#spawn_command}.
