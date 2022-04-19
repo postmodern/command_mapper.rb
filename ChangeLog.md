@@ -10,6 +10,8 @@
   should be appended to the flag (ex: `-Fvalue`).
 * Added the `range:` keyword argument to {CommandMapper::Types::Num#initialize}
   for specifying the acceptable range of numbers.
+* Allow options with `equals: true` (aka `--opt=...`) or `value_in_flag: true`
+  (aka `-Fvalue`) to accept values that start with a `-` character.
 
 ### 0.1.2 / 2021-11-29
 
