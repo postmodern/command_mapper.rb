@@ -597,8 +597,10 @@ module CommandMapper
         self.class.arguments.each do |name,argument|
           value = self[name]
 
-          if value.nil? && argument.required?
-            raise(ArgumentRequired,"argument #{name} is required")
+          if value.nil?
+            if argument.required?
+              raise(ArgumentRequired,"argument #{name} is required")
+            end
           else
             argument.argv(additional_args,value)
           end

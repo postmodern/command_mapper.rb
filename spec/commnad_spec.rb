@@ -1163,6 +1163,26 @@ describe CommandMapper::Command do
           }.to raise_error(ArgumentRequired,"argument arg2 is required")
         end
       end
+
+      context "but the command has un-required arguments that repeat" do
+        module TestCommand
+          class CommandWithUnRequiredRepeatingArguments < CommandMapper::Command
+            command "test" do
+              argument :arg1, required: false
+              argument :arg2, required: false, repeats: true
+              argument :arg3, required: false
+            end
+          end
+        end
+
+        let(:command_class) { TestCommand::CommandWithUnRequiredRepeatingArguments }
+
+        subject { command_class.new(arg1: nil, arg2: nil, arg3: nil) }
+
+        it "must omit the un-required repeating arguments that are not set" do
+          expect(subject.command_argv).to eq([subject.class.command_name])
+        end
+      end
     end
 
     context "when the command is initialized with the command_path: keyword" do
