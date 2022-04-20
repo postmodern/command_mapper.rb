@@ -21,9 +21,9 @@ allow safely and securely executing commands.
     * [Str][CommandMapper::Types::Str]: string values
     * [Num][CommandMapper::Types::Num]: numeric values
     * [Hex][CommandMapper::Types::Hex]: hexadecimal values
-    * [Map][CommandMapper::Types::Map]: maps `true`/`false` to `yes`/`no`, or
-      `enabled`/`disabled` (aka `--opt=yes|no` or
-      `--opt=enabled|disabled` values).
+    * [Map][CommandMapper::Types::Map]: maps Ruby values to other String values.
+      * `Map::YesNo`: maps `true`/`false` to `yes`/`no`.
+      * `Map::EnabledDisabled`: Maps `true`/`false` to `enabled`/`disabled`.
     * [Enum][CommandMapper::Types::Enum]: maps a finite set of Symbols to a
       finite set of Strings (aka `--opt={foo|bar|baz}` values).
     * [List][CommandMapper::Types::List]: comma-separated list
