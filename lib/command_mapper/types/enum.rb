@@ -3,6 +3,8 @@ require 'command_mapper/types/map'
 module CommandMapper
   module Types
     #
+    # Represents a mapping of Ruby values to their String equivalents.
+    #
     # @api semipublic
     #
     class Enum < Map

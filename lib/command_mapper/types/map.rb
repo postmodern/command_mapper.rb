@@ -3,6 +3,8 @@ require 'command_mapper/types/type'
 module CommandMapper
   module Types
     #
+    # Represents a mapping of Ruby values to other String values.
+    #
     # @api semipublic
     #
     class Map < Type
