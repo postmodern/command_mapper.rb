@@ -45,7 +45,7 @@ module CommandMapper
       #   The given value to validate.
       #
       # @return [true, (false, String)]
-      #   Returns true if the valid is considered valid, or false and a
+      #   Returns true if the value is considered valid, or false and a
       #   validation message if the value is not valid.
       #   * If `nil` is given and a value is required, then `false` will be
       #     returned.
