@@ -5,6 +5,8 @@ module CommandMapper
     #
     # Represents a path to an existing directory.
     #
+    # @api semipublic
+    #
     class InputDir < InputPath
 
       #

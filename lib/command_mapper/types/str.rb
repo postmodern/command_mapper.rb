@@ -2,6 +2,9 @@ require 'command_mapper/types/type'
 
 module CommandMapper
   module Types
+    #
+    # @api semipublic
+    #
     class Str < Type
       #
       # Initializes the value.

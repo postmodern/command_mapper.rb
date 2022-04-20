@@ -50,6 +50,8 @@ module CommandMapper
     #
     #     argument :ports, required: true, type: PortRange.new
     #
+    # @api semipublic
+    #
     class Type
 
       #

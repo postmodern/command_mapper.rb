@@ -6,6 +6,8 @@ module CommandMapper
     #
     # Represents a list type.
     #
+    # @api semipublic
+    #
     class List < Type
 
       # The seperator character.

@@ -6,6 +6,8 @@ module CommandMapper
     #
     # Represents a key-value type.
     #
+    # @api semipublic
+    #
     class KeyValue < Type
 
       # The separator String between the key and value.

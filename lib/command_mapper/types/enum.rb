@@ -2,6 +2,9 @@ require 'command_mapper/types/map'
 
 module CommandMapper
   module Types
+    #
+    # @api semipublic
+    #
     class Enum < Map
 
       # @return [Array<Object>]

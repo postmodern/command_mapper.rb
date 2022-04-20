@@ -5,6 +5,8 @@ module CommandMapper
     #
     # Represents a path to an existing file.
     #
+    # @api semipublic
+    #
     class InputFile < InputPath
 
       #

@@ -5,6 +5,8 @@ module CommandMapper
     #
     # Represents a numeric value.
     #
+    # @api semipublic
+    #
     class Num < Type
 
       # The optional range of acceptable numbers.

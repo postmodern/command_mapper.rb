@@ -5,6 +5,8 @@ module CommandMapper
     #
     # Represents a hexadecimal value.
     #
+    # @api semipublic
+    #
     class Hex < Num
 
       #

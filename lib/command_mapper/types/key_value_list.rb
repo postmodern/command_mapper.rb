@@ -6,6 +6,8 @@ module CommandMapper
     #
     # Represents a list of `key=value` pairs.
     #
+    # @api semipublic
+    #
     class KeyValueList < List
 
       #

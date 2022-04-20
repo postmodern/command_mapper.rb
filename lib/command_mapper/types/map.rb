@@ -2,6 +2,9 @@ require 'command_mapper/types/type'
 
 module CommandMapper
   module Types
+    #
+    # @api semipublic
+    #
     class Map < Type
 
       # The map of values to Strings.
