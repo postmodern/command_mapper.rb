@@ -98,6 +98,8 @@ module CommandMapper
     # @raise [ArgumentError]
     #   The given type value was not a {Type}, `Hash`, or `nil`,
     #
+    # @api semipublic
+    #
     def self.Type(value)
       case value
       when Type      then value
