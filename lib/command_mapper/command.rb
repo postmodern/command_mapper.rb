@@ -369,6 +369,7 @@ module CommandMapper
     # All defined options.
     #
     # @return [Hash{Symbol => Argument}]
+    #   The mapping of argument names and {Argument} objects.
     #
     # @api semipublic
     #
@@ -448,6 +449,7 @@ module CommandMapper
     # All defined subcommands.
     #
     # @return [Hash{Symbol => Command}]
+    #   The mapping of subcommand names and subcommand classes.
     #
     # @api semipublic
     #
@@ -544,8 +546,10 @@ module CommandMapper
     # Gets the value of an option or an argument.
     #
     # @param [Symbol] name
+    #   The name of the option, argument, or subcommand.
     #
     # @return [Object]
+    #   The value of the option, argument, or subcommand.
     #
     # @raise [ArgumentError]
     #   The given name was not match any option or argument.
@@ -564,10 +568,13 @@ module CommandMapper
     # Sets an option or an argument with the given name.
     #
     # @param [Symbol] name
+    #   The name of the option, argument, or subcommand.
     #
     # @param [Object] value
+    #   The new value for the option, argument, or subcommand.
     #
     # @return [Object]
+    #   The new value for the option, argument, or subcommand.
     #
     # @raise [ArgumentError]
     #   The given name was not match any option or argument.
@@ -584,6 +591,7 @@ module CommandMapper
     # Returns an Array of command-line arguments for the command.
     #
     # @return [Array<String>]
+    #   The formatted command-line arguments.
     #
     # @raise [ArgumentReqired]
     #   A required argument was not set.
@@ -650,6 +658,8 @@ module CommandMapper
     # Runs the command.
     #
     # @return [Boolean, nil]
+    #   Indicates whether the command exited successfully or not.
+    #   `nil` indicates the command could not be found.
     #
     def run_command
       Kernel.system(@command_env,*command_argv)
@@ -685,6 +695,7 @@ module CommandMapper
     # Executes the command and returns an IO object to it.
     #
     # @return [IO]
+    #   The IO object for the command's `STDIN`.
     #
     def popen_command(mode=nil)
       if mode then IO.popen(@command_env,command_argv,mode)
@@ -699,6 +710,8 @@ module CommandMapper
     #   Additional keyword arguments for {Sudo#initialize}.
     #
     # @return [Boolean, nil]
+    #   Indicates whether the command exited successfully or not.
+    #   `nil` indicates the command could not be found.
     #
     def sudo_command(**sudo_kwargs,&block)
       sudo_params = sudo_kwargs.merge(command: command_argv)
@@ -729,6 +742,7 @@ module CommandMapper
     #   The method name.
     #
     # @return [Boolean]
+    #   Indicates that the method name is also an intenral method name.
     #
     def self.is_internal_method?(name)
       Command.instance_methods(false).include?(name.to_sym)
