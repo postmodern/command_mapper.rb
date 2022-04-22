@@ -90,10 +90,10 @@ module CommandMapper
     #   Additional keywords arguments. These will be used to populate
     #   {#options} and {#arguments}, along with `params`.
     #
-    # @yield [self]
+    # @yield [command]
     #   The newly initialized command.
     #
-    # @yieldparam [Command] self
+    # @yieldparam [Command] command
     #
     # @return [Boolean, nil]
     #
@@ -113,10 +113,10 @@ module CommandMapper
     #   Additional keywords arguments. These will be used to populate
     #   {#options} and {#arguments}, along with `params`.
     #
-    # @yield [self]
+    # @yield [command]
     #   The newly initialized command.
     #
-    # @yieldparam [Command] self
+    # @yieldparam [Command] command
     #
     # @return [Integer]
     #   The PID of the new command process.
@@ -142,10 +142,10 @@ module CommandMapper
     #   Additional keywords arguments. These will be used to populate
     #   {#options} and {#arguments}, along with `params`.
     #
-    # @yield [self]
+    # @yield [command]
     #   The newly initialized command.
     #
-    # @yieldparam [Command] self
+    # @yieldparam [Command] command
     #
     # @return [String]
     #   The stdout output of the command.
@@ -168,10 +168,10 @@ module CommandMapper
     #   Additional keywords arguments. These will be used to populate
     #   {#options} and {#arguments}, along with `params`.
     #
-    # @yield [self]
+    # @yield [command]
     #   The newly initialized command.
     #
-    # @yieldparam [Command] self
+    # @yieldparam [Command] command
     #
     # @return [IO]
     #
@@ -189,10 +189,10 @@ module CommandMapper
     # @param [Hash{Symbol => Object}] kwargs
     #   Additional keyword arguments for {#initialize}.
     #
-    # @yield [self]
+    # @yield [command]
     #   The newly initialized command.
     #
-    # @yieldparam [Command] self
+    # @yieldparam [Command] command
     #
     # @return [Boolean, nil]
     #
