@@ -5,6 +5,11 @@ require 'command_mapper/option'
 require 'shellwords'
 
 module CommandMapper
+  #
+  # Base class for all mapped commands.
+  #
+  # @api public
+  #
   class Command
 
     include Types
