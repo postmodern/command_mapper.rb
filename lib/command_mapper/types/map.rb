@@ -54,7 +54,7 @@ module CommandMapper
       #
       def validate(value)
         unless (@map.has_key?(value) || @map.has_value?(value))
-          return [false, "unknown value (#{value.inspect})"]
+          return [false, "unknown value (#{value.inspect}) must be #{@map.keys.map(&:inspect).join(', ')}, or #{@map.values.map(&:inspect).join(', ')}"]
         end
 
         return true

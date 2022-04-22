@@ -41,9 +41,9 @@ describe CommandMapper::Types::Map do
     context "when given a value that is not in the map" do
       let(:value) { 42 }
 
-      it "must return [false, \"unknown value (...)\"]" do
+      it "must return [false, \"unknown value (...) must be ..., or ...\"]" do
         expect(subject.validate(value)).to eq(
-          [false, "unknown value (#{value.inspect})"]
+          [false, "unknown value (#{value.inspect}) must be #{subject.map.keys.map(&:inspect).join(', ')}, or #{subject.map.values.map(&:inspect).join(', ')}"]
         )
       end
     end
