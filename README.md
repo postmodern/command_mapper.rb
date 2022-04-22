@@ -314,6 +314,18 @@ Grep.run do |grep|
 end
 ```
 
+Overriding the command name:
+
+```ruby
+Grep.run(..., command_name: 'grep2')
+```
+
+Specifying the direct path to the command:
+
+```ruby
+Grep.run(..., command_path: '/path/to/grep')
+```
+
 ### Capturing output
 
 ```ruby
