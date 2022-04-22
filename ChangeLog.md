@@ -1,3 +1,14 @@
+### 0.2.1 / 2022-04-22
+
+* Properly validate in {CommandMapper::OptionValue#validate} when an option,
+  who's value is not required, is given `true`.
+* Omit `nil` arguments from {CommandMapper::Command#command_argv} if the
+  argument is not required.
+* Improve validation error message for {CommandMapper::Types::Num} when
+  initialized with a `range:` value.
+* Improve validation error message for {CommandMapper::Types::Map} and 
+  {CommandMapper::Types::Enum}.
+
 ### 0.2.0 / 2022-04-18
 
 * Added {CommandMapper::Command.spawn} and
