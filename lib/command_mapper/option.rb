@@ -51,6 +51,8 @@ module CommandMapper
     #   Specifies that the value should be appended to the option's flag
     #   (ex: `-Fvalue`).
     #
+    # @api private
+    #
     def initialize(flag, name: nil, value: nil, repeats: false,
                          # formatting options
                          equals:        nil,
@@ -80,6 +82,8 @@ module CommandMapper
     # @raise [ArgumentError]
     #   Could not infer the name from the given option flag or was not given a
     #   valid option flag.
+    #
+    # @api private
     #
     def self.infer_name_from_flag(flag)
       if flag.start_with?('--')
@@ -146,6 +150,8 @@ module CommandMapper
     #   Returns true if the value is valid, or `false` and a validation error
     #   message if the value is not compatible.
     #
+    # @api semipublic
+    #
     def validate(value)
       if accepts_value?
         if repeats?
@@ -172,6 +178,8 @@ module CommandMapper
     #
     # @raise [ArgumentError]
     #   The given value was incompatible with the option.
+    #
+    # @api semipublic
     #
     def argv(argv=[],value)
       valid, message = validate(value)

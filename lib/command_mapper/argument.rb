@@ -30,6 +30,8 @@ module CommandMapper
     # @raise [ArgumentError]
     #   The given `type:` must not be `false` or `nil`.
     #
+    # @api private
+    #
     def initialize(name, required: true, type: Types::Str.new, repeats: false)
       super(required: required, type: type)
 
@@ -55,6 +57,8 @@ module CommandMapper
     # @return [true, (false, String)]
     #   Returns true if the value is valid, or `false` and a validation error
     #   message if the value is not compatible.
+    #
+    # @api semipublic
     #
     def validate(value)
       if repeats?
@@ -100,6 +104,8 @@ module CommandMapper
     #
     # @raise [ArgumentError]
     #   The given value was incompatible with the argument.
+    #
+    # @api semipublic
     #
     def argv(argv=[],value)
       valid, message = validate(value)

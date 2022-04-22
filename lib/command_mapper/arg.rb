@@ -24,6 +24,8 @@ module CommandMapper
     # @raise [ArgumentError]
     #   The `type` keyword argument was given a `nil` value.
     #
+    # @api private
+    #
     def initialize(required: true, type: Types::Str.new)
       @required = required
 
@@ -61,6 +63,8 @@ module CommandMapper
     # @return [true, (false, String)]
     #   Returns true if the value is valid, or `false` and a validation error
     #   message if the value is not compatible.
+    #
+    # @api semipublic
     #
     def validate(value)
       if value.nil?

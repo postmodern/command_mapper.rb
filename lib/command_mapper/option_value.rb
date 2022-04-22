@@ -16,6 +16,8 @@ module CommandMapper
     #   Returns true if the value is valid, or `false` and a validation error
     #   message if the value is not compatible.
     #
+    # @api semipublic
+    #
     def validate(value)
       if !required? && value == true
         return true
@@ -32,6 +34,8 @@ module CommandMapper
     #
     # @return [String]
     #   The formatted value.
+    #
+    # @api semipublic
     #
     def format(value)
       @type.format(value)
