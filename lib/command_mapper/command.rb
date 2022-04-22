@@ -448,7 +448,7 @@ module CommandMapper
     #
     # All defined subcommands.
     #
-    # @return [Hash{Symbol => Command}]
+    # @return [Hash{Symbol => Command.class}]
     #   The mapping of subcommand names and subcommand classes.
     #
     # @api semipublic
