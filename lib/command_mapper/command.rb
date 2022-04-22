@@ -86,6 +86,10 @@ module CommandMapper
     # @param [Hash{Symbol => Object}] params
     #   The option values.
     #
+    # @param [Hash{Symbol => Object}] kwargs
+    #   Additional keywords arguments. These will be used to populate
+    #   {#options} and {#arguments}, along with `params`.
+    #
     # @yield [self]
     #   The newly initialized command.
     #
@@ -104,6 +108,10 @@ module CommandMapper
     #
     # @param [Hash{Symbol => Object}] params
     #   The option values.
+    #
+    # @param [Hash{Symbol => Object}] kwargs
+    #   Additional keywords arguments. These will be used to populate
+    #   {#options} and {#arguments}, along with `params`.
     #
     # @yield [self]
     #   The newly initialized command.
@@ -130,6 +138,10 @@ module CommandMapper
     # @param [Hash{Symbol => Object}] params
     #   The option values.
     #
+    # @param [Hash{Symbol => Object}] kwargs
+    #   Additional keywords arguments. These will be used to populate
+    #   {#options} and {#arguments}, along with `params`.
+    #
     # @yield [self]
     #   The newly initialized command.
     #
@@ -148,6 +160,13 @@ module CommandMapper
     #
     # @param [Hash{Symbol => Object}] params
     #   The option values.
+    #
+    # @param [String] mode
+    #   The IO "mode" to open the IO pipe in.
+    #
+    # @param [Hash{Symbol => Object}] kwargs
+    #   Additional keywords arguments. These will be used to populate
+    #   {#options} and {#arguments}, along with `params`.
     #
     # @yield [self]
     #   The newly initialized command.
