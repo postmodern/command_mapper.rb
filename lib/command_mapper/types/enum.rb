@@ -5,11 +5,14 @@ module CommandMapper
     #
     # Represents a mapping of Ruby values to their String equivalents.
     #
-    # @api semipublic
-    #
     class Enum < Map
 
+      # The values of the enum.
+      #
       # @return [Array<Object>]
+      #
+      # @api semipublic
+      #
       attr_reader :values
 
       #

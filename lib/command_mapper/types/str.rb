@@ -2,9 +2,6 @@ require 'command_mapper/types/type'
 
 module CommandMapper
   module Types
-    #
-    # @api semipublic
-    #
     class Str < Type
       #
       # Initializes the value.
@@ -25,6 +22,8 @@ module CommandMapper
       #
       # @return [Boolean]
       #
+      # @api semipublic
+      #
       def allow_empty?
         @allow_empty
       end
@@ -33,6 +32,8 @@ module CommandMapper
       # Specifies whether the option's value may accept blank values.
       #
       # @return [Boolean]
+      #
+      # @api semipublic
       #
       def allow_blank?
         @allow_blank
@@ -53,6 +54,8 @@ module CommandMapper
       #     `false` will be returned.
       #   * If an empty value is given and blank values are not allowed, then
       #     `false` will be returned.
+      #
+      # @api semipublic
       #
       def validate(value)
         case value

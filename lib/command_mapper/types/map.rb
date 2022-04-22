@@ -5,13 +5,13 @@ module CommandMapper
     #
     # Represents a mapping of Ruby values to other String values.
     #
-    # @api semipublic
-    #
     class Map < Type
 
       # The map of values to Strings.
       #
       # @return [Hash{Object => String}]
+      #
+      # @api semipublic
       attr_reader :map
 
       #
@@ -52,6 +52,8 @@ module CommandMapper
       #   Returns true if the value is valid, or `false` and a validation error
       #   message if the value is not compatible.
       #
+      # @api semipublic
+      #
       def validate(value)
         unless (@map.has_key?(value) || @map.has_value?(value))
           return [false, "unknown value (#{value.inspect}) must be #{@map.keys.map(&:inspect).join(', ')}, or #{@map.values.map(&:inspect).join(', ')}"]
@@ -71,6 +73,8 @@ module CommandMapper
       #
       # @raise [KeyError]
       #   The given value is not a key or value in the map.
+      #
+      # @api semipublic
       #
       def format(value)
         if @map.has_key?(value)

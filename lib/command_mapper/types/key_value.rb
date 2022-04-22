@@ -6,23 +6,27 @@ module CommandMapper
     #
     # Represents a key-value type.
     #
-    # @api semipublic
-    #
     class KeyValue < Type
 
       # The separator String between the key and value.
       #
       # @return [String]
+      #
+      # @api semipublic
       attr_reader :separator
 
       # The key's type.
       #
       # @return [Type]
+      #
+      # @api semipublic
       attr_reader :key
 
       # The value's type.
       #
       # @return [Type]
+      #
+      # @api semipublic
       attr_reader :value
 
       #
@@ -64,6 +68,8 @@ module CommandMapper
       # @return [true, (false, String)]
       #   Returns true if the value is valid, or `false` and a validation error
       #   message if the value is not compatible.
+      #
+      # @api semipublic
       #
       def validate(value)
         case value
@@ -114,6 +120,8 @@ module CommandMapper
       #
       # @return [String]
       #   The formatted key-value pair.
+      #
+      # @api semipublic
       #
       def format(value)
         case value

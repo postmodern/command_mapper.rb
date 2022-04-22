@@ -6,8 +6,6 @@ module CommandMapper
     #
     # Represents a list of `key=value` pairs.
     #
-    # @api semipublic
-    #
     class KeyValueList < List
 
       #
@@ -37,6 +35,8 @@ module CommandMapper
       #
       # @return [String]
       #   The formatted key-value list.
+      #
+      # @api semipublic
       #
       def format(value)
         super(Array(value).map(&@type.method(:format)))

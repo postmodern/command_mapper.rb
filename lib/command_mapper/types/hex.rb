@@ -5,8 +5,6 @@ module CommandMapper
     #
     # Represents a hexadecimal value.
     #
-    # @api semipublic
-    #
     class Hex < Num
 
       #
@@ -29,6 +27,8 @@ module CommandMapper
       #
       # @return [Boolean]
       #
+      # @api semipublic
+      #
       def leading_zero?
         @leading_zero
       end
@@ -42,6 +42,8 @@ module CommandMapper
       # @return [true, (false, String)]
       #   Returns true if the value is valid, or `false` and a validation error
       #   message if the value is not compatible.
+      #
+      # @api semipublic
       #
       def validate(value)
         case value
@@ -70,6 +72,8 @@ module CommandMapper
       #
       # @return [String]
       #   The formatted numeric value.
+      #
+      # @api semipublic
       #
       def format(value)
         case value

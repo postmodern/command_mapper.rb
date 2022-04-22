@@ -5,8 +5,6 @@ module CommandMapper
     #
     # Represents a path to an existing file.
     #
-    # @api semipublic
-    #
     class InputFile < InputPath
 
       #
@@ -18,6 +16,8 @@ module CommandMapper
       # @return [true, (false, String)]
       #   Returns true if the value is valid, or `false` and a validation error
       #   message if the value is not compatible.
+      #
+      # @api semipublic
       #
       def validate(value)
         valid, message = super(value)

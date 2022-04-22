@@ -6,18 +6,20 @@ module CommandMapper
     #
     # Represents a list type.
     #
-    # @api semipublic
-    #
     class List < Type
 
       # The seperator character.
       #
       # @return [String]
+      #
+      # @api semipublic
       attr_reader :separator
 
       # The list element type.
       #
       # @return [Type]
+      #
+      # @api semipublic
       attr_reader :type
 
       #
@@ -45,6 +47,8 @@ module CommandMapper
       #
       # @return [Boolean]
       #
+      # @api semipublic
+      #
       def allow_empty?
         @allow_empty
       end
@@ -58,6 +62,8 @@ module CommandMapper
       # @return [true, (false, String)]
       #   Returns true if the value is valid, or `false` and a validation error
       #   message if the value is not compatible.
+      #
+      # @api semipublic
       #
       def validate(value)
         values = Array(value)
@@ -87,6 +93,8 @@ module CommandMapper
       #
       # @return [String]
       #   The formatted list.
+      #
+      # @api semipublic
       #
       def format(value)
         Array(value).map(&@type.method(:format)).join(@separator)

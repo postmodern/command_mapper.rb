@@ -5,13 +5,13 @@ module CommandMapper
     #
     # Represents a numeric value.
     #
-    # @api semipublic
-    #
     class Num < Type
 
       # The optional range of acceptable numbers.
       #
       # @return [Range, nil]
+      #
+      # @api semipublic
       attr_reader :range
 
       #
@@ -33,6 +33,8 @@ module CommandMapper
       # @return [true, (false, String)]
       #   Returns true if the value is valid, or `false` and a validation error
       #   message if the value is not compatible.
+      #
+      # @api semipublic
       #
       def validate(value)
         case value
@@ -65,6 +67,8 @@ module CommandMapper
       #
       # @return [String]
       #   The formatted numeric value.
+      #
+      # @api semipublic
       #
       def format(value)
         case value
