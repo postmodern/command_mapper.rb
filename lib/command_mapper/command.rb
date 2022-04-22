@@ -84,7 +84,7 @@ module CommandMapper
     # Initializes and runs the command.
     #
     # @param [Hash{Symbol => Object}] params
-    #   The option values.
+    #   The option and argument values.
     #
     # @param [Hash{Symbol => Object}] kwargs
     #   Additional keywords arguments. These will be used to populate
@@ -107,7 +107,7 @@ module CommandMapper
     # PID of the process.
     #
     # @param [Hash{Symbol => Object}] params
-    #   The option values.
+    #   The option and argument values.
     #
     # @param [Hash{Symbol => Object}] kwargs
     #   Additional keywords arguments. These will be used to populate
@@ -136,7 +136,7 @@ module CommandMapper
     # output.
     #
     # @param [Hash{Symbol => Object}] params
-    #   The option values.
+    #   The option and argument values.
     #
     # @param [Hash{Symbol => Object}] kwargs
     #   Additional keywords arguments. These will be used to populate
@@ -159,7 +159,7 @@ module CommandMapper
     # Initializes and executes the command and returns an IO object to it.
     #
     # @param [Hash{Symbol => Object}] params
-    #   The option values.
+    #   The option and argument values.
     #
     # @param [String] mode
     #   The IO "mode" to open the IO pipe in.
@@ -184,7 +184,7 @@ module CommandMapper
     # Initializes and runs the command through `sudo`.
     #
     # @param [Hash{Symbol => Object}] params
-    #   The option values.
+    #   The option and argument values.
     #
     # @param [Hash{Symbol => Object}] kwargs
     #   Additional keyword arguments for {#initialize}.
