@@ -41,7 +41,7 @@ module CommandMapper
     # @param [String, nil] command_path
     #   Overrides the command with a custom path to the command.
     #
-    # @param [Hash{String => String}] env
+    # @param [Hash{String => String}] command_env
     #   Custom environment variables to pass to the command.
     #
     # @param [Hash{Symbol => Object}] kwargs
