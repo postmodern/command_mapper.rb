@@ -24,16 +24,6 @@ module CommandMapper
     # @return [Hash{String => String}]
     attr_reader :command_env
 
-    # The option values to execute the command with.
-    #
-    # @return [Hash{String => Object}]
-    attr_reader :command_options
-
-    # The argument values to execute the command with.
-    #
-    # @return [Hash{String => Object}]
-    attr_reader :command_arguments
-
     # The subcommand's options and arguments.
     #
     # @return [Command, nil]
