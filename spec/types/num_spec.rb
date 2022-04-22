@@ -44,9 +44,9 @@ describe CommandMapper::Types::Num do
         context "but the value is not within the range of values" do
           let(:value) { 0 }
 
-          it "must return [false, \"unacceptable value (...)\"]" do
+          it "must return [false, \"(...) not within the range of acceptable values (...)\"]" do
             expect(subject.validate(value)).to eq(
-              [false, "unacceptable value (#{value.inspect})"]
+              [false, "(#{value.inspect}) not within the range of acceptable values (#{range.inspect})"]
             )
           end
         end
@@ -77,9 +77,9 @@ describe CommandMapper::Types::Num do
           context "but the value is not within the range of values" do
             let(:value) { '0' }
 
-            it "must return [false, \"unacceptable value (...)\"]" do
+            it "must return [false, \"(...) not within the range of acceptable values (...)\"]" do
               expect(subject.validate(value)).to eq(
-                [false, "unacceptable value (#{value.inspect})"]
+                [false, "(#{value.inspect}) not within the range of acceptable values (#{range.inspect})"]
               )
             end
           end
@@ -132,9 +132,9 @@ describe CommandMapper::Types::Num do
         context "but the value is not within the range of values" do
           let(:value) { 0.0 }
 
-          it "must return [false, \"unacceptable value (...)\"]" do
+          it "must return [false, \"(...) not within the range of acceptable values (...)\"]" do
             expect(subject.validate(value)).to eq(
-              [false, "unacceptable value (#{value.inspect})"]
+              [false, "(#{value.inspect}) not within the range of acceptable values (#{range.inspect})"]
             )
           end
         end

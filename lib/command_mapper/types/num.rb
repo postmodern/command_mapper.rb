@@ -50,7 +50,7 @@ module CommandMapper
 
         if @range
           unless @range.include?(value.to_i)
-            return [false, "unacceptable value (#{value.inspect})"]
+            return [false, "(#{value.inspect}) not within the range of acceptable values (#{range.inspect})"]
           end
         end
 
