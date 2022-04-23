@@ -1,8 +1,8 @@
 name: command_mapper
 summary: Safe and secure execution of commands.
 description:
-  Command Mapper maps a command's arguments to Class attributes to allow safely
-  and securely executing commands.
+  Command Mapper maps an external command's arguments to Class attributes to
+  allow safely and securely executing commands.
 
 license: MIT
 authors: Postmodern

@@ -10,8 +10,8 @@
 
 ## Description
   
-Command Mapper maps a command's options and arguments to Class attributes to
-allow safely and securely executing commands.
+Command Mapper maps an external command's options and arguments to Class
+attributes to allow safely and securely executing commands.
 
 ## Features
 
