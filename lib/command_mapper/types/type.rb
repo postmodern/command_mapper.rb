@@ -58,7 +58,7 @@ module CommandMapper
       # The default `validate` method for all types.
       #
       # @param [Object]
-      #   The given value to format.
+      #   The given value to validate.
       #
       # @return [true, (false, String)]
       #   Returns true if the value is valid, or `false` and a validation error
