@@ -20,6 +20,7 @@ attributes to allow safely and securely executing commands.
   * Supports common option types:
     * [Str][CommandMapper::Types::Str]: string values
     * [Num][CommandMapper::Types::Num]: numeric values
+    * [Dec][CommandMapper::Types::Dec]: decimal values
     * [Hex][CommandMapper::Types::Hex]: hexadecimal values
     * [Map][CommandMapper::Types::Map]: maps Ruby values to other String values.
       * `Map::YesNo`: maps `true`/`false` to `yes`/`no`.
@@ -50,6 +51,7 @@ attributes to allow safely and securely executing commands.
 
 [CommandMapper::Types::Str]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Str
 [CommandMapper::Types::Num]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Num
+[CommandMapper::Types::Dec]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Dec
 [CommandMapper::Types::Hex]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Hex
 [CommandMapper::Types::Map]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Map
 [CommandMapper::Types::Enum]: https://rubydoc.info/gems/command_mapper/CommandMapper/Types/Enum
