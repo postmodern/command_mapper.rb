@@ -1,3 +1,7 @@
+### 0.3.0 / 2022-11-11
+
+* Added {CommandMapper::Types::Dec}.
+
 ### 0.2.1 / 2022-04-22
 
 * Properly validate in {CommandMapper::OptionValue#validate} when an option,
