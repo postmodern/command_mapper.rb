@@ -21,7 +21,7 @@ module CommandMapper
       #
       def validate(value)
         unless value.empty?
-          unless File.exists?(value)
+          unless File.exist?(value)
             return [false, "path does not exist (#{value.inspect})"]
           end
         end
