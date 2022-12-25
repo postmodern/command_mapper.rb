@@ -1,3 +1,8 @@
+### 0.3.1 / 2022-12-25
+
+* Use `File.exist?` in {CommandMapper::Types::InputPath#validate} for Ruby
+  3.2.0.
+
 ### 0.3.0 / 2022-11-11
 
 * Added {CommandMapper::Types::Dec}.
