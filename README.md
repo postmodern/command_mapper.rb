@@ -353,6 +353,41 @@ Grep.sudo(patterns: "Error", file: "/var/log/syslog")
 # ...
 ```
 
+### Defining sub-commands
+
+```ruby
+module Git
+  class Command < CommandMapper::Command
+
+    command 'git' do
+      option "--version"
+      option "--help"
+      option "-C", name: :dir, value: {type: InputDir.new}
+      # ...
+
+      subcommand :clone do
+        option "--bare"
+        option "--mirror"
+        option "--depth", value: {type: Num.new}
+        # ...
+
+        argument :repository
+        argument :directory, required: false
+      end
+
+      # ...
+    end
+
+  end
+end
+```
+
+### Invoking sub-commands
+
+```ruby
+Git::Command.run(clone: {repository: 'https://github.com/user/repo.git'})
+```
+
 ### Code Gen
 
 [command_mapper-gen] can automatically generate command classes from a command's
