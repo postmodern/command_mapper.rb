@@ -783,84 +783,127 @@ module CommandMapper
     #
     # Runs the command through `sudo`.
     #
-    # @param [Hash{Symbol => Object}] sudo_kwargs
-    #   Additional keyword arguments for {Sudo#initialize}.
-    #
-    # @option sudo_kwargs [Boolean] :askpass
+    # @param [Boolean] askpass
     #   Enables the `--askpass` `sudo` option.
     #
-    # @option sudo_kwargs [Boolean] :background
+    # @param [Boolean] background
     #   Enables the `--background` `sudo` option
     #
-    # @option sudo_kwargs [Boolean] :bell
+    # @param [Boolean] bell
     #   Enables the `--bell` `sudo` option
     #
-    # @option sudo_kwargs [Integer] :close_from
+    # @param [Integer] close_from
     #   Enables the `--close-from=...` `sudo` option
     #
-    # @option sudo_kwargs [String] :chdir
+    # @param [String] chdir
     #   Enables the `--chdir=...` `sudo` option
     #
-    # @option sudo_kwargs [String] :preserve_env
+    # @param [String] preserve_env
     #   Enables the `--preseve-env=...` `sudo` option
     #
-    # @option sudo_kwargs [String, Boolean] :group
+    # @param [String, Boolean] group
     #   Enables the `--preseve-env=...` `sudo` option
     #
-    # @option sudo_kwargs [Boolean] :set_home
+    # @param [Boolean] set_home
     #   Enables the `--set-home` `sudo` option
     #
-    # @option sudo_kwargs [String] :host
+    # @param [String] host
     #   Enables the `--host=...` `sudo` option
     #
-    # @option sudo_kwargs [Boolean] :login
+    # @param [Boolean] login
     #   Enables the `--login` `sudo` option
     #
-    # @option sudo_kwargs [Boolean] :remove_timestamp
+    # @param [Boolean] remove_timestamp
     #   Enables the `--remove-timestamp` `sudo` option
     #
-    # @option sudo_kwargs [Boolean] :reset_timestamp
+    # @param [Boolean] reset_timestamp
     #   Enables the `--reset-timestamp` `sudo` option
     #
-    # @option sudo_kwargs [Boolean] :non_interactive
+    # @param [Boolean] non_interactive
     #   Enables the `--non-interactive` `sudo` option
     #
-    # @option sudo_kwargs [Boolean] :preserve_groups
+    # @param [Boolean] preserve_groups
     #   Enables the `--preserve-groups` `sudo` option
     #
-    # @option sudo_kwargs [String] :prompt
+    # @param [String] prompt
     #   Enables the `--prompt=...` `sudo` option
     #
-    # @option sudo_kwargs [String] :chroot
+    # @param [String] chroot
     #   Enables the `--chroot=...` `sudo` option
     #
-    # @option sudo_kwargs [String] :role
+    # @param [String] role
     #   Enables the `--role=...` `sudo` option
     #
-    # @option sudo_kwargs [Boolean] :stdin
+    # @param [Boolean] stdin
     #   Enables the `--stdin` `sudo` option
     #
-    # @option sudo_kwargs [Boolean] :shell
+    # @param [Boolean] shell
     #   Enables the `--shell` `sudo` option
     #
-    # @option sudo_kwargs [String] :type
+    # @param [String] type
     #   Enables the `--type=...` `sudo` option
     #
-    # @option sudo_kwargs [Integer] :command_timeout
+    # @param [Integer] command_timeout
     #   Enables the `--command-timeout=...` `sudo` option
     #
-    # @option sudo_kwargs [String] :other_user
+    # @param [String] other_user
     #   Enables the `--other-user=...` `sudo` option
     #
-    # @option sudo_kwargs [String] :user
+    # @param [String] user
     #   Enables the `--user=...` `sudo` option
     #
     # @return [Boolean, nil]
     #   Indicates whether the command exited successfully or not.
     #   `nil` indicates the command could not be found.
     #
-    def sudo_command(**sudo_kwargs,&block)
-      sudo_params = sudo_kwargs.merge(command: command_argv)
+    def sudo_command(askpass: nil,
+                     background: nil,
+                     bell: nil,
+                     close_from: nil,
+                     chdir: nil,
+                     preserve_env: nil,
+                     group: nil,
+                     set_home: nil,
+                     host: nil,
+                     login: nil,
+                     remove_timestamp: nil,
+                     reset_timestamp: nil,
+                     non_interactive: nil,
+                     preserve_groups: nil,
+                     prompt: nil,
+                     chroot: nil,
+                     role: nil,
+                     stdin: nil,
+                     shell: nil,
+                     type: nil,
+                     command_timeout: nil,
+                     other_user: nil,
+                     user: nil, &block)
+      sudo_params = {command: command_argv}
+
+      sudo_params[:askpass]          = askpass          unless askpass.nil?
+      sudo_params[:background]       = background       unless background.nil?
+      sudo_params[:bell]             = bell             unless bell.nil?
+      sudo_params[:close_from]       = close_from       unless close_from.nil?
+      sudo_params[:chdir]            = chdir            unless chdir.nil?
+      sudo_params[:preserve_env]     = preserve_env     unless preserve_env.nil?
+      sudo_params[:group]            = group            unless group.nil?
+      sudo_params[:set_home]         = set_home         unless set_home.nil?
+      sudo_params[:host]             = host             unless host.nil?
+      sudo_params[:login]            = login            unless login.nil?
+      sudo_params[:remove_timestamp] = remove_timestamp unless remove_timestamp.nil?
+      sudo_params[:reset_timestamp]  = reset_timestamp  unless reset_timestamp.nil?
+      sudo_params[:non_interactive]  = non_interactive  unless non_interactive.nil?
+      sudo_params[:preserve_groups]  = preserve_groups  unless preserve_groups.nil?
+      sudo_params[:prompt]           = prompt           unless prompt.nil?
+      sudo_params[:chroot]           = chroot           unless chroot.nil?
+      sudo_params[:role]             = role             unless role.nil?
+      sudo_params[:stdin]            = stdin            unless stdin.nil?
+      sudo_params[:shell]            = shell            unless shell.nil?
+      sudo_params[:type]             = type             unless type.nil?
+      sudo_params[:command_timeout]  = command_timeout  unless command_timeout.nil?
+      sudo_params[:other_user]       = other_user       unless other_user.nil?
+      sudo_params[:user]             = user             unless user.nil?
 
       Sudo.run(sudo_params, command_env: @command_env, &block)
     end

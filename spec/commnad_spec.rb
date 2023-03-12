@@ -1426,6 +1426,43 @@ describe CommandMapper::Command do
 
       subject.sudo_command
     end
+
+    [
+      :askpass,
+      :background,
+      :bell,
+      :close_from,
+      :chdir,
+      :preserve_env,
+      :group,
+      :set_home,
+      :host,
+      :login,
+      :remove_timestamp,
+      :reset_timestamp,
+      :non_interactive,
+      :preserve_groups,
+      :prompt,
+      :chroot,
+      :role,
+      :stdin,
+      :shell,
+      :type,
+      :command_timeout,
+      :other_user,
+      :user,
+    ].each do |option|
+      context "when given the #{option}: keyword argument" do
+        let(:option) { option }
+        let(:value)  { true   }
+
+        it "must pass the #{option}: keyword argument to CommandMapper::Sudo" do
+          expect(Sudo).to receive(:run).with({option => value, :command => subject.command_argv}, :command_env => env)
+
+          subject.sudo_command(option => value)
+        end
+      end
+    end
   end
 
   describe "#to_s" do
