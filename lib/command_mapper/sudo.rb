@@ -42,7 +42,7 @@ module CommandMapper
       option "--bell"
       option "--close-from", equals: true, value: {type: Num.new}
       option "--chdir", equals: true, value: {type: InputDir.new}
-      option "--preserve-env", equals: true, value: true
+      option "--preserve-env", equals: true, value: {type: List.new, required: false}
       option "--edit"
       option "--group", equals: true, value: true
       option "--set-home"
