@@ -1416,7 +1416,7 @@ describe CommandMapper::Command do
     end
   end
 
-  describe "#sudo!" do
+  describe "#sudo_command" do
     subject { command_class.new({opt1: opt1, arg1: arg1}, command_env: env) }
 
     let(:expected_argv) { [command_class.command, "--opt1", opt1, arg1] }
