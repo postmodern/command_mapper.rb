@@ -194,6 +194,75 @@ module CommandMapper
     # @param [Hash{Symbol => Object}] sudo
     #   Additional `sudo` options.
     #
+    # @option sudo [Boolean] :askpass
+    #   Enables the `--askpass` `sudo` option.
+    #
+    # @option sudo [Boolean] :background
+    #   Enables the `--background` `sudo` option
+    #
+    # @option sudo [Boolean] :bell
+    #   Enables the `--bell` `sudo` option
+    #
+    # @option sudo [Integer] :close_from
+    #   Enables the `--close-from=...` `sudo` option
+    #
+    # @option sudo [String] :chdir
+    #   Enables the `--chdir=...` `sudo` option
+    #
+    # @option sudo [String] :preserve_env
+    #   Enables the `--preseve-env=...` `sudo` option
+    #
+    # @option sudo [String, Boolean] :group
+    #   Enables the `--preseve-env=...` `sudo` option
+    #
+    # @option sudo [Boolean] :set_home
+    #   Enables the `--set-home` `sudo` option
+    #
+    # @option sudo [String] :host
+    #   Enables the `--host=...` `sudo` option
+    #
+    # @option sudo [Boolean] :login
+    #   Enables the `--login` `sudo` option
+    #
+    # @option sudo [Boolean] :remove_timestamp
+    #   Enables the `--remove-timestamp` `sudo` option
+    #
+    # @option sudo [Boolean] :reset_timestamp
+    #   Enables the `--reset-timestamp` `sudo` option
+    #
+    # @option sudo [Boolean] :non_interactive
+    #   Enables the `--non-interactive` `sudo` option
+    #
+    # @option sudo [Boolean] :preserve_groups
+    #   Enables the `--preserve-groups` `sudo` option
+    #
+    # @option sudo [String] :prompt
+    #   Enables the `--prompt=...` `sudo` option
+    #
+    # @option sudo [String] :chroot
+    #   Enables the `--chroot=...` `sudo` option
+    #
+    # @option sudo [String] :role
+    #   Enables the `--role=...` `sudo` option
+    #
+    # @option sudo [Boolean] :stdin
+    #   Enables the `--stdin` `sudo` option
+    #
+    # @option sudo [Boolean] :shell
+    #   Enables the `--shell` `sudo` option
+    #
+    # @option sudo [String] :type
+    #   Enables the `--type=...` `sudo` option
+    #
+    # @option sudo [Integer] :command_timeout
+    #   Enables the `--command-timeout=...` `sudo` option
+    #
+    # @option sudo [String] :other_user
+    #   Enables the `--other-user=...` `sudo` option
+    #
+    # @option sudo [String] :user
+    #   Enables the `--user=...` `sudo` option
+    #
     # @param [Hash{Symbol => Object}] kwargs
     #   Additional keyword arguments for {#initialize}.
     #
@@ -716,6 +785,75 @@ module CommandMapper
     #
     # @param [Hash{Symbol => Object}] sudo_params
     #   Additional keyword arguments for {Sudo#initialize}.
+    #
+    # @option sudo_kwargs [Boolean] :askpass
+    #   Enables the `--askpass` `sudo` option.
+    #
+    # @option sudo_kwargs [Boolean] :background
+    #   Enables the `--background` `sudo` option
+    #
+    # @option sudo_kwargs [Boolean] :bell
+    #   Enables the `--bell` `sudo` option
+    #
+    # @option sudo_kwargs [Integer] :close_from
+    #   Enables the `--close-from=...` `sudo` option
+    #
+    # @option sudo_kwargs [String] :chdir
+    #   Enables the `--chdir=...` `sudo` option
+    #
+    # @option sudo_kwargs [String] :preserve_env
+    #   Enables the `--preseve-env=...` `sudo` option
+    #
+    # @option sudo_kwargs [String, Boolean] :group
+    #   Enables the `--preseve-env=...` `sudo` option
+    #
+    # @option sudo_kwargs [Boolean] :set_home
+    #   Enables the `--set-home` `sudo` option
+    #
+    # @option sudo_kwargs [String] :host
+    #   Enables the `--host=...` `sudo` option
+    #
+    # @option sudo_kwargs [Boolean] :login
+    #   Enables the `--login` `sudo` option
+    #
+    # @option sudo_kwargs [Boolean] :remove_timestamp
+    #   Enables the `--remove-timestamp` `sudo` option
+    #
+    # @option sudo_kwargs [Boolean] :reset_timestamp
+    #   Enables the `--reset-timestamp` `sudo` option
+    #
+    # @option sudo_kwargs [Boolean] :non_interactive
+    #   Enables the `--non-interactive` `sudo` option
+    #
+    # @option sudo_kwargs [Boolean] :preserve_groups
+    #   Enables the `--preserve-groups` `sudo` option
+    #
+    # @option sudo_kwargs [String] :prompt
+    #   Enables the `--prompt=...` `sudo` option
+    #
+    # @option sudo_kwargs [String] :chroot
+    #   Enables the `--chroot=...` `sudo` option
+    #
+    # @option sudo_kwargs [String] :role
+    #   Enables the `--role=...` `sudo` option
+    #
+    # @option sudo_kwargs [Boolean] :stdin
+    #   Enables the `--stdin` `sudo` option
+    #
+    # @option sudo_kwargs [Boolean] :shell
+    #   Enables the `--shell` `sudo` option
+    #
+    # @option sudo_kwargs [String] :type
+    #   Enables the `--type=...` `sudo` option
+    #
+    # @option sudo_kwargs [Integer] :command_timeout
+    #   Enables the `--command-timeout=...` `sudo` option
+    #
+    # @option sudo_kwargs [String] :other_user
+    #   Enables the `--other-user=...` `sudo` option
+    #
+    # @option sudo_kwargs [String] :user
+    #   Enables the `--user=...` `sudo` option
     #
     # @return [Boolean, nil]
     #   Indicates whether the command exited successfully or not.
