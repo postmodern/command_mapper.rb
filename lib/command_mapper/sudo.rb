@@ -7,7 +7,7 @@ module CommandMapper
   #
   # ## Sudo options:
   #
-  # * `-A` - `sudo.ask_password`
+  # * `-A` - `sudo.askpass`
   # * `-b` - `sudo.background`
   # * `-C` - `sudo.close_from`
   # * `-E` - `sudo.preserve_env`
