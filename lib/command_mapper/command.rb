@@ -783,7 +783,7 @@ module CommandMapper
     #
     # Runs the command through `sudo`.
     #
-    # @param [Hash{Symbol => Object}] sudo_params
+    # @param [Hash{Symbol => Object}] sudo_kwargs
     #   Additional keyword arguments for {Sudo#initialize}.
     #
     # @option sudo_kwargs [Boolean] :askpass
