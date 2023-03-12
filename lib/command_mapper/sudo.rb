@@ -40,8 +40,8 @@ module CommandMapper
       option "--askpass"
       option "--background"
       option "--bell"
-      option "--close-from", equals: true, value: true
-      option "--chdir", equals: true, value: true
+      option "--close-from", equals: true, value: {type: Num.new}
+      option "--chdir", equals: true, value: {type: InputDir.new}
       option "--preserve-env", equals: true, value: true
       option "--edit"
       option "--group", equals: true, value: true
@@ -55,12 +55,12 @@ module CommandMapper
       option "--non-interactive"
       option "--preserve-groups"
       option "--prompt", equals: true, value: true
-      option "--chroot", equals: true, value: true
+      option "--chroot", equals: true, value: {type: InputDir.new}
       option "--role", equals: true, value: true
       option "--stdin"
       option "--shell"
       option "--type", equals: true, value: true
-      option "--command-timeout", equals: true, value: true
+      option "--command-timeout", equals: true, value: {type: Num.new}
       option "--other-user", equals: true, value: true
       option "--user", equals: true, value: true
       option "--version"
