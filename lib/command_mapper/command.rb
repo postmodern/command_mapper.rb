@@ -191,6 +191,9 @@ module CommandMapper
     # @param [Hash{Symbol => Object}] params
     #   The option and argument values.
     #
+    # @param [Hash{Symbol => Object}] sudo
+    #   Additional `sudo` options.
+    #
     # @param [Hash{Symbol => Object}] kwargs
     #   Additional keyword arguments for {#initialize}.
     #
