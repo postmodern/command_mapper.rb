@@ -447,6 +447,10 @@ gem 'command_mapper', '~> 0.2'
 gemspec.add_dependency 'command_mapper', '~> 0.2'
 ```
 
+## Alternatives
+
+* [terrapin](https://github.com/thoughtbot/terrapin#readme)
+
 ## License
 
 Copyright (c) 2021-2022 Hal Brodigan
