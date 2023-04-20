@@ -425,6 +425,18 @@ class Cat < CommandMapper::Command
 end
 ```
 
+### Real-World Examples
+
+* [ruby-nmap](https://github.com/postmodern/ruby-nmap#readme)
+* [ruby-masscan](https://github.com/postmodern/ruby-masscan#readme)
+* [ruby-amass](https://github.com/postmodern/ruby-amass#readme)
+* [ruby-yasm](https://github.com/postmodern/ruby-yasm#readme)
+* [ruby-ncrack](https://github.com/postmodern/ruby-ncrack#readme)
+* [ruby-nikto](https://github.com/postmodern/ruby-nikto#readme)
+* [ruby-gobuster](https://github.com/postmodern/ruby-gobuster#readme)
+* [ruby-feroxbuster](https://github.com/postmodern/ruby-feroxbuster#readme)
+* [ruby-rustscan](https://github.com/postmodern/ruby-rustscan#readme)
+
 ## Requirements
 
 * [ruby] >= 2.0.0
