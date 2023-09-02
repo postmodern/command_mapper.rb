@@ -31,6 +31,9 @@ module CommandMapper
       # @param [Type, Hash] type 
       #   The list's value type.
       #
+      # @param [Boolean] allow_empty
+      #   Specifies whether the list type will accept empty values.
+      #
       def initialize(separator: ',', type: Str.new, allow_empty: false)
         if type.nil?
           raise(ArgumentError,"type: keyword cannot be nil")
