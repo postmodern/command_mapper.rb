@@ -41,9 +41,6 @@ module CommandMapper
       # @param [Type, Hash] value
       #   The value's value type.
       #
-      # @param [Hash{Symbol => Object}]
-      #   Additional keyword arguments for {Type#initialize}.
-      #
       def initialize(separator: '=', key: Str.new, value: Str.new)
         @separator = separator
 

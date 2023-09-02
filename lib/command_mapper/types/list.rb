@@ -28,7 +28,7 @@ module CommandMapper
       # @param [String] separator
       #   The list separator character.
       #
-      # @param [Type, Hash] value
+      # @param [Type, Hash] type 
       #   The list's value type.
       #
       def initialize(separator: ',', type: Str.new, allow_empty: false)

@@ -50,8 +50,8 @@ module CommandMapper
     #   Custom environment variables to pass to the command.
     #
     # @param [Hash{Symbol => Object}] kwargs
-    #   Additional keywords arguments. These will be used to populate
-    #   {#options} and {#arguments}, along with `params`.
+    #   Additional keywords arguments. These will be used to populate the
+    #   command's `params`.
     #
     # @yield [self]
     #   The newly initialized command.
@@ -92,8 +92,8 @@ module CommandMapper
     #   The option and argument values.
     #
     # @param [Hash{Symbol => Object}] kwargs
-    #   Additional keywords arguments. These will be used to populate
-    #   {#options} and {#arguments}, along with `params`.
+    #   Additional keywords arguments. These will be used to populate the
+    #   command's `params`.
     #
     # @yield [command]
     #   The newly initialized command.
@@ -115,8 +115,8 @@ module CommandMapper
     #   The option and argument values.
     #
     # @param [Hash{Symbol => Object}] kwargs
-    #   Additional keywords arguments. These will be used to populate
-    #   {#options} and {#arguments}, along with `params`.
+    #   Additional keywords arguments. These will be used to populate the
+    #   command's `params`.
     #
     # @yield [command]
     #   The newly initialized command.
@@ -144,8 +144,8 @@ module CommandMapper
     #   The option and argument values.
     #
     # @param [Hash{Symbol => Object}] kwargs
-    #   Additional keywords arguments. These will be used to populate
-    #   {#options} and {#arguments}, along with `params`.
+    #   Additional keywords arguments. These will be used to populate the
+    #   command's `params`.
     #
     # @yield [command]
     #   The newly initialized command.
@@ -170,8 +170,8 @@ module CommandMapper
     #   The IO "mode" to open the IO pipe in.
     #
     # @param [Hash{Symbol => Object}] kwargs
-    #   Additional keywords arguments. These will be used to populate
-    #   {#options} and {#arguments}, along with `params`.
+    #   Additional keywords arguments. These will be used to populate the
+    #   command's `params`.
     #
     # @yield [command]
     #   The newly initialized command.
@@ -280,9 +280,6 @@ module CommandMapper
 
     #
     # Gets or sets the command name.
-    #
-    # @param [#to_s] new_name
-    #   The optional new command name.
     #
     # @return [String]
     #   The command name.

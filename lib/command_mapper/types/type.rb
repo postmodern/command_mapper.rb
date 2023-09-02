@@ -57,7 +57,7 @@ module CommandMapper
       #
       # The default `validate` method for all types.
       #
-      # @param [Object]
+      # @param [Object] value
       #   The given value to validate.
       #
       # @return [true, (false, String)]
