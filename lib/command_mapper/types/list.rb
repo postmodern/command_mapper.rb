@@ -39,9 +39,8 @@ module CommandMapper
           raise(ArgumentError,"type: keyword cannot be nil")
         end
 
-        @separator = separator
-        @type      = Types::Type(type)
-
+        @separator   = separator
+        @type        = Types::Type(type)
         @allow_empty = allow_empty
       end
 
