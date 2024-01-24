@@ -1,3 +1,11 @@
+### 0.3.2 / 2024-01-23
+
+* Switch to use `require_relative` to improve load-times.
+* Allow passing `sudo` specific keyword arguments in
+  {CommandMapper::Command#sudo_command} to {CommandMapper::Sudo.run}.
+* Allow {CommandMapper::Sudo}'s `preserve_env` attribute to accept an optional
+  value.
+
 ### 0.3.1 / 2022-12-25
 
 * Use `File.exist?` in {CommandMapper::Types::InputPath#validate} for Ruby
