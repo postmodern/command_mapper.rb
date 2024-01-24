@@ -1,4 +1,4 @@
-require 'command_mapper/types/num'
+require_relative 'num'
 
 module CommandMapper
   module Types

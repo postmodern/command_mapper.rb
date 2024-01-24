@@ -1,5 +1,5 @@
-require 'command_mapper/types/type'
-require 'command_mapper/types/str'
+require_relative 'types/type'
+require_relative 'types/str'
 
 module CommandMapper
   #

@@ -1,5 +1,5 @@
-require 'command_mapper/exceptions'
-require 'command_mapper/arg'
+require_relative 'exceptions'
+require_relative 'arg'
 
 module CommandMapper
   #

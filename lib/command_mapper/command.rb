@@ -1,6 +1,6 @@
-require 'command_mapper/types'
-require 'command_mapper/argument'
-require 'command_mapper/option'
+require_relative 'types'
+require_relative 'argument'
+require_relative 'option'
 
 require 'shellwords'
 

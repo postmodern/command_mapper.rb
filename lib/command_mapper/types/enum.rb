@@ -1,4 +1,4 @@
-require 'command_mapper/types/map'
+require_relative 'map'
 
 module CommandMapper
   module Types

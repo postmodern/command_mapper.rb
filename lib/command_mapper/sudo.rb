@@ -1,5 +1,5 @@
-require 'command_mapper/command'
-require 'command_mapper/types/key_value_list'
+require_relative 'command'
+require_relative 'types/key_value_list'
 
 module CommandMapper
   #

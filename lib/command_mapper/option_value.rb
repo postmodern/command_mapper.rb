@@ -1,4 +1,4 @@
-require 'command_mapper/arg'
+require_relative 'arg'
 
 module CommandMapper
   #

@@ -1,4 +1,4 @@
-require 'command_mapper/types/input_path'
+require_relative 'input_path'
 
 module CommandMapper
   module Types

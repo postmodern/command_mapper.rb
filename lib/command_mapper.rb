@@ -1,2 +1,2 @@
-require 'command_mapper/command'
-require 'command_mapper/version'
+require_relative 'command_mapper/command'
+require_relative 'command_mapper/version'
